@@ -1,10 +1,10 @@
 # Minutes
 Date: Thursday, 24/06/21\
-Time: 11:10 - 1:10\
+Time: 11:10 - 1:55\
 Attendees: Jack, Dongzhu, Jaeff, Ben, Michael\
 Author: Jack
 
-## comments:
+## Comments:
 create md file/folder for minutes\
 users stories need to be done in issues\
 assumptions list done by next lab\
