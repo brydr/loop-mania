@@ -21,7 +21,8 @@ Buildings\
 Cards\
 Goal\
 Equippable items\
-Non-equippable items\
+Currency\
+Consumables\
 pathTile\
 MovingEntity
 
@@ -51,4 +52,4 @@ ui design/interaction - Dong\
 timeline
 
 ## Next Meeting:
-Monday 3pm
+Monday 8pm
