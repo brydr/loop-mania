@@ -8,6 +8,7 @@ Author: Jack
 Timeline complete
 user stories mostly complete\
 UI looking good need to add some changes\
+Controller class needs to be added to uml\
 <b>Assumptions need to be precise, but we can change later</b>\
 eg. slug has battle radius of 1 and support radius of 1\
 <b>More precision needed in user story acceptance criteria:</b>\
@@ -26,7 +27,6 @@ Soldiers animated behind character or some other representation on the map\
 Hover over health bar to show detail about specific amount of health ie. 50/100\
 Battle result screen in place of battle window for our mvp
 
-
 ## Qs for tutor:
 - is our uml goals correct?
 - do we need a non-path tile?
@@ -34,8 +34,9 @@ Battle result screen in place of battle window for our mvp
 
 ## To Do:
 User Stories - Everyone update their user stories with priority and story points\
-assumptions - Ben, anyone can add if they think of them\
-ui design/interaction updates - Dong
+update assumptions to be more precise - Ben, anyone can add if they think of them\
+ui design/interaction updates - Dong\
+update uml to include controller class and javaFX stuff - next meeting
 
 ## Next Meeting:
 11am Thursday 01/06/2021
