@@ -5,13 +5,22 @@
     * **Vampires** have a battle radius of 2 units, support radius of 3 units
 
 [idea]: # (The size of each 'unit' scaled with the size of the world )
-* Enemies will fight before the character and allied soldiers.
-* The player must press <kbd>Q</kbd> for *The Character* to consume a health potion. 
+* Enemies will fight before *The Character* and allied soldiers. Allied soldiers strike, if any strike, then *The Character*, then any surviving enemies retaliate. The battle ends when either *The Character* or all enemies are killed.
+* The player must press <kbd>Q</kbd> for *The Character* to consume a health potion.
+* There is no maximum imposed on the amount of allied soldiers. 
 <!-- TODO: 
 Provide damage values/functions for:
 * Unarmed
 * Sword
 * Stake (regular and Vampire)
+
+How much HEALTH does a HEALTH POTION restore?
+
+What is the speed, damage and health of an allied soldier? If the allied soldiers are WITH The Character, then they must be the same speed.
+
+What is the speed, damage and health of The Character?
+
+
 
 What behaviour does "provides defence" and "defends against enemy attacks" have for Armour and Shields/Helmets specifically?
 * Damage reduction function?
