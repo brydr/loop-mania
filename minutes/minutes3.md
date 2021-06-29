@@ -8,7 +8,7 @@ Author: Jack
 Timeline complete
 user stories mostly complete\
 UI looking good need to add some changes\
-Controller class needs to be added to uml\
+Michael said we don't need to include controller\
 <b>Assumptions need to be precise, but we can change later</b>\
 eg. slug has battle radius of 1 and support radius of 1\
 <b>More precision needed in user story acceptance criteria:</b>\
@@ -17,7 +17,7 @@ drops gold -> drops 100 gold?\
 <b>3 levels of priority for user stories:</b>
 1. essential
 2. in spec but doesn't need to be in mvp
-3. extensions\
+3. extensions
 
 <b>UI Updates to be completed:</b>\
 Have friendly soldiers with a counter instead of the tiles for each soldier\
@@ -36,7 +36,7 @@ Battle result screen in place of battle window for our mvp
 User Stories - Everyone update their user stories with priority and story points\
 update assumptions to be more precise - Ben, anyone can add if they think of them\
 ui design/interaction updates - Dong\
-update uml to include controller class and javaFX stuff - next meeting
+Go over uml as a group next meeting
 
 ## Next Meeting:
 11am Thursday 01/06/2021
