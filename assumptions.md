@@ -19,6 +19,7 @@
 ## Health Potions
 * A health potion restores **30 HP** of health to *The Character*.
 * A health potion has a 10% chance of dropping from defeating enemies.
+* Each path tile in the game has a 1% chance of a health potion spawning on them.
 
 ## Rare Items
 * The One Ring has a 3% chance of dropping from defeating enemies.
@@ -55,6 +56,7 @@
     * Armour: 200 gold (buy), 100 gold (sell)
     * Helmet: 120 gold (buy), 60 gold (sell)
     * Health Potions: 50 gold (buy), 20 gold (sell)
+* Each path tile in the game has a 1% chance of gold spawning on them.
 
 # Buildings
 * A **trap** deals 30 HP of damage.
@@ -68,6 +70,7 @@
 * Defeating a slug gives 10 XP.
 
 # Payouts: Defeated Enemies, Excess Items/Cards
+* Items include the sword, stake, staff, armour, shield, helmet and health potion.
 * When there are too many items **AND** cards, and an item/card is destroyed, the user will receive either experience or gold with a 50/50 chance.
 * When there are **too many items**, a user will receive either a card, or experience, or gold - with a 1 in 3 chance of either.
 * When there are **too many cards**, a user will receive either an item, or experience, or gold - with a 1 in 3 chance of either.
