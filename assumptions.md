@@ -18,6 +18,10 @@
 
 ## Health Potions
 * A health potion restores **30 HP** of health to *The Character*.
+* A health potion has a 10% chance of dropping from defeating enemies.
+
+## Rare Items
+* The One Ring has a 3% chance of dropping from defeating enemies.
 
 ## Armour
 * **Body armour** reduces enemy attack by 50%
