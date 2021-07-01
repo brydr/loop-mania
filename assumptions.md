@@ -19,7 +19,7 @@
 ## Health Potions
 * A health potion restores **30 HP** of health to *The Character*.
 * A health potion has a 10% chance of dropping from defeating enemies.
-* Each path tile in the game has a 1% chance of a health potion spawning on them.
+* Each path tile in the game has a 1% chance of a health potion spawning on them every time *The Character* completes a full cycle.
 
 ## Rare Items
 * The One Ring has a 3% chance of dropping from defeating enemies.
@@ -56,7 +56,7 @@
     * Armour: 200 gold (buy), 100 gold (sell)
     * Helmet: 120 gold (buy), 60 gold (sell)
     * Health Potions: 50 gold (buy), 20 gold (sell)
-* Each path tile in the game has a 1% chance of gold spawning on them.
+* Each path tile in the game has a 1% chance of gold spawning on them every time *The Character* completes a full cycle.
 
 # Buildings
 * A **trap** deals 30 HP of damage.
