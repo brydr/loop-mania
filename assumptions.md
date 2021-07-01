@@ -4,6 +4,8 @@
 
 * Enemies will fight before *The Character* and allied soldiers. Allied soldiers strike, if any strike, then *The Character*, then any surviving enemies retaliate. The battle ends when either *The Character* or all enemies are killed.
 * The player must press <kbd>Q</kbd> for *The Character* to consume a health potion.
+* For each instance of the game where *The Character* moves from one tile to the next, there will be at most 1 battle with any enemy and any number of supporting enemies.
+
 
 # Items
 ## Weapons
