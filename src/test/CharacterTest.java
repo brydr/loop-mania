@@ -15,11 +15,6 @@ import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Character;
 
-/**
- * this class is a dummy class demonstrating how to setup tests for the project
- * you should setup additional test classes in a similar fashion, aiming to achieve high coverage.
- * A clickable "Run Test" link should appear if you have installed the Java Extension Pack properly.
- */
 public class CharacterTest {
     @Test
     public void moveUpDownPathTest(){
@@ -42,11 +37,11 @@ public class CharacterTest {
     public void takeDamageTest(){
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
-        Boolean isAlive = c.takeDamage(50);
-        assertTrue(isAlive);
+        // check not dead
+        assertFalse(c.takeDamage(50));
         assertEquals(c.getHp(), 50);
-        isAlive = c.takeDamage(50);
-        assertFalse(isAlive);
+        // check neg dmg and dead
+        assertTrue(c.takeDamage(60));
         assertEquals(c.getHp(), 0);
     }
 
@@ -55,7 +50,7 @@ public class CharacterTest {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
         assertTrue(c.getAlliedSoldiersList().isEmpty());
-        int hp = 100;
+        int hp = 50;
         AlliedSoldier ally1 = new AlliedSoldier(hp);
         AlliedSoldier ally2 = new AlliedSoldier(hp);
         c.addAlliedSoldier(ally1);
