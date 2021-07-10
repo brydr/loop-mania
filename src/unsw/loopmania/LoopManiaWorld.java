@@ -146,6 +146,7 @@ public class LoopManiaWorld {
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
             // due to mutating list we're iterating over
+            character.gold.addGold(new Random().nextInt(90)+10);
             killEnemy(e);
         }
         return defeatedEnemies;
@@ -159,6 +160,7 @@ public class LoopManiaWorld {
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            goldPayout();
             removeCard(0);
         }
         VampireCastleCard vampireCastleCard = new VampireCastleCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
@@ -189,6 +191,7 @@ public class LoopManiaWorld {
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             // TODO = give some cash/experience rewards for the discarding of the oldest sword
             removeItemByPositionInUnequippedInventoryItems(0);
+            goldPayout();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
         
@@ -214,6 +217,8 @@ public class LoopManiaWorld {
     public void runTickMoves(){
         character.moveDownPath();
         moveBasicEnemies();
+        goldTile();
+        System.out.println(character.gold.getGold());
     }
 
     /**
@@ -347,5 +352,17 @@ public class LoopManiaWorld {
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;
+    }
+
+    public void goldPayout() {
+        if (new Random().nextInt(100) > 85) {
+            character.gold.addGold(new Random().nextInt(90)+10);
+        }
+    }
+
+    public void goldTile() {
+        if (new Random().nextInt(100) >= 99) {
+            character.gold.addGold(new Random().nextInt(90)+10);
+        }
     }
 }
