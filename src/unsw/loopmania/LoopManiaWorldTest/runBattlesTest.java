@@ -108,6 +108,8 @@ public class runBattlesTest {
 
         newWorld.runBattles();
 
+        c.moveUpPath();
+
         newWorld.possiblySpawnEnemies();    // The third slug should kill the character.
 
         c.moveDownPath();
