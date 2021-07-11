@@ -25,11 +25,11 @@ Remember to update LoopManiaWorld if it needs a function for your assigned epic\
 Do all your work on a new gitlab branch named after your epic\
 update uml when changes to design made
 
-Dong: equippable items
-Jaeff: updating battles for vampire bite
-Dong/Jaeff: state pattern for battles
-Jack: observer pattern for list<AlliedSoldier>, update attack/takeDamage to use equippedItem methods
-Michael: goals, consumables(health potion)
+Dong: equippable items\
+Jaeff: updating battles for vampire bite\
+Dong/Jaeff: state pattern for battles\
+Jack: observer pattern for list<AlliedSoldier>, update attack/takeDamage to use equippedItem methods\
+Michael: goals, consumables(health potion)\
 Ben: buildings classes, strategy pattern for difficulty
 
 ## Next Meeting:
