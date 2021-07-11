@@ -7,8 +7,26 @@ import java.util.Random;
  */
 public class BasicEnemy extends MovingEntity {
     // TODO = modify this, and add additional forms of enemy
+
+    private int attackPower;
+    private int hp;
+    private int speed;
+    private int battleRadius;
+    private int supportRadius;
+
     public BasicEnemy(PathPosition position) {
         super(position);
+    }
+
+    public int getHp() {
+        return hp;
+    }
+    public int getBattleRadius() {
+        return battleRadius;
+    }
+
+    public int getSupportRadius() {
+        return supportRadius;
     }
 
     /**
