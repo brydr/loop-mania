@@ -9,6 +9,7 @@ public class AlliedSoldier{
     private int hp;
     private Optional<BasicEnemy> oldEnemy;
     private Duration tranceTime;
+    private int attackDamage = 8;
 
     // constructor for basic AlliedSoldier
     public AlliedSoldier(int hp) {
@@ -34,13 +35,8 @@ public class AlliedSoldier{
      * reduce hp of AlliedSoldier
      * @return true if dead, false if alive
      */
-    public Boolean takeDamage(int damage) {
+    public void takeDamage(int damage) {
         hp -= Math.round(damage);
-        if (hp < 0) {
-            hp = 0;
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -51,5 +47,13 @@ public class AlliedSoldier{
         tranceTime = this.tranceTime.minus(timePassed);
         if (tranceTime.isNegative() || tranceTime.isZero()) return true;
         else return false;
+    }
+
+    /**
+     * @param enemy, enemy to be attacked
+     * outputs damage to given enemy
+     */
+    public void attack(MovingEntity enemy) {
+        enemy.takeDamage(this.attackDamage);
     }
 }

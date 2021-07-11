@@ -1,5 +1,6 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -13,7 +14,7 @@ public class Character extends MovingEntity {
     private Optional<Shield> equippedShield;
     private Optional<Helmet> equippedHelmet;
     private Optional<RareItem> equippedRareItem;
-    private List<AlliedSoldier> listAlliedSoldiers;
+    private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
     //private weaponStrategy strategy????
 
     // TODO = potentially implement relationships between this class and other classes
@@ -66,11 +67,11 @@ public class Character extends MovingEntity {
         return listAlliedSoldiers;
     }
 
-    public void addAlliedSoldiers(AlliedSoldier soldier) {
+    public void addAlliedSoldier(AlliedSoldier soldier) {
         this.listAlliedSoldiers.add(soldier);
     }
 
-    public void removeAlliedSoldiers(AlliedSoldier soldier) {
+    public void removeAlliedSoldier(AlliedSoldier soldier) {
         this.listAlliedSoldiers.remove(soldier);
     }
 
@@ -78,7 +79,7 @@ public class Character extends MovingEntity {
      * reduce hp of character based on armour being warn
      * @return true if dead, false if alive
      */
-    public Boolean takeDamage(int damage) {
+    public void takeDamage(int damage) {
         Boolean hasArmour = false;
         Boolean hasHelmet = false;
         Boolean hasShield = false;
@@ -93,21 +94,16 @@ public class Character extends MovingEntity {
         else if (hasHelmet) damage *= 0.3;
         if (hasShield && thirtyPercentChance) damage = 0;
         int newHp = this.getHp() - damage;
-        if (newHp < 0) newHp = 0;
         this.setHp(Math.round(newHp));
-
-        // return true if dead
-        if (this.getHp() == 0)
-            return true;
-        return false;
     }
 
     /**
-     * Calls damage from weapon through strategy pattern
-     * @return attack damage
+     * @param enemy, enemy to be attacked
+     * Calls damage from equippedWeapon
+     * outputs damage to given enemy
      */
-    public int attack(int damage) {
-        int outputDamage = this.equippedWeapon.attack(damage);
-        return Math.round(outputDamage);
+    public void attack(MovingEntity enemy) {
+        int outputDamage = this.equippedWeapon.attack();
+        enemy.takeDamage(outputDamage);
     }
 }

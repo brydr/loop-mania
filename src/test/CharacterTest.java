@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
+import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.Character;
 
 public class CharacterTest {
@@ -38,28 +39,28 @@ public class CharacterTest {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
         // check not dead
-        assertFalse(c.takeDamage(50));
+        c.takeDamage(50);
         assertEquals(c.getHp(), 50);
         // check neg dmg and dead
-        assertTrue(c.takeDamage(60));
-        assertEquals(c.getHp(), 0);
+        c.takeDamage(60);
+        assertEquals(c.getHp(), -10);
     }
 
     @Test
     public void alliedSoldierListTest(){
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
-        assertTrue(c.getAlliedSoldiersList().isEmpty());
+        assertTrue(c.getListAlliedSoldiers().isEmpty());
         int hp = 50;
         AlliedSoldier ally1 = new AlliedSoldier(hp);
         AlliedSoldier ally2 = new AlliedSoldier(hp);
         c.addAlliedSoldier(ally1);
         c.addAlliedSoldier(ally2);
-        List<AlliedSoldier> listSoldiers = c.getAlliedSoldiersList();
-        assertEquals(listSoldiers[0].equals(ally1));
-        assertEquals(listSoldiers[1].equals(ally2));
+        List<AlliedSoldier> listSoldiers = c.getListAlliedSoldiers();
+        assertEquals(listSoldiers.get(0), ally1);
+        assertEquals(listSoldiers.get(1), ally2);
         c.removeAlliedSoldier(ally1);
-        List<AlliedSoldier> listSoldiers = c.getAlliedSoldiersList();
-        assertEquals(listSoldiers[0].equals(ally2));
+        listSoldiers = c.getListAlliedSoldiers();
+        assertEquals(listSoldiers.get(0), ally2);
     }
 }

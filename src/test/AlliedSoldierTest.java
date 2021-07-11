@@ -22,13 +22,13 @@ public class AlliedSoldierTest {
         int hp = 50;
         AlliedSoldier ally = new AlliedSoldier(hp);
         assertEquals(ally.getHp(), 50);
-        // take 20 dmg and check not dead
-        assertFalse(ally.takeDamage(20));
+        // take 20 dmg
+        ally.takeDamage(20);
         assertEquals(ally.getHp(), 30);
-        // take 40 dmg and check dead
-        assertTrue(ally.takeDamage(40));
+        // take 40 dmg
+        ally.takeDamage(40);
         // check negative health
-        assertEquals(ally.getHp(), 0);
+        assertEquals(ally.getHp(), -10);
     }
 
 @Test
@@ -46,5 +46,20 @@ public class AlliedSoldierTest {
         assertFalse(ally2.isTranceOver(threeSeconds));
         // check trance is over 3-5=0
         assertTrue(ally2.isTranceOver(fiveSeconds));
+    }
+
+@Test
+    public void attackTest(){
+        int allyHp = 100;
+        int slugHp = 30;
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        Slug slug = new Slug(pos, slugHp);
+        AlliedSoldier ally1 = new AlliedSoldier(allyHp);
+        ally1.attack(slug);
+        assertEquals(slug.getHp(), 30-8);
+        ally1.attack(slug);
+        ally1.attack(slug);
+        ally1.attack(slug);
+        assertEquals(slug.getHp(), -2);
     }
 }
