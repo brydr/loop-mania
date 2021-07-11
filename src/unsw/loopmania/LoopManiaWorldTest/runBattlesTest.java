@@ -32,19 +32,10 @@ public class runBattlesTest {
         newWorld.setCharacter(c);
 
         newWorld.possiblySpawnEnemies();
-
         c.moveDownPath();
-
-        List<BasicEnemy> expectedDeadEnemies = new ArrayList<BasicEnemy>();
-        PathPosition pos2 = new PathPosition(0, Arrays.asList(new Pair<>(0, 4)));
-        Slug slug = new Slug(pos2);
-        slug.takeDamage(30);
-        expectedDeadEnemies.add(slug);
-
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(expectedDeadEnemies == deadEnemies);     // Both slugs should be dead.
-
+        assertTrue(deadEnemies.get(0).getClass() == Slug.class);  
         assertTrue(c.getHp() == 55);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
@@ -64,7 +55,7 @@ public class runBattlesTest {
 
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(expectedDeadEnemies == deadEnemies);   
+        assertTrue(expectedDeadEnemies.equals(deadEnemies));   
 
         assertTrue(c.getHp() == 100);   
     }
@@ -82,16 +73,9 @@ public class runBattlesTest {
         newWorld.possiblySpawnEnemies();
 
         c.moveDownPath();   // Observer pattern should be implemented so if the character moves, the allied soldier moves with it so no need to move the allied soldier.
-
-        List<BasicEnemy> expectedDeadEnemies = new ArrayList<BasicEnemy>();
-        PathPosition pos2 = new PathPosition(0, Arrays.asList(new Pair<>(0, 4)));
-        Slug slug = new Slug(pos2);
-        slug.takeDamage(30);
-        expectedDeadEnemies.add(slug);
-
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(expectedDeadEnemies == deadEnemies);   
+        assertTrue(deadEnemies.get(0).getClass() == Slug.class); 
 
         assertTrue(c.getHp() == 100);   
         // Since it is assumed soldiers are equipped with a sword they will deal 8 damage. The character without weapons will deal 2 damage.
