@@ -12,6 +12,7 @@ public abstract class MovingEntity extends Entity {
      */
     private PathPosition position;
     private int hp;
+    private int attackPower;
 
     /**
      * Create a moving entity which moves up and down the path in position
@@ -52,11 +53,19 @@ public abstract class MovingEntity extends Entity {
         return y().get();
     }
 
+    public PathPosition getPosition() {
+        return position;
+    }
+
     public int getHp() {
         return hp;
     }
 
+    public void attack(MovingEntity movingEntity) {
+        
+    }
+
     public void takeDamage(int damage) {
-        hp -= damage;
+
     }
 }
