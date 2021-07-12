@@ -69,7 +69,7 @@ public abstract class LoopManiaWorldLoader {
         // TODO = load more entity types from the file
         switch (type) {
         case "hero_castle":
-            Character character = new Character(new PathPosition(indexInPath, orderedPath), new Gold());
+            Character character = new Character(new PathPosition(indexInPath, orderedPath));
             world.setCharacter(character);
             onLoad(character);
             entity = character;

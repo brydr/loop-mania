@@ -7,9 +7,9 @@ public class Character extends MovingEntity {
     public Gold gold;
     
     // TODO = potentially implement relationships between this class and other classes
-    public Character(PathPosition position, Gold gold) {
+    public Character(PathPosition position) {
         super(position);
-        this.gold = gold;
+        this.gold = new Gold();
     }
     
 }
