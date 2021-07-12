@@ -10,4 +10,9 @@ public class VampireCastleCard extends Card {
     public VampireCastleCard(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y);
     }    
+    
+    public Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY) {
+        VampireCastleBuilding newBuilding = new VampireCastleBuilding(buildingNodeX, buildingNodeY);
+        return newBuilding;
+    }
 }
