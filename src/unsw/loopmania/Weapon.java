@@ -12,4 +12,7 @@ public abstract class Weapon extends EquippableItem {
 
 	public abstract void attack(BasicEnemy enemy);
 
+	public int getAttackPower() {
+		return attackPower;
+	}
 }

@@ -11,10 +11,12 @@ public class Sword extends Weapon implements AttackAbility {
 		super(x, y, 8);
 	}
 
+	/**
+	 * @param enemy The enemy being attacked
+	 */
 	@Override
 	public void attack(BasicEnemy enemy) {
-		// TODO attack
-
+		enemy.takeDamage(this.getAttackPower());
 	}
 
 	@Override
