@@ -39,6 +39,27 @@ public class runBattlesTest {
         assertTrue(c.getHp() == 55);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
+    // Test if the supporting enemies die.
+    @Test 
+    public void testSupportingEnemiesDead() {
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4)));
+        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4), new Pair<>(0,5)));
+
+        Character c = new Character(pos);
+        
+        newWorld.setCharacter(c);
+
+        newWorld.possiblySpawnEnemies();
+        newWorld.possiblySpawnEnemies();
+        c.moveDownPath();
+        c.moveDownPath();
+        List<BasicEnemy> deadEnemies = newWorld.runBattles();
+
+        assertTrue(deadEnemies.get(0).getClass() == Slug.class);  
+        assertTrue(deadEnemies.get(1).getClass() == Slug.class); 
+        assertTrue(c.getHp() == 10);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
+    }
+
     // There should be no fight between the slug and character since it is out of the slugs battle radius.
     @Test
     public void outOfRange() {

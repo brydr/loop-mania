@@ -143,7 +143,7 @@ public class LoopManiaWorld {
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
             // TODO = you should implement different RHS on this inequality, based on influence radii and battle radii
-            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) < Math.pow(e.getBattleRadius(), 2) ){
+            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getBattleRadius(), 2) ){
                 // fight...
                 System.out.println("fight");
                 int enemyHealth = e.getHp();
@@ -173,7 +173,7 @@ public class LoopManiaWorld {
         for (BasicEnemy e: enemies) {
             if (alreadyABattle == false) {
                 break;
-            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) < Math.pow(e.getSupportRadius(), 2)) {
+            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getSupportRadius(), 2)) {
                 int enemyHealth = e.getHp();
                 int charHealth = character.getHp();
 
