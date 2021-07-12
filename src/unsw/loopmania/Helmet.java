@@ -1,9 +1,11 @@
 package unsw.loopmania;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Helmet extends ProtectiveGear {
 	// TODO reduce wearer's attack power
-	public Helmet(Character wearer) {
-		super(wearer);
+	public Helmet(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
+		super(x, y, wearer);
 	}
 
 	@Override

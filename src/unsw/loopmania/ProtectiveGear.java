@@ -1,9 +1,12 @@
 package unsw.loopmania;
 
-public abstract class ProtectiveGear {
+import javafx.beans.property.SimpleIntegerProperty;
+
+public abstract class ProtectiveGear extends EquippableItem {
 	private final Character wearer;
 
-	public ProtectiveGear(Character wearer) {
+	public ProtectiveGear(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
+		super(x, y);
 		this.wearer = wearer;
 	}
 

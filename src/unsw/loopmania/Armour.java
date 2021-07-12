@@ -1,8 +1,10 @@
 package unsw.loopmania;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Armour extends ProtectiveGear {
-	public Armour(Character wearer) {
-		super(wearer);
+	public Armour(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
+		super(x, y, wearer);
 	}
 
 	@Override

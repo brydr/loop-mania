@@ -14,6 +14,10 @@ public abstract class BasicEnemy extends MovingEntity {
     // TODO
     public abstract void takeDamage(int damage);
 
+    public int getHp() {
+        // TODO
+    }
+
     public abstract void convertToFriendly(int time);
 
     /**

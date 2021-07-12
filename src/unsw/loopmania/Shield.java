@@ -1,9 +1,11 @@
 package unsw.loopmania;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Shield extends ProtectiveGear {
 	private final double critNegationChance = .6;
-	public Shield(Character wearer) {
-		super(wearer);
+	public Shield(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
+		super(x, y, wearer);
 	}
 
 	@Override
