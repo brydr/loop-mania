@@ -12,7 +12,6 @@ public abstract class MovingEntity extends Entity {
      */
     private PathPosition position;
     private int hp;
-    private int attackPower;
 
     /**
      * Create a moving entity which moves up and down the path in position

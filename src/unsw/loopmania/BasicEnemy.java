@@ -10,7 +10,6 @@ public class BasicEnemy extends MovingEntity {
 
     private int attackPower;
     private int hp;
-    private int speed;
     private int battleRadius;
     private int supportRadius;
 
@@ -43,4 +42,13 @@ public class BasicEnemy extends MovingEntity {
             moveDownPath();
         }
     }
+
+    public void attack(MovingEntity movingEntity) {
+        movingEntity.takeDamage(attackPower);
+    }
+
+    public void takeDamage(int damage) {
+        hp -= damage;
+    }
+    
 }
