@@ -74,9 +74,7 @@ public abstract class MovingEntity extends Entity {
         return position;
     }
 
-    public void takeDamage(int damage) {
-        this.hp = hp - damage;
-    }
+    public abstract void takeDamage(int damage);
 
     public abstract void attack(MovingEntity movingEntity);
 }

@@ -58,6 +58,10 @@ public abstract class BasicEnemy extends MovingEntity {
         this.destroy();
     }
 
+    public void takeDamage(int damage) {
+        int hp = this.getHp();
+        this.setHp(hp - damage);
+    }
+
     public abstract void attack(MovingEntity movingEntity);
-    public abstract void takeDamage(MovingEntity movingEntity);
 }
