@@ -20,7 +20,8 @@ public class AlliedSoldierTest {
     @Test
     public void takeDamageTest(){
         int hp = 50;
-        AlliedSoldier ally = new AlliedSoldier(hp);
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
+        AlliedSoldier ally = new AlliedSoldier(pos, hp);
         assertEquals(ally.getHp(), 50);
         // take 20 dmg
         ally.takeDamage(20);
@@ -38,8 +39,8 @@ public class AlliedSoldierTest {
         BasicEnemy enemy = new BasicEnemy(pos);
         Duration fiveSeconds = Duration.ofSeconds(5);
         Duration threeSeconds = Duration.ofSeconds(3);
-        AlliedSoldier ally1 = new AlliedSoldier(hp, fiveSeconds, Optional.of(enemy));
-        AlliedSoldier ally2 = new AlliedSoldier(hp, fiveSeconds, Optional.of(enemy));
+        AlliedSoldier ally1 = new AlliedSoldier(pos, hp, fiveSeconds, Optional.of(enemy));
+        AlliedSoldier ally2 = new AlliedSoldier(pos, hp, fiveSeconds, Optional.of(enemy));
         // check trance is over 5-5=0
         assertTrue(ally1.isTranceOver(fiveSeconds));
         // check trance isn't over 5-3=2
@@ -54,7 +55,7 @@ public class AlliedSoldierTest {
         int slugHp = 30;
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Slug slug = new Slug(pos, slugHp);
-        AlliedSoldier ally1 = new AlliedSoldier(allyHp);
+        AlliedSoldier ally1 = new AlliedSoldier(pos, allyHp);
         ally1.attack(slug);
         assertEquals(slug.getHp(), 30-8);
         ally1.attack(slug);

@@ -17,7 +17,6 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
     //private weaponStrategy strategy????
 
-    // TODO = potentially implement relationships between this class and other classes
     public Character(PathPosition position) {
         super(position);
         this.setHp(100);
@@ -78,6 +77,7 @@ public class Character extends MovingEntity {
     /**
      * reduce hp of character based on armour being warn
      * @return true if dead, false if alive
+     * TODO call armour methods when they've been implemented
      */
     public void takeDamage(int damage) {
         Boolean hasArmour = false;
@@ -99,11 +99,49 @@ public class Character extends MovingEntity {
 
     /**
      * @param enemy, enemy to be attacked
+     * Observer pattern to make all allied soldiers attack the enemy
      * Calls damage from equippedWeapon
      * outputs damage to given enemy
      */
     public void attack(MovingEntity enemy) {
-        int outputDamage = this.equippedWeapon.attack();
-        enemy.takeDamage(outputDamage);
+        // all allies attack enemy
+        for (AlliedSoldier ally : listAlliedSoldiers) {
+            ally.attack(enemy);
+        }
+        int outputDamage = this.equippedWeapon.attack(enemy);
+        // reduce player damage by 15% if helmet equipped
+        if (this.equippedHelmet != null) outputDamage *= 0.85;
+        enemy.takeDamage(Math.floor(outputDamage));
+    }
+
+    /**
+     * Observer pattern
+     * update AlliedSoldier positions
+     */
+    public void notifyObserversPosition(Boolean isDownPath) {
+        for (AlliedSoldier ally : listAlliedSoldiers) {
+            if (isDownPath) ally.moveDownPath();
+            else ally.moveUpPath();
+        }
+    }
+
+    /**
+     * Move character and allied soldiers up path
+     */
+    @Override
+    public void moveUpPath() {
+        super.moveUpPath();
+        Boolean isDownPath = false;
+        notifyObserversPosition(isDownPath);
+    }
+
+    /**
+     * Move character and allied soldiers down path
+     */
+    @Override
+    public void moveDownPath() {
+        super.moveDownPath();
+        Boolean isDownPath = true;
+        notifyObserversPosition(isDownPath);
     }
 }

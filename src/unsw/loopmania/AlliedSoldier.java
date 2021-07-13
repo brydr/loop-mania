@@ -4,21 +4,22 @@ import java.time.Duration;
 import java.util.Optional;
 
 
-public class AlliedSoldier{
+public class AlliedSoldier extends MovingEntity {
 
-    private int hp;
     private Optional<BasicEnemy> oldEnemy;
     private Duration tranceTime;
     private int attackDamage = 8;
 
     // constructor for basic AlliedSoldier
-    public AlliedSoldier(int hp) {
-        this.hp = hp;
+    public AlliedSoldier(PathPosition pos, int hp) {
+        super(pos);
+        this.setHp(hp);
     }
 
     // constructor for when enemy is put in trance
-    public AlliedSoldier(int hp, Duration tranceTime, Optional<BasicEnemy> oldEnemy) {
-        this.hp = hp;
+    public AlliedSoldier(PathPosition pos, int hp, Duration tranceTime, Optional<BasicEnemy> oldEnemy) {
+        super(pos);
+        this.setHp(hp);
         this.tranceTime = tranceTime;
         this.oldEnemy = oldEnemy;
     }
@@ -27,16 +28,12 @@ public class AlliedSoldier{
         return oldEnemy;
     }
 
-    public int getHp() {
-        return this.hp;
-    }
-
     /**
      * reduce hp of AlliedSoldier
      * @return true if dead, false if alive
      */
     public void takeDamage(int damage) {
-        hp -= Math.round(damage);
+        this.setHp(this.getHp() - Math.round(damage));
     }
 
     /**
