@@ -13,6 +13,9 @@ public class Slug extends BasicEnemy {
     public int getHp() {
         return hp;
     }
+    public int getAttack() {
+        return attackPower;
+    }
     public int getBattleRadius() {
         return battleRadius;
     }

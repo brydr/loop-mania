@@ -15,7 +15,9 @@ public class Zombie extends BasicEnemy implements Undead {
     public int getHp() {
         return hp;
     }
-
+    public int getAttack() {
+        return attackPower;
+    }
     public int getBattleRadius() {
         return battleRadius;
     }
