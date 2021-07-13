@@ -2,14 +2,15 @@ package unsw.loopmania;
 
 import java.util.Random;
 
+import javafx.beans.property.SimpleBooleanProperty;
+
 /**
  * a basic form of enemy in the world
  */
-public class BasicEnemy extends MovingEntity {
+public abstract class BasicEnemy extends MovingEntity {
     // TODO = modify this, and add additional forms of enemy
 
     private int attackPower;
-    private int hp;
     private int battleRadius;
     private int supportRadius;
 
@@ -17,8 +18,8 @@ public class BasicEnemy extends MovingEntity {
         super(position);
     }
 
-    public int getHp() {
-        return hp;
+    public int getAttack() {
+        return attackPower;
     }
     public int getBattleRadius() {
         return battleRadius;
@@ -26,6 +27,16 @@ public class BasicEnemy extends MovingEntity {
 
     public int getSupportRadius() {
         return supportRadius;
+    }
+    public void setAttack(int attack) {
+        this.attackPower = attack;
+    }
+    public void setBattleRadius(int battleRadius) {
+        this.battleRadius = battleRadius;
+    }
+
+    public void setSupportRadius(int supportRadius) {
+        this.supportRadius = supportRadius;
     }
 
     /**
@@ -43,12 +54,10 @@ public class BasicEnemy extends MovingEntity {
         }
     }
 
-    public void attack(MovingEntity movingEntity) {
-        movingEntity.takeDamage(attackPower);
+    public void convertToFriendly() {
+        this.destroy();
     }
 
-    public void takeDamage(int damage) {
-        hp -= damage;
-    }
-    
+    public abstract void attack(MovingEntity movingEntity);
+    public abstract void takeDamage(MovingEntity movingEntity);
 }
