@@ -46,6 +46,7 @@
     * A crticial bite from a Zombie has a 10% chance of occuring.
 * A **Vampire** has 60 HP of health, and its attack incurs 12 HP of damage.
     * A critical bite from a Vampire has a 20% chance of occuring and deals between 4 and 20 HP of additional damage.
+    * Number of random Vampire attacks that will have the random additional damage will last for 1 to 3 attacks starting with the initial critical bite.
 
 # Gold
 * The following items have the following prices.
