@@ -163,7 +163,7 @@ public class LoopManiaWorld {
                 enemiesInRange.add(e);
             }
         }
-        
+
         int i = 0;
         // An array that will store all enemies that have turned into allied soldiers.
         List<AlliedSoldier> transformedEnemies = new ArrayList<AlliedSoldier>();
@@ -231,6 +231,13 @@ public class LoopManiaWorld {
             if (i >= enemiesInRange.size()) {
                 i = 0;
             }
+        }
+
+        // If the fight ends whilst the enemy is in a trance, the enemy dies.
+        for (AlliedSoldier transedEnemy : transformedEnemies) {
+            convertBackAllied.reactivateOldEnemy();
+            BasicEnemy oldEnemy = convertBackAllied.getOldEnemy();
+            defeatedEnemies.add(oldEnemy);
         }
 
         for (BasicEnemy e: defeatedEnemies){
