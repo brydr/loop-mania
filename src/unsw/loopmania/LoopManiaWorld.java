@@ -163,10 +163,13 @@ public class LoopManiaWorld {
                 enemiesInRange.add(e);
             }
         }
-
-        int battleDuration = 0;
+        
         int i = 0;
-        while (!(enemiesInRange.isEmpty())) {
+        // An array that will store all enemies that have turned into allied soldiers.
+        List<AlliedSoldier> transformedEnemies = new ArrayList<AlliedSoldier>();
+
+        // End the while if there are no enemies left or the only enemies left are transformedEnemies.
+        while (!(enemiesInRange.equals(transformedEnemies))) {
             
             BasicEnemy e = enemiesInRange.get(i);
             int enemyHealth = e.getHp();
@@ -182,7 +185,27 @@ public class LoopManiaWorld {
                 }
                 charHealth = character.getHp();
                 enemyHealth = e.getHp();
-                battleDuration++;
+
+                // An array that will store all allies that need to be removed from the transformedEnemies array due to converting back into an enemy.
+                List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();
+
+                for (AlliedSoldier transedEnemy : transformedEnemies) {
+                    Duration enemyTransedTime = transedEnemy.getTransedTime(); 
+                    transedEnemy.setTranceTime(enemyTransedTime.minus(1)); // Minus 1 to the transed time of the allied soldier since a "second" has passed.
+                    // Check if the transed time is now equal to 0.
+                    // If it is then add the allied soldier into the convertBackAlliedSoldier array.
+                    if (transedEnemy.getTransedTime() - 1 == 0) {
+                        convertBackAlliedSoldier.add(transedEnemy);
+                    }
+                }
+
+                // Loop through the convertBackAlliedSoldier to check for any allied soldiers that are converting back into an enemy.
+                for (AlliedSoldier convertBackAllied : convertBackAlliedSoldier) {
+                    convertBackAllied.reactivateOldEnemy();
+                    BasicEnemy oldEnemy = convertBackAllied.getOldEnemy();
+                    enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
+                    transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
+                }
             }
 
             if (charHealth <= 0) {
@@ -191,45 +214,23 @@ public class LoopManiaWorld {
 
             if (enemyHealth <= 0) {
                 defeatedEnemies.add(e);
-            // If an enemy did not die it means it was put in trance or that the character died.
+            // If an enemy did not die it means it was put in trance.
             } else {
                 Random rand = new Random();
                 int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
                 AlliedSoldier transformedSoldier = new AlliedSoldier(e.getPosition(), tranceTime, e);
-                character.addAlliedSoldier(transformedSoldier);
-                enemiesInRange.remove(e);
-                i--;
+                
+                transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
+                character.addAlliedSoldier(transformedSoldier); // Add the new allied soldier into the characters array of allied soldiers.
+                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
+                i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
             }
         
             i++;
+            // If it goes past the maximum index then set i back to 0. 
             if (i >= enemiesInRange.size()) {
                 i = 0;
             }
-        }
-
-
-        int battleDuration = 0;
-        for (BasicEnemy e: enemiesInRange) {
-            int enemyHealth = e.getHp();
-            int charHealth = character.getHp();
-
-            while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
-                character.attack(e);    // character.attack(e) also makes all allies of it attack too.
-                e.attack(character);
-                charHealth = character.getHp();
-                enemyHealth = e.getHp();
-            }
-
-            if (enemyHealth <= 0) {
-                defeatedEnemies.add(e);
-            } else {
-                e.setInTrance(true);
-            }
-
-            if (charHealth <= 0) {
-                // Character is dead so game over.    
-            }
-            battleDuration++;
         }
 
         for (BasicEnemy e: defeatedEnemies){
