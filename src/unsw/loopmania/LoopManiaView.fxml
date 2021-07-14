@@ -71,15 +71,30 @@
                      </image>
                   </ImageView>
                   <!-- blankCell is an empty cell -->
-                  <ImageView id="blankCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="0">    
+                  <ImageView id="helmetCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="0">    
                      <image>
-                        <Image url="@../../images/image_just_black_tiny.png"/>
+                        <Image url="@../../images/helmet_slot.png"/>
                      </image>
                   </ImageView>
                   <!-- shieldCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView id="shieldCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="0">    
+                  <ImageView id="armourCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="0">    
+                     <image>
+                        <Image url="@../../images/armour_slot.png"/>
+                     </image>
+                  </ImageView>
+                  <ImageView id="shieldCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0" GridPane.rowIndex="1">    
                      <image>
                         <Image url="@../../images/shield_unequipped.png"/>
+                     </image>
+                  </ImageView>
+                  <ImageView id="potionCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/potion_slot.png"/>
+                     </image>
+                  </ImageView>
+                  <ImageView id="ringCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/ring_slot.png"/>
                      </image>
                   </ImageView>
                </children>
