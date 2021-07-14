@@ -13,9 +13,11 @@ public abstract class BasicEnemy extends MovingEntity {
     private int attackPower;
     private int battleRadius;
     private int supportRadius;
+    Boolean inTrance;
 
     public BasicEnemy(PathPosition position) {
         super(position);
+        inTrance = false;
     }
 
     public int getAttack() {
@@ -54,14 +56,19 @@ public abstract class BasicEnemy extends MovingEntity {
         }
     }
 
-    public void convertToFriendly() {
-        this.destroy();
+    public Boolean getInTrance() {
+        return inTrance;
     }
+
+    public void setInTrance(Boolean inTrance) {
+        this.inTrance = inTrance;
+    }
+
 
     public void takeDamage(int damage) {
         int hp = this.getHp();
         this.setHp(hp - damage);
     }
 
-    public abstract void attack(MovingEntity movingEntity);
+    public abstract void attack(Character character);
 }

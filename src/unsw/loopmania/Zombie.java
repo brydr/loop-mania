@@ -26,21 +26,27 @@ public class Zombie extends BasicEnemy implements Undead {
         } 
     }
 
-    public void attack(MovingEntity movingEntity) {
+    public void attack(Character character) {
         int criticalBiteChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
 
-        if (criticalBiteChance == 0) {
-            criticalBite(movingEntity);
-        }
-
         int attackPower = this.getAttack();
-        movingEntity.takeDamage(attackPower);
+        List<AlliedSoldier> alliedSoldiers = character.getListAlliedSoldiers();
+        // If the character has allied soldiers it should attack them instead.
+        if (alliedSoldiers.size() > 0) {
+            AlliedSoldier firstSoldier = alliedSoldiers.get(0);
+            firstSoldier.takeDamage(attackPower);
+            if (firstSoldier.getHp() <= 0) {
+                alliedSoldiers.removeAlliedSoldier(firstSoldier);
+            } else if (criticalBiteChance == 0) {
+                Zombie newZombie = new Zombie(firstSoldier.getPosition());
+                setConvertedToEnemy(character.convertToEnemy(firstSoldier, newZombie));
+            }
+        } else {
+            character.takeDamage(attackPower);
+        }
     }
     
-    public void criticalBite(MovingEntity movingEntity) {   
-        // If the criticalBite is inflicted on an allied Soldier then change its class into a zombie.
-        if (movingEntity.getClass() == AlliedSoldier.class) {
-            movingEntity = new Zombie(movingEntity.getPosition());
-        }
+    public void criticalBite() {   
+
     }
 }

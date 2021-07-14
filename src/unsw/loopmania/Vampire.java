@@ -29,7 +29,7 @@ public class Vampire extends BasicEnemy implements Undead {
             this.setSpeed(1);
         } 
     }
-    public void attack(MovingEntity movingEntity) {
+    public void attack(Character character) {
         int criticalBiteChance = (new Random()).nextInt(5); // Random number between 0 and 4 inclusive
 
         if (criticalDuration == 0) {
@@ -38,21 +38,21 @@ public class Vampire extends BasicEnemy implements Undead {
 
         if (criticalBiteChance == 0 && alreadyInCritical == false) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
             alreadyInCritical = true;
-            criticalBite(movingEntity);
+            criticalBite();
         } else if (alreadyInCritical && criticalDuration != 0) {     // If the vampire is already in a criticalBite state.
-            criticalBite(movingEntity);
+            criticalBite();
             criticalDuration -= 1;  // Subtract 1 from the duration.
         } else {
             alreadyInCritical = false;
         }
 
         int attackPower = this.getAttack();
-        movingEntity.takeDamage(attackPower);
+        character.takeDamage(attackPower);
         // Set the attack back to 12 in case the attack got increased due to critical bite.
         this.setAttack(12);
     }
     
-    public void criticalBite(MovingEntity movingEntity) {
+    public void criticalBite() {
         int criticalBiteDamage = (new Random()).nextInt(17) + 4; // A random number between 4 and 20 inclusive
         // This prevents the vampire from entering a criticalBite state whilst it is already in a criticalBite state.
         if (!(alreadyInCritical)) {

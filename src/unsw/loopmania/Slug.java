@@ -26,9 +26,9 @@ public class Slug extends BasicEnemy {
         } 
     }
 
-    public void attack(MovingEntity movingEntity) {
+    public void attack(Character character) {
         int attackPower = this.getAttack();
-        movingEntity.takeDamage(attackPower);
+        character.takeDamage(attackPower);
     }
 
 }
