@@ -10,7 +10,6 @@ import org.javatuples.Pair;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
 
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.BasicEnemy;
@@ -19,9 +18,8 @@ import unsw.loopmania.PathPosition;
 public class AlliedSoldierTest {
     @Test
     public void takeDamageTest(){
-        int hp = 50;
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
-        AlliedSoldier ally = new AlliedSoldier(pos, hp);
+        AlliedSoldier ally = new AlliedSoldier(pos);
         assertEquals(ally.getHp(), 50);
         // take 20 dmg
         ally.takeDamage(20);
@@ -34,13 +32,12 @@ public class AlliedSoldierTest {
 
 @Test
     public void tranceTimeTest(){
-        int hp = 50;
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         BasicEnemy enemy = new BasicEnemy(pos);
         Duration fiveSeconds = Duration.ofSeconds(5);
         Duration threeSeconds = Duration.ofSeconds(3);
-        AlliedSoldier ally1 = new AlliedSoldier(pos, hp, fiveSeconds, Optional.of(enemy));
-        AlliedSoldier ally2 = new AlliedSoldier(pos, hp, fiveSeconds, Optional.of(enemy));
+        AlliedSoldier ally1 = new AlliedSoldier(pos, fiveSeconds, enemy);
+        AlliedSoldier ally2 = new AlliedSoldier(pos, fiveSeconds, enemy);
         // check trance is over 5-5=0
         assertTrue(ally1.isTranceOver(fiveSeconds));
         // check trance isn't over 5-3=2
@@ -51,16 +48,29 @@ public class AlliedSoldierTest {
 
 @Test
     public void attackTest(){
-        int allyHp = 100;
-        int slugHp = 30;
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
-        Slug slug = new Slug(pos, slugHp);
-        AlliedSoldier ally1 = new AlliedSoldier(pos, allyHp);
+        Slug slug = new Slug(pos);
+        AlliedSoldier ally1 = new AlliedSoldier(pos);
         ally1.attack(slug);
         assertEquals(slug.getHp(), 30-8);
         ally1.attack(slug);
         ally1.attack(slug);
         ally1.attack(slug);
         assertEquals(slug.getHp(), -2);
+    }
+
+@Test
+    public void reactivateldEnemyTest(){
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
+        BasicEnemy enemy = new BasicEnemy(pos);
+        Duration fiveSeconds = Duration.ofSeconds(5);
+        AlliedSoldier ally = new AlliedSoldier(pos, fiveSeconds, enemy);
+        enemy.setInTrance(true);
+        // check enemy is tranced
+        assertTrue(enemy.getInTrance());
+        // check enemy is not tranced and same hp as ally
+        ally.reactivateOldEnemy();
+        assertFalse(enemy.getInTrance());
+        assertEquals(enemy.getHp(), ally.getHp());
     }
 }

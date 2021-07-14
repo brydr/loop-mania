@@ -2,64 +2,79 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 /**
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
-    private Optional<Weapon> equippedWeapon;
-    private Optional<Armour> equippedArmour;
-    private Optional<Shield> equippedShield;
-    private Optional<Helmet> equippedHelmet;
-    private Optional<RareItem> equippedRareItem;
+    //TODO update unarmed xy coord arguments
+    private WeaponStrategy equippedWeapon = new Unarmed(0,0);
+    private Armour equippedArmour;
+    private Shield equippedShield;
+    private Helmet equippedHelmet;
+    private RareItem equippedRareItem;
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
-    //private weaponStrategy strategy????
 
     public Character(PathPosition position) {
         super(position);
         this.setHp(100);
     }
 
-    public Optional<Weapon> getEquippedWeapon() {
+    public Weapon getEquippedWeapon() {
         return equippedWeapon;
     }
 
-    public void setEquippedWeapon(Optional<Weapon> equippedWeapon) {
+    public void setEquippedWeapon(Weapon equippedWeapon) {
         this.equippedWeapon = equippedWeapon;
     }
 
-    public Optional<Armour> getEquippedArmour() {
+    public Armour getEquippedArmour() {
         return equippedArmour;
     }
 
-    public void setEquippedArmour(Optional<Armour> equippedArmour) {
+    public void setEquippedArmour(Armour equippedArmour) {
         this.equippedArmour = equippedArmour;
     }
 
-    public Optional<Shield> getEquippedShield() {
+    public Shield getEquippedShield() {
         return equippedShield;
     }
 
-    public void setEquippedShield(Optional<Shield> equippedShield) {
+    public void setEquippedShield(Shield equippedShield) {
         this.equippedShield = equippedShield;
     }
 
-    public Optional<Helmet> getEquippedHelmet() {
+    public Helmet getEquippedHelmet() {
         return equippedHelmet;
     }
 
-    public void setEquippedHelmet(Optional<Helmet> equippedHelmet) {
+    public void setEquippedHelmet(Helmet equippedHelmet) {
         this.equippedHelmet = equippedHelmet;
     }
 
-    public Optional<RareItem> getEquippedRareItem() {
+    public RareItem getEquippedRareItem() {
         return equippedRareItem;
     }
 
-    public void setEquippedRareItem(Optional<RareItem> equippedRareItem) {
+    public void setEquippedRareItem(RareItem equippedRareItem) {
         this.equippedRareItem = equippedRareItem;
+    }
+    
+    public void removeEquippedArmour() {
+        this.equippedArmour = null;
+    }
+
+    public void removeEquippedShield() {
+        this.equippedShield = null;
+    }
+
+    public void removeEquippedHelmet() {
+        this.equippedHelmet = null;
+    }
+
+    public void removeEquippedRareItem() {
+        this.equippedRareItem = null;
     }
 
     public List<AlliedSoldier> getListAlliedSoldiers() {
@@ -75,26 +90,19 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * reduce hp of character based on armour being warn
-     * @return true if dead, false if alive
-     * TODO call armour methods when they've been implemented
+     * reduce hp of character based on armour equipped
+     * @param damage, raw damage coming from enemy
      */
     public void takeDamage(int damage) {
-        Boolean hasArmour = false;
-        Boolean hasHelmet = false;
-        Boolean hasShield = false;
-        Boolean thirtyPercentChance = new Random().nextInt(10) < 3;
+        if (this.equippedArmour != null) 
+            damage = equippedArmour.calculateDamage(damage);
+        if (this.equippedHelmet != null) 
+            damage = equippedHelmet.calculateDamage(damage);
+        if (this.equippedShield != null) 
+            damage = equippedShield.calculateDamage(damage);
 
-        if (this.equippedArmour != null) hasArmour = true;
-        if (this.equippedHelmet != null) hasHelmet = true;
-        if (this.equippedShield != null) hasShield = true;
-
-        if (hasArmour && hasHelmet) damage *= 0.35;
-        else if (hasArmour) damage *= 0.5;
-        else if (hasHelmet) damage *= 0.3;
-        if (hasShield && thirtyPercentChance) damage = 0;
         int newHp = this.getHp() - damage;
-        this.setHp(Math.round(newHp));
+        this.setHp(newHp);
     }
 
     /**
@@ -103,15 +111,20 @@ public class Character extends MovingEntity {
      * Calls damage from equippedWeapon
      * outputs damage to given enemy
      */
-    public void attack(MovingEntity enemy) {
-        // all allies attack enemy
-        for (AlliedSoldier ally : listAlliedSoldiers) {
-            ally.attack(enemy);
-        }
+    public void attack(BasicEnemy enemy) {
         int outputDamage = this.equippedWeapon.attack(enemy);
         // reduce player damage by 15% if helmet equipped
-        if (this.equippedHelmet != null) outputDamage *= 0.85;
-        enemy.takeDamage(Math.floor(outputDamage));
+        if (this.equippedHelmet != null) 
+            outputDamage = equippedHelmet.calculateAttack();
+        enemy.takeDamage(outputDamage);
+
+        // check enemy isn't in trance before allies attack
+        if (!enemy.getInTrance()){
+            // all allies attack enemy
+            for (AlliedSoldier ally : listAlliedSoldiers) {
+                ally.attack(enemy);
+            }
+        }
     }
 
     /**
@@ -143,5 +156,25 @@ public class Character extends MovingEntity {
         super.moveDownPath();
         Boolean isDownPath = true;
         notifyObserversPosition(isDownPath);
+    }
+
+    /**
+     * @param ally, ally to be converted back into an enemy
+     */
+    public void convertBackToEnemy(AlliedSoldier ally) {
+        ally.reactivateOldEnemy();
+        this.removeAlliedSoldier(ally);
+    }
+
+    /**
+     * If zombie crit bite, it parses the ally it bit and a new zombie instance
+     * @param ally, ally to be converted into an enemy
+     * @param enemy, new enemy
+     * @return enemy returned so it can be added to the list of enemies to attack in runBattles
+     */
+    public BasicEnemy convertToEnemy(AlliedSoldier ally, BasicEnemy enemy) {
+        enemy.setHp(ally.getHp());
+        this.removeAlliedSoldier(ally);
+        return enemy;
     }
 }

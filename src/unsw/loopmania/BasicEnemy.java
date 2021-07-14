@@ -6,6 +6,8 @@ import java.util.Random;
  * a basic form of enemy in the world
  */
 public class BasicEnemy extends MovingEntity {
+    Boolean inTrance = false;
+
     // TODO = modify this, and add additional forms of enemy
     public BasicEnemy(PathPosition position) {
         super(position);
@@ -25,4 +27,14 @@ public class BasicEnemy extends MovingEntity {
             moveDownPath();
         }
     }
+
+    public Boolean getInTrance() {
+        return inTrance;
+    }
+
+    public void setInTrance(Boolean inTrance) {
+        this.inTrance = inTrance;
+    }
+
+    
 }

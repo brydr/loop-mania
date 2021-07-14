@@ -1,30 +1,30 @@
 package unsw.loopmania;
 
 import java.time.Duration;
-import java.util.Optional;
 
 
 public class AlliedSoldier extends MovingEntity {
 
-    private Optional<BasicEnemy> oldEnemy;
+    private BasicEnemy oldEnemy;
     private Duration tranceTime;
-    private int attackDamage = 8;
+    private static final int attackDamage = 8;
 
     // constructor for basic AlliedSoldier
-    public AlliedSoldier(PathPosition pos, int hp) {
+    public AlliedSoldier(PathPosition pos) {
         super(pos);
+        int hp = 50;
         this.setHp(hp);
     }
 
     // constructor for when enemy is put in trance
-    public AlliedSoldier(PathPosition pos, int hp, Duration tranceTime, Optional<BasicEnemy> oldEnemy) {
+    public AlliedSoldier(PathPosition pos, Duration tranceTime, BasicEnemy oldEnemy) {
         super(pos);
-        this.setHp(hp);
+        this.setHp(oldEnemy.getHp());
         this.tranceTime = tranceTime;
         this.oldEnemy = oldEnemy;
     }
 
-    public Optional<BasicEnemy> getOldEnemy() {
+    public BasicEnemy getOldEnemy() {
         return oldEnemy;
     }
 
@@ -33,7 +33,7 @@ public class AlliedSoldier extends MovingEntity {
      * @return true if dead, false if alive
      */
     public void takeDamage(int damage) {
-        this.setHp(this.getHp() - Math.round(damage));
+        this.setHp(this.getHp() - damage);
     }
 
     /**
@@ -50,7 +50,17 @@ public class AlliedSoldier extends MovingEntity {
      * @param enemy, enemy to be attacked
      * outputs damage to given enemy
      */
-    public void attack(MovingEntity enemy) {
-        enemy.takeDamage(this.attackDamage);
+    public void attack(BasicEnemy enemy) {
+        enemy.takeDamage(attackDamage);
+    }
+
+    /**
+     * reactivates oldEnemy with same health as this AlliedSoldier
+     * TODO might need to cap health at a max in case returning back 
+     * from trance gives the enemy extra health then before
+     */
+    public void reactivateOldEnemy() {
+        oldEnemy.setInTrance(false);
+        oldEnemy.setHp(this.getHp());
     }
 }

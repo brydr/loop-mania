@@ -49,14 +49,11 @@ public class CharacterTest {
 
 @Test
     public void alliedAttackTest(){
-        int allyHp = 100;
-        int slugHp = 30;
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
-        Slug slug = new Slug(pos, slugHp);
-        AlliedSoldier ally1 = new AlliedSoldier(pos, allyHp);
-        AlliedSoldier ally2 = new AlliedSoldier(pos, allyHp);
+        Slug slug = new Slug(pos);
+        AlliedSoldier ally1 = new AlliedSoldier(pos);
+        AlliedSoldier ally2 = new AlliedSoldier(pos);
         Character c = new Character(pos);
-        // TODO may need to equip character with Weapon unarmed
         c.addAlliedSoldier(ally1);
         c.addAlliedSoldier(ally2);
         assertEquals(slug.getHp(), 30);
@@ -70,9 +67,8 @@ public class CharacterTest {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
         assertTrue(c.getListAlliedSoldiers().isEmpty());
-        int hp = 50;
-        AlliedSoldier ally1 = new AlliedSoldier(pos, hp);
-        AlliedSoldier ally2 = new AlliedSoldier(pos, hp);
+        AlliedSoldier ally1 = new AlliedSoldier(pos);
+        AlliedSoldier ally2 = new AlliedSoldier(pos);
         c.addAlliedSoldier(ally1);
         c.addAlliedSoldier(ally2);
         List<AlliedSoldier> listSoldiers = c.getListAlliedSoldiers();
@@ -88,9 +84,8 @@ public class CharacterTest {
         // create character add 2 AlliedSoldiers
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
         Character c = new Character(pos);
-        int hp = 50;
-        AlliedSoldier ally1 = new AlliedSoldier(pos, hp);
-        AlliedSoldier ally2 = new AlliedSoldier(pos, hp);
+        AlliedSoldier ally1 = new AlliedSoldier(pos);
+        AlliedSoldier ally2 = new AlliedSoldier(pos);
         c.addAlliedSoldier(ally1);
         c.addAlliedSoldier(ally2);
         List<AlliedSoldier> listSoldiers = c.getListAlliedSoldiers();
@@ -130,17 +125,56 @@ public class CharacterTest {
     }
 
 /**
+ * testing convertToEnemy method used for zombie crit bite
+ * should return enemy passed in
+ * should remove ally from list of allied soldiers
+ */
+@Test
+public void convertToEnemyTest(){
+    PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+    Character c = new Character(pos);
+    AlliedSoldier ally1 = new AlliedSoldier(pos);
+    c.addAlliedSoldier(ally1);
+    AssertFalse(c.getListAlliedSoldiers().isEmpty());
+    BasicEnemy enemy = c.convertToEnemy(ally1, new Slug(pos));
+    assertTrue(c.getListAlliedSoldiers().isEmpty());
+    assertTrue(enemy.instanceof(Slug));
+}
+
+/**
+ * Integration test for converting enemy to friendly and friendly back to enemy
+ */
+@Test
+public void convertBackToEnemyTest(){
+    PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+    Character c = new Character(pos);
+    Slug enemy = new Slug(pos);
+
+    // convert to ally
+    enemy.convertToFriendly(c);
+    // check enemy converted to ally
+    assertTrue(enemy.getInTrance());
+    assertFalse(c.getListAlliedSoldiers().isEmpty());
+
+    // convert back to enemy
+    for (AlliedSoldier ally : c.getListAlliedSoldiers()) {
+        c.convertBackToEnemy(ally);
+    }
+    // check ally converted to enemy
+    assertFalse(enemy.getInTrance());
+    assertTrue(c.getListAlliedSoldiers().isEmpty());
+}
+
+/**
  * Integration test for different equipped weapons and enemies
  * TODO implement different enemies, check trance
  */
 @Test
 public void integrationAttackTest(){
-    int slugHp = 30;
-    Slug slug = new Slug(pos, slugHp);
     PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+    Slug slug = new Slug(pos);
     Character c = new Character(pos);
     assertEquals(slug.getHp(), 30);        
-    // TODO may need to equip character with Weapon unarmed
     // unarmed does 2 dmg
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2);
