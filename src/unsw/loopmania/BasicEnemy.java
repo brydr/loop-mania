@@ -23,6 +23,7 @@ public abstract class BasicEnemy extends MovingEntity {
     public int getAttack() {
         return attackPower;
     }
+
     public int getBattleRadius() {
         return battleRadius;
     }
@@ -30,9 +31,11 @@ public abstract class BasicEnemy extends MovingEntity {
     public int getSupportRadius() {
         return supportRadius;
     }
+
     public void setAttack(int attack) {
         this.attackPower = attack;
     }
+
     public void setBattleRadius(int battleRadius) {
         this.battleRadius = battleRadius;
     }
@@ -40,16 +43,6 @@ public abstract class BasicEnemy extends MovingEntity {
     public void setSupportRadius(int supportRadius) {
         this.supportRadius = supportRadius;
     }
-
-    // TODO
-    public abstract void takeDamage(int damage);
-
-    public int getHp() {
-        // TODO
-        return -1;
-    }
-
-    public abstract void convertToFriendly(int time);
 
     /**
      * move the enemy
@@ -74,7 +67,6 @@ public abstract class BasicEnemy extends MovingEntity {
     public void setInTrance(Boolean inTrance) {
         this.inTrance = inTrance;
     }
-
 
     public void takeDamage(int damage) {
         int hp = this.getHp();
