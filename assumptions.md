@@ -34,7 +34,7 @@
 # Enemies and Allies
 * There is no maximum imposed on the amount of allied soldiers.
 * Both *The Character*, allied soldiers and enemies all have the same speed, moving at 1 tile per instance, except for Zombies which travel at half speed, moving at 0.5 tiles per instance meaning zombies will move one tile every two instances.
-* Allied soldiers has 50 HP and are automatically equipped with a Helmet and a Sword.
+* Allied soldiers has 50 HP and don't have armour
 * Enemies converted into allied soldier via trance can't use their special abilities
 * When enemy converts to an ally (and vice versa), they keep their HP
 
