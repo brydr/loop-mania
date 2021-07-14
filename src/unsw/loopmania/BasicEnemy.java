@@ -2,13 +2,43 @@ package unsw.loopmania;
 
 import java.util.Random;
 
+import javafx.beans.property.SimpleBooleanProperty;
+
 /**
  * a basic form of enemy in the world
  */
 public abstract class BasicEnemy extends MovingEntity {
     // TODO = modify this, and add additional forms of enemy
+
+    private int attackPower;
+    private int battleRadius;
+    private int supportRadius;
+    Boolean inTrance;
+
     public BasicEnemy(PathPosition position) {
         super(position);
+        inTrance = false;
+    }
+
+    public int getAttack() {
+        return attackPower;
+    }
+    public int getBattleRadius() {
+        return battleRadius;
+    }
+
+    public int getSupportRadius() {
+        return supportRadius;
+    }
+    public void setAttack(int attack) {
+        this.attackPower = attack;
+    }
+    public void setBattleRadius(int battleRadius) {
+        this.battleRadius = battleRadius;
+    }
+
+    public void setSupportRadius(int supportRadius) {
+        this.supportRadius = supportRadius;
     }
 
     // TODO
@@ -36,4 +66,20 @@ public abstract class BasicEnemy extends MovingEntity {
             moveDownPath();
         }
     }
+
+    public Boolean getInTrance() {
+        return inTrance;
+    }
+
+    public void setInTrance(Boolean inTrance) {
+        this.inTrance = inTrance;
+    }
+
+
+    public void takeDamage(int damage) {
+        int hp = this.getHp();
+        this.setHp(hp - damage);
+    }
+
+    public abstract void attack(Character character);
 }

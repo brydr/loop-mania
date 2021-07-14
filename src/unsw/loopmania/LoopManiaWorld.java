@@ -83,6 +83,9 @@ public class LoopManiaWorld {
         return height;
     }
 
+    public List<BasicEnemy> getEnemies() {
+        return enemies;
+    }
     /**
      * set the character. This is necessary because it is loaded as a special entity out of the file
      * @param character the character
@@ -111,9 +114,9 @@ public class LoopManiaWorld {
         List<BasicEnemy> spawningEnemies = new ArrayList<>();
         if (pos != null){
             int indexInPath = orderedPath.indexOf(pos);
-            BasicEnemy enemy = new BasicEnemy(new PathPosition(indexInPath, orderedPath));
-            enemies.add(enemy);
-            spawningEnemies.add(enemy);
+            Slug slug = new Slug(new PathPosition(indexInPath, orderedPath));
+            enemies.add(slug);
+            spawningEnemies.add(slug);
         }
         return spawningEnemies;
     }
@@ -134,14 +137,101 @@ public class LoopManiaWorld {
     public List<BasicEnemy> runBattles() {
         // TODO = modify this - currently the character automatically wins all battles without any damage!
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
+        List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
+        boolean alreadyABattle = false;
+
+        BasicEnemy battledEnemy = null;
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
             // TODO = you should implement different RHS on this inequality, based on influence radii and battle radii
-            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) < 4){
-                // fight...
-                defeatedEnemies.add(e);
+            // If an enemy is in range add it into the enemiesInRange array. This enemy will be the enemy the character is battling.
+            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getBattleRadius(), 2)){
+                enemiesInRange.add(e);
+                battledEnemy = e;
+                alreadyABattle = true;
+                break;
             }
         }
+
+        for (BasicEnemy e: enemies) {
+            // Check if there is an enemy that it is battling since supports only help enemies that are battling.
+            if (alreadyABattle == false) {
+                break;
+            // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
+            // These enemies added will be the enemies supporting.
+            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getSupportRadius(), 2)) {
+                enemiesInRange.add(e);
+            }
+        }
+
+        int battleDuration = 0;
+        int i = 0;
+        while (!(enemiesInRange.isEmpty())) {
+            
+            BasicEnemy e = enemiesInRange.get(i);
+            int enemyHealth = e.getHp();
+            int charHealth = character.getHp();
+
+            while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
+                character.attack(e);    // character.attack(e) also makes all allies of it attack too.
+                e.attack(character);    // Attacks allies first.
+                // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
+                if (e.getConvertedToEnemy() != null) {
+                    enemiesInRange.add(e.getConvertedToEnemy());
+                    e.setConvertedToEnemy(null);
+                }
+                charHealth = character.getHp();
+                enemyHealth = e.getHp();
+                battleDuration++;
+            }
+
+            if (charHealth <= 0) {
+                // Character is dead so game over.    
+            }
+
+            if (enemyHealth <= 0) {
+                defeatedEnemies.add(e);
+            // If an enemy did not die it means it was put in trance or that the character died.
+            } else {
+                Random rand = new Random();
+                int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
+                AlliedSoldier transformedSoldier = new AlliedSoldier(e.getPosition(), tranceTime, e);
+                character.addAlliedSoldier(transformedSoldier);
+                enemiesInRange.remove(e);
+                i--;
+            }
+        
+            i++;
+            if (i >= enemiesInRange.size()) {
+                i = 0;
+            }
+        }
+
+
+        int battleDuration = 0;
+        for (BasicEnemy e: enemiesInRange) {
+            int enemyHealth = e.getHp();
+            int charHealth = character.getHp();
+
+            while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
+                character.attack(e);    // character.attack(e) also makes all allies of it attack too.
+                e.attack(character);
+                charHealth = character.getHp();
+                enemyHealth = e.getHp();
+            }
+
+            if (enemyHealth <= 0) {
+                defeatedEnemies.add(e);
+            } else {
+                e.setInTrance(true);
+            }
+
+            if (charHealth <= 0) {
+                // Character is dead so game over.    
+            }
+            battleDuration++;
+        }
+
         for (BasicEnemy e: defeatedEnemies){
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
