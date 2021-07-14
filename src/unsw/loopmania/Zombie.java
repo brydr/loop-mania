@@ -1,5 +1,8 @@
 package unsw.loopmania;
 
+import java.util.Arrays;
+import java.util.List;
+
 import java.util.Random;
 public class Zombie extends BasicEnemy implements Undead {
     public Zombie(PathPosition position) {
@@ -36,7 +39,7 @@ public class Zombie extends BasicEnemy implements Undead {
             AlliedSoldier firstSoldier = alliedSoldiers.get(0);
             firstSoldier.takeDamage(attackPower);
             if (firstSoldier.getHp() <= 0) {
-                alliedSoldiers.removeAlliedSoldier(firstSoldier);
+                character.removeAlliedSoldier(firstSoldier);
             } else if (criticalBiteChance == 0) {
                 Zombie newZombie = new Zombie(firstSoldier.getPosition());
                 setConvertedToEnemy(character.convertToEnemy(firstSoldier, newZombie));
