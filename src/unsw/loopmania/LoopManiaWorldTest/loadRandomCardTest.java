@@ -1,38 +1,49 @@
 package unsw.loopmania.LoopManiaWorldTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.Card;
+import unsw.loopmania.LoopManiaWorld;
+
 public class loadRandomCardTest {
     
     @Test
     public void testMaximumCard() {
-        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4)));
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
-        newWorld.loadRandomCard();
+        // NOTE: This is fixed-size, and List.of is immutable, so we should use 
+        // ArrayList< >(List.of( ... )) if we want mutability & growability
+        var path = Arrays.asList(
+            new Pair<Integer, Integer>(0, 1), 
+            new Pair<Integer, Integer>(0, 2), 
+            new Pair<Integer, Integer>(0, 3), 
+            new Pair<Integer, Integer>(0, 4)
+        );
+        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, path);
+        
+        for (int i = 0; i < 10; i++) {
+            newWorld.loadRandomCard();
+        }
+
         List<Card> cardEntities = newWorld.getCards();
-        assertTrue(cardEntities.size() == 9);   // Only a maximum of 9 cards so the first card should be removed.
+        // Only a maximum of 9 cards so the first card should be removed.
+        assertEquals(cardEntities.size(), 9);
     }
 
 
     public void testCorrectCard() {
-        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4)));
+        var path = Arrays.asList(
+            new Pair<Integer, Integer>(0, 1), 
+            new Pair<Integer, Integer>(0, 2), 
+            new Pair<Integer, Integer>(0, 3), 
+            new Pair<Integer, Integer>(0, 4)
+        );
+        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, path);
 
         newWorld.loadRandomCard();
         List<Card> cardEntities = newWorld.getCards();
