@@ -35,7 +35,7 @@ public class LoopManiaWorld {
      */
     private List<Entity> nonSpecifiedEntities;
 
-    private Character character;
+    public Character character;
 
     // TODO = add more lists for other entities, for equipped inventory items, etc...
 
@@ -56,9 +56,7 @@ public class LoopManiaWorld {
      */
     private List<Pair<Integer, Integer>> orderedPath;
 
-    public AmassGold goldGoal;
-    public CompleteCycles cycleGoal;
-    public ObtainExperience expGoal;
+    public Goal goals;
 
     /**
      * create the world (constructor)
@@ -77,9 +75,7 @@ public class LoopManiaWorld {
         unequippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
-        goldGoal = new AmassGold();
-        cycleGoal = new CompleteCycles();
-        expGoal = new ObtainExperience();
+        goals = new Goal();
     }
 
     public int getWidth() {
@@ -153,7 +149,7 @@ public class LoopManiaWorld {
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
             // due to mutating list we're iterating over
-            character.gold.addGold(new Random().nextInt(90)+10);
+            //character.gold.addGold(new Random().nextInt(90)+10);
             character.addExperience(new Random().nextInt(20)+10);
             killEnemy(e);
         }
@@ -228,7 +224,6 @@ public class LoopManiaWorld {
         goldTile();
         cycleCount();
         checkGoals();
-        System.out.println(character.gold.getGold());
     }
 
     /**
@@ -386,14 +381,16 @@ public class LoopManiaWorld {
     }
 
     public void checkGoals() {
-        if (character.gold.getGold() == this.goldGoal.gold) {
-            this.goldGoal.setCompletion(true);
-        }
-        if (character.getExperience() == this.expGoal.experience) {
-            this.expGoal.setCompletion(true);
-        }
-        if (character.getCycles() == this.cycleGoal.cycles) {
-            this.cycleGoal.setCompletion(true);
+        for (Goal g : goals.getSubGoals()) {
+            if (g instanceof ObtainExperience && character.getExperience() >= g.value) {
+                g.setCompletion();
+            }
+            if (g instanceof CompleteCycles && character.getCycles() >= g.value) {
+                g.setCompletion();
+            }
+            if (g instanceof AmassGold && character.gold.getGold() >= g.value) {
+                g.setCompletion();
+            }            
         }
     }
 }
