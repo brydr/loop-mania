@@ -1,48 +1,55 @@
 package unsw.loopmania.LoopManiaWorldTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.LoopManiaWorld;
-import unsw.loopmania.Card;
+import unsw.loopmania.BarracksBuilding;
+import unsw.loopmania.BarracksCard;
 import unsw.loopmania.Building;
+import unsw.loopmania.CampfireBuilding;
+import unsw.loopmania.CampfireCard;
+import unsw.loopmania.Card;
+import unsw.loopmania.LoopManiaWorld;
+import unsw.loopmania.TowerBuilding;
+import unsw.loopmania.TowerCard;
+import unsw.loopmania.TrapBuilding;
+import unsw.loopmania.TrapCard;
+import unsw.loopmania.VampireCastleBuilding;
+import unsw.loopmania.VampireCastleCard;
+import unsw.loopmania.ZombiePitBuilding;
+import unsw.loopmania.ZombiePitCard;
 
 public class convertCardToBuildingByCoordinatesTest {
     
     @Test
     public void testCorrectBuilding() {
-        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4)));
+        var path = Arrays.asList(
+            new Pair<Integer, Integer>(0, 1), 
+            new Pair<Integer, Integer>(0, 2),
+            new Pair<Integer, Integer>(0, 3), 
+            new Pair<Integer, Integer>(0, 4)
+        );
+        LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, path);
         Card newCard = newWorld.loadRandomCard();
         
-        Building newBuilding = convertCardToBuildingByCoordinates(newCard.getX(), newCard.getY(), new SimpleIntegerProperty(1), new SimpleIntegerProperty(1));
+        Building newBuilding = newWorld.convertCardToBuildingByCoordinates(newCard.getX(), newCard.getY(), 1, 1);
 
-        if (newCard.getClass() == BarracksCard.class) {
-            assertTrue(newBuilding.getClass() == BarracksBuilding.class);
-        } else if (newCard.getClass() == CampfireCard.class) {
-            assertTrue(newBuilding.getClass() == CampfireBuilding.class);
-        } else if (newCard.getClass() == TowerCard.class) {
-            assertTrue(newBuilding.getClass() == TowerBuilding.class);
-        } else if (newCard.getClass() == TrapCard.class) {
-            assertTrue(newBuilding.getClass() == TrapBuilding.class);
-        } else if (newCard.getClass() == VampireCastleCard.class) {
-            assertTrue(newBuilding.getClass() == VampireCastleBuilding.class);
-        } else if (newCard.getClass() == VillageCard.class) {
-            assertTrue(newBuilding.getClass() == VillageBuilding.class);
-        } else if (newCard.getClass() == ZombiePitCard.class) {
-            assertTrue(newBuilding.getClass() == ZombiePitBuilding.class);
-        } 
+        // We require that BOTH or NEITHER are true; i.e. logical XNOR or `==`
+        assertTrue((newCard instanceof BarracksCard)      == (newBuilding instanceof BarracksBuilding));
+        assertTrue((newCard instanceof CampfireCard)      == (newBuilding instanceof CampfireBuilding));
+        assertTrue((newCard instanceof TowerCard)         == (newBuilding instanceof TowerBuilding));
+        assertTrue((newCard instanceof TrapCard)          == (newBuilding instanceof TrapBuilding));
+        assertTrue((newCard instanceof VampireCastleCard) == (newBuilding instanceof VampireCastleBuilding));
+        assertTrue((newCard instanceof ZombiePitCard)     == (newBuilding instanceof ZombiePitBuilding));
 
+        
         List<Card> cardEntities = newWorld.getCards();
-
-        assertTrue(cardEntities.size() == 0);   // The card should have been destroyed.
+        // The card should have been destroyed.
+        assertTrue(cardEntities.size() == 0);
     }
 }
