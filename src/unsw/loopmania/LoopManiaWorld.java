@@ -3,6 +3,7 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.time.Duration;
 
 import org.javatuples.Pair;
 
@@ -191,10 +192,10 @@ public class LoopManiaWorld {
 
                 for (AlliedSoldier transedEnemy : transformedEnemies) {
                     Duration enemyTransedTime = transedEnemy.getTransedTime(); 
-                    transedEnemy.setTranceTime(enemyTransedTime.minus(1)); // Minus 1 to the transed time of the allied soldier since a "second" has passed.
+                    transedEnemy.setTranceTime(enemyTransedTime.minus(Duration.ofSeconds(1))); // Minus 1 to the transed time of the allied soldier since a "second" has passed.
                     // Check if the transed time is now equal to 0.
                     // If it is then add the allied soldier into the convertBackAlliedSoldier array.
-                    if (transedEnemy.getTransedTime() - 1 == 0) {
+                    if (transedEnemy.getTransedTime().equals(Duration.ZERO)) {
                         convertBackAlliedSoldier.add(transedEnemy);
                     }
                 }
@@ -218,7 +219,8 @@ public class LoopManiaWorld {
             } else {
                 Random rand = new Random();
                 int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-                AlliedSoldier transformedSoldier = new AlliedSoldier(e.getPosition(), tranceTime, e);
+                Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
+                AlliedSoldier transformedSoldier = new AlliedSoldier(e.getPosition(), tranceTimeDuration, e);
                 
                 transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
                 character.addAlliedSoldier(transformedSoldier); // Add the new allied soldier into the characters array of allied soldiers.
@@ -235,8 +237,8 @@ public class LoopManiaWorld {
 
         // If the fight ends whilst the enemy is in a trance, the enemy dies.
         for (AlliedSoldier transedEnemy : transformedEnemies) {
-            convertBackAllied.reactivateOldEnemy();
-            BasicEnemy oldEnemy = convertBackAllied.getOldEnemy();
+            transedEnemy.reactivateOldEnemy();
+            BasicEnemy oldEnemy = transedEnemy.getOldEnemy();
             defeatedEnemies.add(oldEnemy);
         }
 

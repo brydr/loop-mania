@@ -86,7 +86,4 @@ public abstract class MovingEntity extends Entity {
 
     public abstract void takeDamage(int damage);
 
-    public abstract void attack(Character character);
-
-    public abstract void attack(BasicEnemy basicEnemy);
 }
