@@ -2,19 +2,23 @@ package unsw.loopmania.CardTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import org.junit.jupiter.api.Test;
-import unsw.loopmania.ZombiePitCard;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.Building;
 import unsw.loopmania.ZombiePitBuilding;
+import unsw.loopmania.ZombiePitCard;
 public class ZombieCardTest {
  
     @Test
     public void testCreateBuilding() {
         SimpleIntegerProperty buildingNodeX = new SimpleIntegerProperty(0);
         SimpleIntegerProperty buildingNodeY = new SimpleIntegerProperty(1);
-        ZombiePitCard zombiePitCard = new ZombiePitCard(buildingNodeX, buildingNodeY);
-        ZombiePitBuilding zombiePitBuilding = ZombiePitBuilding.createBuilding(buildingNodeX, buildingNodeY);
 
-        assertTrue(zombiePitBuilding.getClass() == ZombiePitBuilding.class);    // Test the returned building is of the class ZombiePitBuilding.
+        ZombiePitCard zombiePitCard = new ZombiePitCard(buildingNodeX, buildingNodeY);
+        Building zombiePitBuilding = zombiePitCard.createBuilding(buildingNodeX, buildingNodeY);
+
+        // Test that the returned Building is of the subclass ZombiePitBuilding
+        assertTrue(zombiePitBuilding instanceof ZombiePitBuilding);
     }
 }
