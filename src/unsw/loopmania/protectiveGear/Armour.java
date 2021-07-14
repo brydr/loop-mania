@@ -1,7 +1,8 @@
-package unsw.loopmania.protectives;
+package unsw.loopmania.protectiveGear;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BasicEnemy;
+import unsw.loopmania.Character;
 
 public class Armour extends ProtectiveGear {
 	public Armour(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {

@@ -8,5 +8,5 @@ public class Character extends MovingEntity {
     public Character(PathPosition position) {
         super(position);
     }
-    
+
 }
