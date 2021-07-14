@@ -20,8 +20,9 @@ public class ZombieEnemyTest {
     
     @Test
     public void testRadius() {
-
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Zombie zombie = new Zombie(pos);
 
         assertEquals(zombie.getBattleRadius(), 2);
@@ -32,7 +33,10 @@ public class ZombieEnemyTest {
 
     @Test
     public void testMove() {
-        PathPosition pos = new PathPosition(2, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4), new Pair<>(0, 4)));
+        PathPosition pos = new PathPosition( 2, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3),
+                                                              new Pair<>(0, 4)) );
         Zombie zombie = new Zombie(pos);
         zombie.move();
         // Zombies are slow so they do not move on the first tick.
@@ -48,7 +52,9 @@ public class ZombieEnemyTest {
 
     @Test
     public void testAttackAndTakeDamage() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Zombie zombie = new Zombie(pos);
         Character c = new Character(pos);
 
@@ -63,12 +69,15 @@ public class ZombieEnemyTest {
 
     @Test
     public void testCriticalBite() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Zombie zombie = new Zombie(pos);
         AlliedSoldier alliedSoldier = new AlliedSoldier(pos);
 
         zombie.attack(alliedSoldier);
 
-        assertTrue(alliedSoldier.getClass() == Zombie.class);
+        // TODO = Test for this some other way, since this WON'T work
+        assertTrue(alliedSoldier instanceof Zombie);
     }
 }
