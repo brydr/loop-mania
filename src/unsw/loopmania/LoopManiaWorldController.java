@@ -2,6 +2,7 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
@@ -117,6 +118,8 @@ public class LoopManiaWorldController {
     private Image vampireCastleCardImage;
     private Image basicEnemyImage;
     private Image swordImage;
+    private Image healthPotionImage;
+    private Image theOneRingImage;
     private Image basicBuildingImage;
 
     /**
@@ -167,6 +170,8 @@ public class LoopManiaWorldController {
         vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
         basicEnemyImage = new Image((new File("src/images/slug.png")).toURI().toString());
         swordImage = new Image((new File("src/images/basic_sword.png")).toURI().toString());
+        healthPotionImage = new Image((new File("src/images/brilliant_blue_new.png")).toURI().toString());
+        theOneRingImage = new Image((new File("src/images/the_one_ring.png")).toURI().toString());
         basicBuildingImage = new Image((new File("src/images/vampire_castle_building_purple_background.png")).toURI().toString());
         currentlyDraggedImage = null;
         currentlyDraggedType = null;
@@ -241,6 +246,9 @@ public class LoopManiaWorldController {
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
+            if (new Random().nextInt(100) >= 90) {
+                loadHealthPotion();
+            }
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -291,6 +299,16 @@ public class LoopManiaWorldController {
         onLoad(sword);
     }
 
+    private void loadHealthPotion(){
+        HealthPotion healthPotion = world.addUnequippedHealthPotion();
+        onLoad(healthPotion);
+    }
+
+    private void loadTheOneRing(){
+        TheOneRing theOneRing = world.addUnequippedTheOneRing();
+        onLoad(theOneRing);
+    }
+
     /**
      * run GUI events after an enemy is defeated, such as spawning items/experience/gold
      * @param enemy defeated enemy for which we should react to the death of
@@ -300,6 +318,12 @@ public class LoopManiaWorldController {
         // in starter code, spawning extra card/weapon...
         // TODO = provide different benefits to defeating the enemy based on the type of enemy
         loadSword();
+        if (new Random().nextInt(100) >= 90) {
+            loadHealthPotion();
+        }
+        if (new Random().nextInt(100) >= 97) {
+            loadTheOneRing();
+        }
         loadVampireCard();
     }
 
@@ -330,6 +354,34 @@ public class LoopManiaWorldController {
         ImageView view = new ImageView(swordImage);
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
         addEntity(sword, view);
+        unequippedInventory.getChildren().add(view);
+    }
+
+    private void onLoad(HealthPotion healthPotion) {
+        ImageView view = new ImageView(healthPotionImage);
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
+        addEntity(healthPotion, view);
+        unequippedInventory.getChildren().add(view);
+    }
+
+    private void onLoadEquipped(HealthPotion healthPotion) {
+        ImageView view = new ImageView(healthPotionImage);
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
+        addEntity(healthPotion, view);
+        equippedItems.getChildren().add(view);
+    }
+
+    private void onLoadEquipped(TheOneRing theOneRing) {
+        ImageView view = new ImageView(theOneRingImage);
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
+        addEntity(theOneRing, view);
+        equippedItems.getChildren().add(view);
+    }
+
+    private void onLoad(TheOneRing theOneRing) {
+        ImageView view = new ImageView(theOneRingImage);
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
+        addEntity(theOneRing, view);
         unequippedInventory.getChildren().add(view);
     }
 
@@ -399,10 +451,19 @@ public class LoopManiaWorldController {
                                 onLoad(newBuilding);
                                 break;
                             case ITEM:
+                                Entity e = world.getUnequippedInventoryItemEntityByCoordinates(nodeX,nodeY);
                                 removeDraggableDragEventHandlers(draggableType, targetGridPane);
-                                // TODO = spawn an item in the new location. The above code for spawning a building will help, it is very similar
+                                if (e instanceof HealthPotion) {
+                                    // TODO = spawn an item in the new location. The above code for spawning a building will help, it is very similar
+                                    HealthPotion healthPotion = world.addEquippedHealthPotion(x, y);
+                                    onLoadEquipped(healthPotion);
+                                }
+                                if (e instanceof TheOneRing) {
+                                    TheOneRing theOneRing = world.addEquippedTheOneRing(x, y);
+                                    onLoadEquipped(theOneRing);
+                                }
                                 removeItemByCoordinates(nodeX, nodeY);
-                                targetGridPane.add(image, x, y, 1, 1);
+                                //targetGridPane.add(image, x, y, 1, 1);                                
                                 break;
                             default:
                                 break;
@@ -519,7 +580,15 @@ public class LoopManiaWorldController {
                         draggedEntity.setImage(vampireCastleCardImage);
                         break;
                     case ITEM:
-                        draggedEntity.setImage(swordImage);
+                        if(view.getImage().equals(swordImage)) {
+                            draggedEntity.setImage(swordImage);
+                        }
+                        if(view.getImage().equals(healthPotionImage)) {
+                            draggedEntity.setImage(healthPotionImage);
+                        }
+                        if(view.getImage().equals(theOneRingImage)) {
+                            draggedEntity.setImage(theOneRingImage);
+                        }
                         break;
                     default:
                         break;
@@ -550,6 +619,7 @@ public class LoopManiaWorldController {
                                     n.setOpacity(0.7);
                                 }
                             }
+                            
                             event.consume();
                         }
                     });
@@ -559,7 +629,7 @@ public class LoopManiaWorldController {
                             if (currentlyDraggedType == draggableType){
                                 n.setOpacity(1);
                             }
-                
+                                            
                             event.consume();
                         }
                     });
@@ -608,9 +678,12 @@ public class LoopManiaWorldController {
                 pause();
             }
             break;
+        case Q:
+            world.consumeHealthPotion();
         default:
             break;
         }
+        
     }
 
     public void setMainMenuSwitcher(MenuSwitcher mainMenuSwitcher){

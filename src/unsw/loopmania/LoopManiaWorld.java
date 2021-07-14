@@ -38,6 +38,7 @@ public class LoopManiaWorld {
     private Character character;
 
     // TODO = add more lists for other entities, for equipped inventory items, etc...
+    private List<Entity> equippedInventoryItems;
 
     // TODO = expand the range of enemies
     private List<BasicEnemy> enemies;
@@ -75,6 +76,7 @@ public class LoopManiaWorld {
         enemies = new ArrayList<>();
         cardEntities = new ArrayList<>();
         unequippedInventoryItems = new ArrayList<>();
+        equippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
         goldGoal = new AmassGold();
@@ -153,7 +155,7 @@ public class LoopManiaWorld {
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
             // due to mutating list we're iterating over
-            character.gold.addGold(new Random().nextInt(90)+10);
+            //character.gold.addGold(new Random().nextInt(90)+10);
             character.addExperience(new Random().nextInt(20)+10);
             killEnemy(e);
         }
@@ -209,6 +211,43 @@ public class LoopManiaWorld {
         return sword;
     }
 
+    public HealthPotion addUnequippedHealthPotion() {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
+        if (firstAvailableSlot == null){
+            removeItemByPositionInUnequippedInventoryItems(0);
+            payout();
+            firstAvailableSlot = getFirstAvailableSlotForItem();
+        }
+        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        unequippedInventoryItems.add(healthPotion);
+        return healthPotion;
+    }
+
+    public HealthPotion addEquippedHealthPotion(int x, int y) {
+        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(x), new SimpleIntegerProperty(y));
+        equippedInventoryItems.add(healthPotion);
+        System.out.println("Added to inventory");
+        return healthPotion;
+    }
+
+    public TheOneRing addUnequippedTheOneRing() {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
+        if (firstAvailableSlot == null){
+            removeItemByPositionInUnequippedInventoryItems(0);
+            payout();
+            firstAvailableSlot = getFirstAvailableSlotForItem();
+        }
+        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        unequippedInventoryItems.add(theOneRing);
+        return theOneRing;
+    }
+
+    public TheOneRing addEquippedTheOneRing(int x, int y) {
+        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(x), new SimpleIntegerProperty(y));
+        equippedInventoryItems.add(theOneRing);
+        return theOneRing;
+    }
+
     /**
      * remove an item by x,y coordinates
      * @param x x coordinate from 0 to width-1
@@ -225,10 +264,11 @@ public class LoopManiaWorld {
     public void runTickMoves(){
         character.moveDownPath();
         moveBasicEnemies();
+        useTheOneRing();
         goldTile();
         cycleCount();
         checkGoals();
-        System.out.println(character.gold.getGold());
+        //System.out.println(character.gold.getGold());
     }
 
     /**
@@ -247,13 +287,27 @@ public class LoopManiaWorld {
      * @param y y index from 0 to height-1
      * @return unequipped inventory item at the input position
      */
-    private Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
+    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
         for (Entity e: unequippedInventoryItems){
             if ((e.getX() == x) && (e.getY() == y)){
                 return e;
             }
         }
         return null;
+    }
+
+    public Entity getEquippedInventoryItemEntityByCoordinates(int x, int y){
+        for (Entity e: equippedInventoryItems){
+            if ((e.getX() == x) && (e.getY() == y)){
+                return e;
+            }
+        }
+        return null;
+    }
+
+    private void removeEquippedInventoryItem(Entity item){
+        item.destroy();
+        equippedInventoryItems.remove(item);
     }
 
     /**
@@ -365,17 +419,17 @@ public class LoopManiaWorld {
     }
 
     public void payout() {
-        if (new Random().nextInt(100) > 85) {
-            character.gold.addGold(new Random().nextInt(90)+10);
+        if (new Random().nextInt(100) >= 85) {
+            //character.gold.addGold(new Random().nextInt(90)+10);
         }
-        if (new Random().nextInt(100) > 50) {
+        if (new Random().nextInt(100) >= 50) {
             character.addExperience(new Random().nextInt(20)+10);
         }
     }
 
     public void goldTile() {
         if (new Random().nextInt(100) >= 99) {
-            character.gold.addGold(new Random().nextInt(90)+10);
+            //character.gold.addGold(new Random().nextInt(90)+10);
         }
     }
 
@@ -386,9 +440,9 @@ public class LoopManiaWorld {
     }
 
     public void checkGoals() {
-        if (character.gold.getGold() == this.goldGoal.gold) {
+        /*if (character.gold.getGold() == this.goldGoal.gold) {
             this.goldGoal.setCompletion(true);
-        }
+        }*/
         if (character.getExperience() == this.expGoal.experience) {
             this.expGoal.setCompletion(true);
         }
@@ -396,4 +450,24 @@ public class LoopManiaWorld {
             this.cycleGoal.setCompletion(true);
         }
     }
+
+    public void consumeHealthPotion() {
+        Entity healthPotion = getEquippedInventoryItemEntityByCoordinates(1, 1);
+        if (healthPotion != null) {
+            removeEquippedInventoryItem(healthPotion);
+            /*int newHp = character.getHp() + 30;
+            if (newHp > 100) {
+                newHp = 100;
+            }
+            character.setHp(newHp);*/
+        }
+    }
+
+    public void useTheOneRing() {
+        Entity theOneRing = getEquippedInventoryItemEntityByCoordinates(2, 1);
+        /*if (theOneRing != null && character.getHp() <= 0) {
+            character.setHp(100);
+        }*/
+    }
+
 }
