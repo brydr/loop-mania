@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Sword;
 import unsw.loopmania.Vampire;
-import unsw.loopmania.Weapon;
+import unsw.loopmania.weapons;
 
 public class SwordTest {
 	@Test
@@ -18,7 +18,7 @@ public class SwordTest {
 
 		BasicEnemy vampire = new Vampire();
 		int vampireHealth = vampire.getHp();
-		sword.attack(vampire);
+		sword.getDamage(vampire);
 		assertTrue(vampire.getHp() == vampireHealth - sword.getAttackPower());
 	}
 }

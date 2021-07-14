@@ -1,29 +1,30 @@
-package unsw.loopmania;
+package unsw.loopmania.weapons;
 
 import java.util.Random;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.BasicEnemy;
 
 public class Staff extends Weapon implements MagicAbility {
-	private final double tranceChance = .2;
+	private final static double TRANCE_CHANCE = .2;
+	private final static int ATTACK_POWER = 3;
 
 	public Staff(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-		super(x, y, 3);
+		super(x, y, Staff.ATTACK_POWER);
 	}
 
 	@Override
-	public void attack(BasicEnemy enemy) {
+	public int getDamage(BasicEnemy enemy) {
 		if (this.shouldTrance()) {
 			enemy.convertToFriendly(this.generateTranceLength());
-		} else {
-			enemy.takeDamage(this.getAttackPower());
+			return 0;
 		}
-
+		// TODO
+		return Staff.ATTACK_POWER;
 	}
 
 	private boolean shouldTrance() {
-		// TODO global seed?
-		return Math.random() < tranceChance;
+		return Math.random() < TRANCE_CHANCE;
 	}
 
 	private int generateTranceLength() {
@@ -31,9 +32,4 @@ public class Staff extends Weapon implements MagicAbility {
 		return randomGenerator.nextInt(18) + 3;
 	}
 
-	@Override
-	public void magicAbility(BasicEnemy enemy) {
-		// TODO implement
-
-	}
 }

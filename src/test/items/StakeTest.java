@@ -9,7 +9,7 @@ import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Stake;
 import unsw.loopmania.Vampire;
-import unsw.loopmania.Weapon;
+import unsw.loopmania.weapons;
 
 public class StakeTest {
 	@Test
@@ -19,7 +19,7 @@ public class StakeTest {
 
 		BasicEnemy slug = new Slug();
 		int slugHealth = slug.getHp();
-		stake.attack(slug);
+		stake.getDamage(slug);
 		assertTrue(slug.getHp() == slugHealth - stake.getAttackPower());
 	}
 
@@ -30,7 +30,7 @@ public class StakeTest {
 
 		BasicEnemy vampire = new Vampire();
 		int vampireHealth = vampire.getHp();
-		stake.attack(vampire);
+		stake.getDamage(vampire);
 		assertTrue(vampire.getHp() == vampireHealth - 16);
 	}
 }

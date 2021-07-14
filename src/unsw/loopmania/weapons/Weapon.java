@@ -1,8 +1,10 @@
-package unsw.loopmania;
+package unsw.loopmania.weapons;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.BasicEnemy;
+import unsw.loopmania.EquippableItem;
 
-public abstract class Weapon extends EquippableItem {
+public abstract class Weapon extends EquippableItem implements WeaponStrategy {
 	private final int attackPower;
 
 	public Weapon(SimpleIntegerProperty x, SimpleIntegerProperty y, int attackPower) {
@@ -10,7 +12,9 @@ public abstract class Weapon extends EquippableItem {
 		this.attackPower = attackPower;
 	}
 
-	public abstract void attack(BasicEnemy enemy);
+	public int getDamage(BasicEnemy enemy) {
+		return attackPower;
+	}
 
 	public int getAttackPower() {
 		return attackPower;

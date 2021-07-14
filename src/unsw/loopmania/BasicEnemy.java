@@ -16,6 +16,7 @@ public abstract class BasicEnemy extends MovingEntity {
 
     public int getHp() {
         // TODO
+        return -1;
     }
 
     public abstract void convertToFriendly(int time);

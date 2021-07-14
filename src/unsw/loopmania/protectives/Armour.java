@@ -1,6 +1,7 @@
-package unsw.loopmania;
+package unsw.loopmania.protectives;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.BasicEnemy;
 
 public class Armour extends ProtectiveGear {
 	public Armour(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
@@ -8,7 +9,7 @@ public class Armour extends ProtectiveGear {
 	}
 
 	@Override
-	public int calculateDamage(BasicEnemy attacker, int attackPower, boolean isCritical) {
+	public int calculateDamage(BasicEnemy attacker, int attackPower) {
 		return attackPower / 2;
 	}
 }

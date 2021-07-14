@@ -7,8 +7,8 @@ import org.junit.Test;
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Slug;
-import unsw.loopmania.Staff;
-import unsw.loopmania.Weapon;
+import unsw.loopmania.weapons.Staff;
+import unsw.loopmania.weapons.Weapon;
 
 public class StaffTest {
 	@Test
@@ -19,7 +19,7 @@ public class StaffTest {
 
 		BasicEnemy slug = new Slug();
 		int slugHealth = slug.getHp();
-		staff.attack(slug);
+		staff.getDamage(slug);
 
 		assertTrue(slug.getHp() == slugHealth - staff.getAttackPower());
 	}
