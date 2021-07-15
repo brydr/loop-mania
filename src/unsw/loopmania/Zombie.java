@@ -12,6 +12,7 @@ public class Zombie extends BasicEnemy implements Undead {
         this.setSpeed(2);
         this.setBattleRadius(2);
         this.setSupportRadius(2);
+        this.setExperienceGain(40);
     }
 
     @Override

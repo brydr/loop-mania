@@ -12,6 +12,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.setSpeed(1);
         this.setBattleRadius(2);
         this.setSupportRadius(3);
+        this.setExperienceGain(200);
         this.criticalDuration = 0;
         this.alreadyInCritical = false;
     }

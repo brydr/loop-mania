@@ -13,6 +13,7 @@ public abstract class BasicEnemy extends MovingEntity {
     private int attackPower;
     private int battleRadius;
     private int supportRadius;
+    private int experienceGain;
     Boolean inTrance;
 
     public BasicEnemy(PathPosition position) {
@@ -23,6 +24,7 @@ public abstract class BasicEnemy extends MovingEntity {
     public int getAttack() {
         return attackPower;
     }
+    
     public int getBattleRadius() {
         return battleRadius;
     }
@@ -30,7 +32,13 @@ public abstract class BasicEnemy extends MovingEntity {
     public int getSupportRadius() {
         return supportRadius;
     }
+
+    public int getExperienceGain() {
+        return experienceGain;
+    }
+
     public void setAttack(int attack) {
+        
         this.attackPower = attack;
     }
     public void setBattleRadius(int battleRadius) {
@@ -39,6 +47,10 @@ public abstract class BasicEnemy extends MovingEntity {
 
     public void setSupportRadius(int supportRadius) {
         this.supportRadius = supportRadius;
+    }
+
+    public void setExperienceGain(int experience) {
+        this.experienceGain = experience;
     }
 
     /**

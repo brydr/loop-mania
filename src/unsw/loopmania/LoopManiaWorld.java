@@ -211,6 +211,23 @@ public class LoopManiaWorld {
             }
 
             if (enemyHealth <= 0) {
+                int experienceGain = e.getExperienceGain(); // Get the experience obtained from defeating an enemy.
+                character.addExperience(experienceGain);
+                int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+                int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+
+                if (randomLoot == 0) {
+                    character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+                } else if (randomLoot == 1) {
+                    loadRandomCard();
+                } else {
+                    loadRandomWeapon();
+                }
+
+                if (oneRingChance < 3) {
+                    RareItem oneRing = new RareItem();
+                    character.setEquippedRareItem(oneRing);
+                }
                 defeatedEnemies.add(e);
             // If an enemy did not die it means it was put in trance.
             } else {
