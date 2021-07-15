@@ -3,6 +3,7 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.javatuples.Pair;
 
@@ -49,7 +50,7 @@ public class LoopManiaWorld {
     private List<Entity> unequippedInventoryItems;
 
     // TODO = expand the range of buildings
-    private List<VampireCastleBuilding> buildingEntities;
+    private List<Building> buildingEntities;
 
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
@@ -214,28 +215,11 @@ public class LoopManiaWorld {
             removeCard(0);
         }
 
-        List<Card> possibleCards = new ArrayList<Card>();
-    
-        BarracksCard barracksCard = new BarracksCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        CampfireCard campfireCard = new CampfireCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        TowerCard towerCard = new TowerCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        TrapCard trapCard = new TrapCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        VillageCard villageCard = new VillageCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        ZombiePitCard zombiePitCard = new ZombiePitCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        VampireCastleCard vampireCastleCard = new VampireCastleCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
+        // TODO = Make RandomCardGenerator an instance variable to improve performance
+        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
 
-        possibleCards.add(barracksCard);
-        possibleCards.add(campfireCard);
-        possibleCards.add(towerCard);
-        possibleCards.add(trapCard);
-        possibleCards.add(villageCard);
-        possibleCards.add(zombiePitCard);
-        possibleCards.add(vampireCastleCard);
-
-        int randomCardChance = (new Random()).nextInt(7); // Random number between 0 and 6 inclusive
-
-        cardEntities.add(possibleCards.get(randomCardChance));
-        return possibleCards.get(randomCardChance);
+        cardEntities.add(randCard);
+        return randCard;
     }
 
     /**
@@ -408,17 +392,29 @@ public class LoopManiaWorld {
                 break;
             }
         }
+        /* FP Alternative
+        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
+        var cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
+        assert cardMatches.count() == 1;
+        Card myCard = cardMatches.findAny().get();
+        */
         
         // now spawn building
         // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
-        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX), 
+                                                   new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
-        // destroy the card
+        // Destroy the card
         card.destroy();
         cardEntities.remove(card);
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;
+    }
+
+    public List<Card> getCards() {
+        return cardEntities;
     }
 }
