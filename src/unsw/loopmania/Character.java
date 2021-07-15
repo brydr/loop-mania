@@ -15,6 +15,8 @@ public class Character extends MovingEntity {
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+    private int experience = 0;
+    private int cycles = 0;
 
     public Character(PathPosition position) {
         super(position);
@@ -59,6 +61,23 @@ public class Character extends MovingEntity {
 
     public void setEquippedRareItem(RareItem equippedRareItem) {
         this.equippedRareItem = equippedRareItem;
+    }
+
+    public int getCycles() {
+        return cycles;
+    }
+
+    public int addCycles() {
+        return cycles = cycles + 1;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public int addExperience(int exp) {
+        return experience = experience + exp;
+         
     }
     
     public void removeEquippedArmour() {
