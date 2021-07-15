@@ -19,6 +19,7 @@ public class LoopManiaWorld {
 
     public static final int unequippedInventoryWidth = 4;
     public static final int unequippedInventoryHeight = 4;
+    public static final int numBasicItems = 7;
 
     /**
      * width of the world in GridPane cells
@@ -151,19 +152,23 @@ public class LoopManiaWorld {
         return defeatedEnemies;
     }
 
+    public int getCardEntitiesSizeRemoveIfFull() {
+        // if adding more cards than have, remove the first card...
+        if (cardEntities.size() >= getWidth()){
+            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            // TODO may have to edit payout based on what is being deleted
+            payout();
+            removeCard(0);
+        }
+        return cardEntities.size();
+    }
+
     /**
      * spawn a card in the world and return the card entity
      * @return a card to be spawned in the controller as a JavaFX node
      */
-    public VampireCastleCard loadVampireCard(){
-        // if adding more cards than have, remove the first card...
-        if (cardEntities.size() >= getWidth()){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
-            removeCard(0);
-        }
-        VampireCastleCard vampireCastleCard = new VampireCastleCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        cardEntities.add(vampireCastleCard);
-        return vampireCastleCard;
+    public void loadCard(Card card){
+        cardEntities.add(card);
     }
 
     /**
@@ -182,20 +187,63 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Sword addUnequippedSword(){
-        // TODO = expand this - we would like to be able to add multiple types of items, apart from swords
+    public Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
         Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
         if (firstAvailableSlot == null){
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
-            // TODO = give some cash/experience rewards for the discarding of the oldest sword
             removeItemByPositionInUnequippedInventoryItems(0);
+            // give some cash/experience rewards for the discarding of the oldest sword
+            payout();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
-        
-        // now we insert the new sword, as we know we have at least made a slot available...
-        Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        unequippedInventoryItems.add(sword);
-        return sword;
+        return firstAvailableSlot;
+    }
+
+    /**
+     * spawn an item in the world and return the item entity
+     * @return an item to be spawned in the controller as a JavaFX node
+     * @pre unequippedInventoryItems isn't full (getFirstSlotRemoveIfFull should be run before creating item for this method)
+     */
+    public void addUnequippedItem(Item item){
+        unequippedInventoryItems.add(item);
+    }
+
+    /**
+     * spawn a random BasicItem (no rare items)
+     * All items have equal chance of spawn
+     * used when enemies defeated or card destroyed
+     * @return BasicItem to be spawned in the controller as a JavaFX node
+     */
+    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+        Random randomGenerator = new Random();
+        BasicItem newItem;
+        int numBasicItems = 7;
+        switch (randomGenerator.nextInt(numBasicItems)) {
+            case 0: 
+                newItem = new HealthPotion(x, y);
+                break;
+            case 1: 
+                newItem = new Staff(x, y);
+                break;
+            case 2: 
+                newItem = new Stake(x, y);
+                break;
+            case 3: 
+                newItem = new Sword(x, y);
+                break;
+            case 4: 
+                newItem = new Armour(x, y);
+                break;
+            case 5: 
+                newItem = new Shield(x, y);
+                break;
+            case 6: 
+                newItem = new Helmet(x, y);
+                break;
+            default: throw new RuntimeException("Can't generate random item");
+        }
+        unequippedInventoryItems.add(newItem);
+        return newItem;
     }
 
     /**
