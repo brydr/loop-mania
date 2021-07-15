@@ -22,7 +22,7 @@ public class ShieldTest {
 	private final Character character = new Character(pos);
 	BasicEnemy slug = new Slug(pos);
 	private final SimpleIntegerProperty one = new SimpleIntegerProperty(1);
-	private final ProtectiveGear armour = new Shield(one, one, character);
+	private final ProtectiveGear armour = new Shield(one, one);
 
 	@Test
 	public void damageReductionTest() {
