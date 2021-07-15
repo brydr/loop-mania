@@ -2,14 +2,13 @@ package unsw.loopmania.protectiveGear;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BasicEnemy;
-import unsw.loopmania.Character;
 
 public class Helmet extends ProtectiveGear {
 	// TODO reduce wearer's attack power
 	private final static double DAMAGE_MULTIPLIER = .7;
 
-	public Helmet(SimpleIntegerProperty x, SimpleIntegerProperty y, Character wearer) {
-		super(x, y, wearer);
+	public Helmet(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+		super(x, y);
 	}
 
 	@Override

@@ -8,8 +8,8 @@ import java.util.List;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import unsw.loopmania.PathPosition;
 import unsw.loopmania.Character;
+import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 
 
@@ -17,8 +17,9 @@ public class SlugEnemyTest {
     
     @Test
     public void testRadius() {
-
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
 
         assertEquals(slug.getBattleRadius(), 1);
@@ -29,7 +30,10 @@ public class SlugEnemyTest {
 
     @Test
     public void testMove() {
-        PathPosition pos = new PathPosition(2, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4), new Pair<>(0, 4)));
+        PathPosition pos = new PathPosition( 2, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2),
+                                                              new Pair<>(0, 3),
+                                                              new Pair<>(0, 4)) );
         Slug slug = new Slug(pos);
         slug.move();
 
@@ -42,7 +46,9 @@ public class SlugEnemyTest {
 
     @Test
     public void testAttackAndTakeDamage() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
         Character c = new Character(pos);
 

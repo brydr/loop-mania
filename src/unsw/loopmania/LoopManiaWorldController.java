@@ -275,10 +275,10 @@ public class LoopManiaWorldController {
     /**
      * load a vampire card from the world, and pair it with an image in the GUI
      */
-    private void loadVampireCard() {
+    private void loadRandomCard() {
         // TODO = load more types of card
-        VampireCastleCard vampireCastleCard = world.loadVampireCard();
-        onLoad(vampireCastleCard);
+        Card randomCard = world.loadRandomCard();
+        onLoad(randomCard);
     }
 
     /**
@@ -300,7 +300,7 @@ public class LoopManiaWorldController {
         // in starter code, spawning extra card/weapon...
         // TODO = provide different benefits to defeating the enemy based on the type of enemy
         loadSword();
-        loadVampireCard();
+        loadRandomCard();
     }
 
     /**
@@ -309,14 +309,15 @@ public class LoopManiaWorldController {
      * and load the image into the cards GridPane.
      * @param vampireCastleCard
      */
-    private void onLoad(VampireCastleCard vampireCastleCard) {
-        ImageView view = new ImageView(vampireCastleCardImage);
+    private void onLoad(Card randomCard) {
+        Image randomCardImage = randomCard.getImage();
+        ImageView view = new ImageView(randomCardImage);
 
         // FROM https://stackoverflow.com/questions/41088095/javafx-drag-and-drop-to-gridpane
         // note target setOnDragOver and setOnDragEntered defined in initialize method
         addDragEventHandlers(view, DRAGGABLE_TYPE.CARD, cards, squares);
 
-        addEntity(vampireCastleCard, view);
+        addEntity(randomCard, view);
         cards.getChildren().add(view);
     }
 
@@ -476,7 +477,7 @@ public class LoopManiaWorldController {
      * @param buildingNodeY the y coordinate of the drop location for the card, where the building will spawn, from 0 to height-1
      * @return building entity returned from the world
      */
-    private VampireCastleBuilding convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+    private Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         return world.convertCardToBuildingByCoordinates(cardNodeX, cardNodeY, buildingNodeX, buildingNodeY);
     }
 

@@ -10,7 +10,7 @@ import org.junit.Test;
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
-import unsw.loopmania.weapons.Unarmed;
+import unsw.loopmania.Unarmed;
 import unsw.loopmania.weapons.Weapon;
 
 public class UnarmedTest {

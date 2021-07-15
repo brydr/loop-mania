@@ -7,6 +7,8 @@ import unsw.loopmania.EquippableItem;
 public abstract class Weapon extends EquippableItem implements WeaponStrategy {
 	private final int attackPower;
 
+	public static final int WEAPONS =
+
 	public Weapon(SimpleIntegerProperty x, SimpleIntegerProperty y, int attackPower) {
 		super(x, y);
 		this.attackPower = attackPower;
