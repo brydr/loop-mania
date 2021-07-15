@@ -36,7 +36,7 @@ public class runBattlesTest {
         }
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0).getClass() == Slug.class);  
+        assertTrue(deadEnemies.get(0) instanceof Slug);  
         assertTrue(c.getHp() == 55);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
@@ -56,8 +56,8 @@ public class runBattlesTest {
 
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0).getClass() == Slug.class);  
-        assertTrue(deadEnemies.get(1).getClass() == Slug.class); 
+        assertTrue(deadEnemies.get(0) instanceof Slug);  
+        assertTrue(deadEnemies.get(1) instanceof Slug); 
         assertTrue(c.getHp() == 10);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
@@ -97,7 +97,7 @@ public class runBattlesTest {
 
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0).getClass() == Slug.class); 
+        assertTrue(deadEnemies.get(0) instanceof Slug); 
 
         assertTrue(c.getHp() == 100);   
         // Since it is assumed soldiers are equipped with a sword they will deal 8 damage. The character without weapons will deal 2 damage.

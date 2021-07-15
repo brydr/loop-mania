@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.util.Random;
 public class Zombie extends BasicEnemy implements Undead {
 
-    int criticalBiteChance;
+    private int criticalBiteChance;
     public Zombie(PathPosition position) {
         super(position);
         this.setAttack(6);

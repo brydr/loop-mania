@@ -1,6 +1,5 @@
 package unsw.loopmania;
 
-import unsw.loopmania.WeaponStrategy;
 import javafx.beans.property.SimpleIntegerProperty;
 public class Unarmed extends Weapon {
 	private final static int ATTACK_POWER = 2;

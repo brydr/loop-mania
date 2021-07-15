@@ -1,7 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.BasicEnemy;
 
 public class Helmet extends ProtectiveGear {
 	// TODO reduce wearer's attack power

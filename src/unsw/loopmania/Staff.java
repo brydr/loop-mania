@@ -1,7 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.BasicEnemy;
 
 public class Staff extends Weapon implements MagicAbility {
 	private double TRANCE_CHANCE = .2;
@@ -12,7 +11,7 @@ public class Staff extends Weapon implements MagicAbility {
 	}
 
 	// Used for testing runBattles.
-	public Staff(SimpleIntegerProperty x, SimpleIntegerProperty y, int trance_chance) {
+	public Staff(SimpleIntegerProperty x, SimpleIntegerProperty y, double trance_chance) {
 		super(x, y, Staff.ATTACK_POWER);
 		this.TRANCE_CHANCE = trance_chance;
 	}

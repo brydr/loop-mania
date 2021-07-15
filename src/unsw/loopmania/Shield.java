@@ -1,14 +1,18 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.BasicEnemy;
 
 public class Shield extends ProtectiveGear {
 	// Critical bite negation is handled in the vampire class
-	private final double ALL_NEGATION_CHANCE = .3;
+	private double ALL_NEGATION_CHANCE = .3;
 
 	public Shield(SimpleIntegerProperty x, SimpleIntegerProperty y) {
 		super(x, y);
+	}
+
+	public Shield(SimpleIntegerProperty x, SimpleIntegerProperty y, double negation_chance) {
+		this(x, y);
+		ALL_NEGATION_CHANCE = negation_chance;
 	}
 
 	@Override

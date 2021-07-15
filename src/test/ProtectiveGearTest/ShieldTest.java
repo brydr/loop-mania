@@ -22,21 +22,21 @@ public class ShieldTest {
 	private final Character character = new Character(pos);
 	BasicEnemy slug = new Slug(pos);
 	private final SimpleIntegerProperty one = new SimpleIntegerProperty(1);
-	private final ProtectiveGear armour = new Shield(one, one);
+	private final Shield shield = new Shield(one, one, 1); // Create a shield that has 100% negation chance.
 
 	@Test
 	public void damageReductionTest() {
-		int calculatedDamage = armour.calculateDamage(slug.getAttack());
-		assertTrue(calculatedDamage == 0 || calculatedDamage == slug.getAttack());
-
+		int calculatedDamage = shield.calculateDamage(slug.getAttack());
+		assertTrue(calculatedDamage == 0);
 	}
 
 	@Test
 	public void negateCriticalBiteTest() {
-		BasicEnemy vampire = new Vampire(pos);
+		Vampire vampire = new Vampire(pos);
+		character.setEquippedShield(shield);
 
-		// TODO test negation of critical bite
-		assertTrue(false);
+		vampire.attack(character);
+		assertTrue(vampire.criticalChance == 0.12);
 	}
 
 }

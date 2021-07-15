@@ -4,6 +4,8 @@ import java.util.Random;
 import java.time.Duration;
 public class Vampire extends BasicEnemy implements Undead {
 
+    // criticalChance is only used for testing, primarily for the shield.
+    public double criticalChance;
     private int criticalDuration;
     private boolean alreadyInCritical;
     public Vampire(PathPosition position) {
@@ -15,6 +17,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.setSupportRadius(3);
         this.setExperienceGain(200);
         this.criticalDuration = 0;
+        criticalChance = 0.2;
         this.alreadyInCritical = false;
     }
 
@@ -32,11 +35,15 @@ public class Vampire extends BasicEnemy implements Undead {
         }
     }
     public void attack(Character character) {
+
         int criticalBiteChance;
+
         if (character.getEquippedShield() == null) {
             criticalBiteChance = (new Random()).nextInt(55); // Random number between 0 and 54 inclusive
+            criticalChance = 0.2;
         } else {
             criticalBiteChance = (new Random()).nextInt(100); // Random number between 0 and 99 inclusive
+            criticalChance = 0.12;
         }
 
 

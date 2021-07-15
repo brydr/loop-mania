@@ -1,8 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.BasicEnemy;
-import unsw.loopmania.Vampire;
 
 public class Stake extends Weapon implements AttackAbility {
 	private final static int ATTACK_POWER = 4;
