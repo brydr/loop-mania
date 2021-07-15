@@ -5,28 +5,25 @@ import java.util.List;
 
 public class Goal {
     public boolean completed;
-    public List<Goal> subGoals;
-    public int value;
-
-    public Goal(){
-        this.completed = false;
-        this.value = 0;
-        subGoals = new ArrayList<Goal>();
-    }
     
-    public boolean getCompletion() {
-        return completed;
+    private int cyclesRequired;
+    private int experienceRequired;
+    private int goldRequired;
+
+
+    public Goal(int cycles, int experience, int gold){
+        this.cyclesRequired = cycles;
+        this.experienceRequired = experience;
+        this.goldRequired = gold;
     }
 
-    public void setCompletion() {
-        completed = true;
+    public int getCycles() {
+        return cyclesRequired;
     }
-
-    public void addSubGoal(Goal goal) {
-        subGoals.add(goal);
+    public int getExperience() {
+        return experienceRequired;
     }
-
-    public List<Goal> getSubGoals() {
-        return subGoals;
+    public int getGold() {
+        return goldRequired;
     }
 }
