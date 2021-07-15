@@ -90,10 +90,19 @@ public class Character extends MovingEntity {
     }
 
     /**
+     * attack allied soldier first otherwise
      * reduce hp of character based on armour equipped
      * @param damage, raw damage coming from enemy
      */
     public void takeDamage(int damage) {
+        if (!listAlliedSoldiers.isEmpty()) {
+            AlliedSoldier ally = listAlliedSoldiers.get(0);
+            ally.takeDamage(damage);
+            if (ally.getHp() <= 0) {
+                removeAlliedSoldier(ally);
+                return;
+            }
+        }
         if (this.equippedArmour != null) 
             damage = equippedArmour.calculateDamage(damage);
         if (this.equippedHelmet != null) 
