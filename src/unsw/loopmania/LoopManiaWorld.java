@@ -191,19 +191,16 @@ public class LoopManiaWorld {
                 List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();
 
                 for (AlliedSoldier transedEnemy : transformedEnemies) {
-                    Duration enemyTransedTime = transedEnemy.getTransedTime(); 
-                    transedEnemy.setTranceTime(enemyTransedTime.minus(Duration.ofSeconds(1))); // Minus 1 to the transed time of the allied soldier since a "second" has passed.
                     // Check if the transed time is now equal to 0.
                     // If it is then add the allied soldier into the convertBackAlliedSoldier array.
-                    if (transedEnemy.getTransedTime().equals(Duration.ZERO)) {
+                    if (transedEnemy.isTranceOver(Duration.ofSeconds(1))) {
                         convertBackAlliedSoldier.add(transedEnemy);
                     }
                 }
 
                 // Loop through the convertBackAlliedSoldier to check for any allied soldiers that are converting back into an enemy.
                 for (AlliedSoldier convertBackAllied : convertBackAlliedSoldier) {
-                    convertBackAllied.reactivateOldEnemy();
-                    BasicEnemy oldEnemy = convertBackAllied.getOldEnemy();
+                    BasicEnemy oldEnemy = character.convertBackToEnemy(convertBackAllied);
                     enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
                     transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
                 }
