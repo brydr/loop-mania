@@ -170,9 +170,10 @@ public class Character extends MovingEntity {
     /**
      * @param ally, ally to be converted back into an enemy
      */
-    public void convertBackToEnemy(AlliedSoldier ally) {
+    public BasicEnemy convertBackToEnemy(AlliedSoldier ally) {
         ally.reactivateOldEnemy();
         this.removeAlliedSoldier(ally);
+        return ally.getOldEnemy();
     }
 
     /**
