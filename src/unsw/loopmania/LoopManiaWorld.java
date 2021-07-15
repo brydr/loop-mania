@@ -221,7 +221,7 @@ public class LoopManiaWorld {
                 } else if (randomLoot == 1) {
                     loadRandomCard();
                 } else {
-                    loadRandomWeapon();
+                    loadRandomItem();
                 }
 
                 if (oneRingChance < 3) {
