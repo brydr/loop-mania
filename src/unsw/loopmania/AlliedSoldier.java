@@ -63,4 +63,9 @@ public class AlliedSoldier extends MovingEntity {
         oldEnemy.setInTrance(false);
         oldEnemy.setHp(this.getHp());
     }
+
+    public String getImage() {
+        String alliedSoldierImage = "src/images/deep_elf_master_archer.png";
+        return alliedSoldierImage;
+    }
 }

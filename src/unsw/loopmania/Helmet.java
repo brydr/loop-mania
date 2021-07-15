@@ -15,4 +15,8 @@ public class Helmet extends ProtectiveGear {
 		return (int) Math.round(Helmet.DAMAGE_MULTIPLIER * attackPower);
 	}
 
+	public String getImage() {
+        String helmetImage = "src/images/helmet.png";
+        return helmetImage;
+    }
 }

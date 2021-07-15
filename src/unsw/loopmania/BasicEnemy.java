@@ -2,8 +2,6 @@ package unsw.loopmania;
 
 import java.util.Random;
 
-import javafx.beans.property.SimpleBooleanProperty;
-
 /**
  * a basic form of enemy in the world
  */

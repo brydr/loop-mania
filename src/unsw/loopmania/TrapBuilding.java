@@ -8,4 +8,8 @@ public class TrapBuilding extends Building {
         super(x, y);
     }
     
+    public String getImage() {
+        String trapBuildingImage = "src/images/trap.png";
+        return trapBuildingImage;
+    }
 }

@@ -11,4 +11,9 @@ public class Armour extends ProtectiveGear {
 	public int calculateDamage(int attackPower) {
 		return attackPower / 2;
 	}
+
+	public String getImage() {
+        String armourImage = "src/images/armour.png";
+        return armourImage;
+    }
 }

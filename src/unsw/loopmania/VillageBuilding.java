@@ -8,4 +8,8 @@ public class VillageBuilding extends Building {
         super(x, y);
     }
     
+    public String getImage() {
+        String VillageBuildingImage = "src/images/village.png";
+        return VillageBuildingImage;
+    }
 }

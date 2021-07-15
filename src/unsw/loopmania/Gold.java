@@ -18,4 +18,9 @@ public class Gold extends Currency {
     public void subtractGold(int sub) {
         amount = amount - sub;
     }
+
+    public String getImage() {
+        String goldImage = "src/images/gold_pile.png";
+        return goldImage;
+    }
 }

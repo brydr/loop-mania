@@ -8,12 +8,6 @@ import java.util.Random;
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.Armour;
-import unsw.loopmania.Helmet;
-import unsw.loopmania.Shield;
-import unsw.loopmania.Staff;
-import unsw.loopmania.Stake;
-import unsw.loopmania.Sword;
 
 /**
  * A backend world.

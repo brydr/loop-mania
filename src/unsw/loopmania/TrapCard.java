@@ -14,9 +14,8 @@ public class TrapCard extends Card {
         return newBuilding;
     }
 
-    @Override
-    public Image getImage() {
-        Image trapCardImage = new Image((new File("src/images/trap_card.png")).toURI().toString());
+    public String getImage() {
+        String trapCardImage = "src/images/trap_card.png";
         return trapCardImage;
     }
 }

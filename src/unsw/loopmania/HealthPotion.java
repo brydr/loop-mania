@@ -8,4 +8,9 @@ public class HealthPotion extends Consumable {
         super(x, y);
     }
     
+
+    public String getImage() {
+        String healthPotionImage = "src/images/brilliant_blue_new.png";
+        return healthPotionImage;
+    }
 }

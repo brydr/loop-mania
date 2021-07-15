@@ -11,4 +11,9 @@ public class Sword extends Weapon implements AttackAbility {
 	public Sword(SimpleIntegerProperty x, SimpleIntegerProperty y) {
 		super(x, y, Sword.ATTACK_POWER);
 	}
+
+	public String getImage() {
+        String swordImage = "src/images/basic_sword.png";
+        return swordImage;
+    }
 }

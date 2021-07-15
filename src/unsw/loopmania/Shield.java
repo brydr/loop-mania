@@ -23,4 +23,9 @@ public class Shield extends ProtectiveGear {
 	private boolean negateAllDamage() {
 		return Math.random() < ALL_NEGATION_CHANCE;
 	}
+
+	public String getImage() {
+        String shieldImage = "src/images/shield.png";
+        return shieldImage;
+    }
 }

@@ -1,8 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.image.Image;
-import java.io.File;
 
 /**
  * represents a vampire castle card in the backend game world
@@ -19,9 +17,8 @@ public class VampireCastleCard extends Card {
         return newBuilding;
     }
 
-    @Override
-    public Image getImage() {
-        Image vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
+    public String getImage() {
+        String vampireCastleCardImage = "src/images/vampire_castle_card.png";
         return vampireCastleCardImage;
     }
 }

@@ -71,4 +71,10 @@ public class Zombie extends BasicEnemy implements Undead {
     public void criticalBite() {   
 
     }
+
+    public String getImage() {
+        String zombieImage = "src/images/zombie.png";
+        return zombieImage;
+    }
+
 }

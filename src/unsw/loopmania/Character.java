@@ -2,7 +2,6 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import javafx.beans.property.SimpleIntegerProperty;
 
 /**
@@ -218,5 +217,10 @@ public class Character extends MovingEntity {
         enemy.setHp(ally.getHp());
         this.removeAlliedSoldier(ally);
         return enemy;
+    }
+
+    public String getImage() {
+        String characterImage = "src/images/human_new.png";
+        return characterImage;
     }
 }

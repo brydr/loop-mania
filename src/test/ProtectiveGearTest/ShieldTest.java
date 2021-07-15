@@ -13,7 +13,6 @@ import unsw.loopmania.Character;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Vampire;
-import unsw.loopmania.ProtectiveGear;
 import unsw.loopmania.Shield;
 
 public class ShieldTest {
