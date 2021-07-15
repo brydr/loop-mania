@@ -17,6 +17,7 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
     private int experience = 0;
     private int cycles = 0;
+    public Gold gold = new Gold();
 
     public Character(PathPosition position) {
         super(position);
@@ -78,6 +79,18 @@ public class Character extends MovingEntity {
     public int addExperience(int exp) {
         return experience = experience + exp;
          
+    }
+
+    public int getGold() {
+        return gold.getGold();
+    }
+
+    public void addGold(int gold) {
+        this.gold.addGold(gold);
+    }
+
+    public void subtractGold(int gold) {
+        this.gold.subtractGold(gold);
     }
     
     public void removeEquippedArmour() {

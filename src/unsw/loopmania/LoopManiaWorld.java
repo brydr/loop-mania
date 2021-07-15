@@ -150,7 +150,6 @@ public class LoopManiaWorld {
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
             // due to mutating list we're iterating over
             //character.gold.addGold(new Random().nextInt(90)+10);
-            character.addExperience(new Random().nextInt(20)+10);
             killEnemy(e);
         }
         return defeatedEnemies;
