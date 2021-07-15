@@ -31,13 +31,19 @@ public class Vampire extends BasicEnemy implements Undead {
         } 
     }
     public void attack(Character character) {
-        int criticalBiteChance = (new Random()).nextInt(5); // Random number between 0 and 4 inclusive
+        int criticalBiteChance;
+        if (character.getEquippedShield() == null) {
+            criticalBiteChance = (new Random()).nextInt(55); // Random number between 0 and 54 inclusive
+        } else {
+            criticalBiteChance = (new Random()).nextInt(100); // Random number between 0 and 99 inclusive
+        }
+
 
         if (criticalDuration == 0) {
             alreadyInCritical = false;
         }
 
-        if (criticalBiteChance == 0 && alreadyInCritical == false) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
+        if (criticalBiteChance <= 11 && alreadyInCritical == false) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
             alreadyInCritical = true;
             criticalBite();
         } else if (alreadyInCritical && criticalDuration != 0) {     // If the vampire is already in a criticalBite state.

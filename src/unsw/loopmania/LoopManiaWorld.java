@@ -95,6 +95,10 @@ public class LoopManiaWorld {
         this.character = character;
     }
 
+    public Character getCharacter() {
+        return character;
+    }
+
     /**
      * add a generic entity (without it's own dedicated method for adding to the world)
      * @param entity
@@ -211,22 +215,6 @@ public class LoopManiaWorld {
             }
 
             if (enemyHealth <= 0) {
-                int experienceGain = e.getExperienceGain(); // Get the experience obtained from defeating an enemy.
-                character.addExperience(experienceGain);
-                int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-                int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-
-                if (randomLoot == 0) {
-                    character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-                } else if (randomLoot == 1) {
-                    loadRandomCard();
-                } else {
-                    loadRandomItem();
-                }
-
-                if (oneRingChance < 3) {
-                    addUnequippedTheOneRing();
-                }
                 defeatedEnemies.add(e);
             // If an enemy did not die it means it was put in trance.
             } else {
@@ -295,20 +283,10 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Sword addUnequippedSword(){
-        // TODO = expand this - we would like to be able to add multiple types of items, apart from swords
-        Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
-        if (firstAvailableSlot == null){
-            // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
-            // TODO = give some cash/experience rewards for the discarding of the oldest sword
-            removeItemByPositionInUnequippedInventoryItems(0);
-            firstAvailableSlot = getFirstAvailableSlotForItem();
-        }
-        
+    public Item addUnequippedItem(Item item){        
         // now we insert the new sword, as we know we have at least made a slot available...
-        Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        unequippedInventoryItems.add(sword);
-        return sword;
+        unequippedInventoryItems.add(item);
+        return item;
     }
 
     /**
