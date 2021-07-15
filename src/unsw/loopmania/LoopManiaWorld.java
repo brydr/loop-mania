@@ -225,8 +225,7 @@ public class LoopManiaWorld {
                 }
 
                 if (oneRingChance < 3) {
-                    RareItem oneRing = new RareItem();
-                    character.setEquippedRareItem(oneRing);
+                    addUnequippedTheOneRing();
                 }
                 defeatedEnemies.add(e);
             // If an enemy did not die it means it was put in trance.
