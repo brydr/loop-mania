@@ -1,9 +1,8 @@
-package test.protectiveGear;
+package test.ProtectiveGearTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import unsw.loopmania.Character;
 import org.javatuples.Pair;
 import org.junit.Test;
 
@@ -11,8 +10,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
-import unsw.loopmania.protectiveGear.Armour;
-import unsw.loopmania.protectiveGear.ProtectiveGear;
+import unsw.loopmania.Armour;
+import unsw.loopmania.ProtectiveGear;
 
 public class ArmourTest {
 	private final PathPosition pos = new PathPosition(0,
@@ -24,7 +23,7 @@ public class ArmourTest {
 		SimpleIntegerProperty one = new SimpleIntegerProperty(1);
 		ProtectiveGear armour = new Armour(one, one);
 
-		assertTrue(armour.calculateDamage(slug, slug.getAttack()) == slug.getAttack() / 2);
+		assertTrue(armour.calculateDamage(slug.getAttack()) == slug.getAttack() / 2);
 
 	}
 }

@@ -1,4 +1,4 @@
-package test.weapons;
+package test.WeaponTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,8 +12,8 @@ import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Vampire;
-import unsw.loopmania.weapons.Stake;
-import unsw.loopmania.weapons.Weapon;
+import unsw.loopmania.Stake;
+import unsw.loopmania.Weapon;
 
 public class StakeTest {
 	private final static int BASE_DAMAGE = 4;

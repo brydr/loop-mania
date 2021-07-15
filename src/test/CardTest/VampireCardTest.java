@@ -1,4 +1,4 @@
-package unsw.loopmania.CardTest;
+package test.CardTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

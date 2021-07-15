@@ -1,4 +1,4 @@
-package test.weapons;
+package test.WeaponTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Unarmed;
-import unsw.loopmania.weapons.Weapon;
+import unsw.loopmania.Weapon;
 
 public class UnarmedTest {
 	private final static int BASE_DAMAGE = 2;

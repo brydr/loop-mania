@@ -1,4 +1,4 @@
-package test.protectiveGear;
+package test.ProtectiveGearTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,8 +13,8 @@ import unsw.loopmania.Character;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Vampire;
-import unsw.loopmania.protectiveGear.ProtectiveGear;
-import unsw.loopmania.protectiveGear.Shield;
+import unsw.loopmania.ProtectiveGear;
+import unsw.loopmania.Shield;
 
 public class ShieldTest {
 	private final PathPosition pos = new PathPosition(0,
@@ -26,7 +26,7 @@ public class ShieldTest {
 
 	@Test
 	public void damageReductionTest() {
-		int calculatedDamage = armour.calculateDamage(slug, slug.getAttack());
+		int calculatedDamage = armour.calculateDamage(slug.getAttack());
 		assertTrue(calculatedDamage == 0 || calculatedDamage == slug.getAttack());
 
 	}

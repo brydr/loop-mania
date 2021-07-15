@@ -1,4 +1,4 @@
-package test;
+package test.CharacterAndAlliedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -12,7 +12,6 @@ import java.time.Duration;
 import java.util.Arrays;
 
 import unsw.loopmania.AlliedSoldier;
-import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 

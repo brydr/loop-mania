@@ -1,4 +1,4 @@
-package unsw.loopmania.LoopManiaWorldTest;
+package test.LoopManiaWorldTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
