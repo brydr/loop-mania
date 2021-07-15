@@ -3,13 +3,14 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
     //TODO update unarmed xy coord arguments
-    private WeaponStrategy equippedWeapon = new Unarmed(0,0);
+    private WeaponStrategy equippedWeapon = new Unarmed(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
     private Armour equippedArmour;
     private Shield equippedShield;
     private Helmet equippedHelmet;
@@ -24,7 +25,7 @@ public class Character extends MovingEntity {
         this.setHp(100);
     }
 
-    public Weapon getEquippedWeapon() {
+    public WeaponStrategy getEquippedWeapon() {
         return equippedWeapon;
     }
 
@@ -127,13 +128,13 @@ public class Character extends MovingEntity {
      * @param damage, raw damage coming from enemy
      */
     public void takeDamage(int damage) {
-        if (!listAlliedSoldiers.isEmpty()) {
+        if (listAlliedSoldiers.size() > 0) {
             AlliedSoldier ally = listAlliedSoldiers.get(0);
             ally.takeDamage(damage);
             if (ally.getHp() <= 0) {
                 removeAlliedSoldier(ally);
-                return;
             }
+            return;
         }
         if (this.equippedArmour != null) 
             damage = equippedArmour.calculateDamage(damage);
@@ -153,10 +154,10 @@ public class Character extends MovingEntity {
      * outputs damage to given enemy
      */
     public void attack(BasicEnemy enemy) {
-        int outputDamage = this.equippedWeapon.attack(enemy);
+        int outputDamage = this.equippedWeapon.getDamage(enemy);
         // reduce player damage by 15% if helmet equipped
         if (this.equippedHelmet != null) 
-            outputDamage = equippedHelmet.calculateAttack();
+            outputDamage = equippedHelmet.calculateDamage(outputDamage);
         enemy.takeDamage(outputDamage);
 
         // check enemy isn't in trance before allies attack
@@ -182,9 +183,8 @@ public class Character extends MovingEntity {
     /**
      * Move character and allied soldiers up path
      */
-    @Override
-    public void moveUpPath() {
-        super.moveUpPath();
+    public void moveUp() {
+        moveUpPath();
         Boolean isDownPath = false;
         notifyObserversPosition(isDownPath);
     }
@@ -192,9 +192,9 @@ public class Character extends MovingEntity {
     /**
      * Move character and allied soldiers down path
      */
-    @Override
-    public void moveDownPath() {
-        super.moveDownPath();
+    public void moveDown() {
+        System.out.println("test");
+        moveDownPath();
         Boolean isDownPath = true;
         notifyObserversPosition(isDownPath);
     }

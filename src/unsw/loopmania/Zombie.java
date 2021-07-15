@@ -1,10 +1,12 @@
 package unsw.loopmania;
 
-import java.util.Arrays;
 import java.util.List;
+import java.time.Duration;
 
 import java.util.Random;
 public class Zombie extends BasicEnemy implements Undead {
+
+    int criticalBiteChance;
     public Zombie(PathPosition position) {
         super(position);
         this.setAttack(6);
@@ -13,6 +15,13 @@ public class Zombie extends BasicEnemy implements Undead {
         this.setBattleRadius(2);
         this.setSupportRadius(2);
         this.setExperienceGain(40);
+        this.criticalBiteChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
+    }
+
+    // Used for testing.
+    public Zombie(PathPosition position, int criticalBiteChance) {
+        this(position);
+        this.criticalBiteChance = criticalBiteChance;    
     }
 
     @Override
@@ -30,8 +39,17 @@ public class Zombie extends BasicEnemy implements Undead {
         } 
     }
 
+    public AlliedSoldier convertToFriendly(Character character) {
+        Random rand = new Random();
+        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
+        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
+        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
+        character.addAlliedSoldier(transformedSoldier);
+        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
+        return transformedSoldier;
+    }
+
     public void attack(Character character) {
-        int criticalBiteChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
 
         int attackPower = this.getAttack();
         List<AlliedSoldier> alliedSoldiers = character.getListAlliedSoldiers();

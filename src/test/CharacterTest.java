@@ -4,18 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import unsw.loopmania.LoopManiaWorld;
+import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Sword;
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.Character;
+import unsw.loopmania.Slug;
+import unsw.loopmania.BasicEnemy;
+import unsw.loopmania.Staff;
+import unsw.loopmania.Stake;
 
 public class CharacterTest {
     @Test
@@ -82,7 +85,7 @@ public class CharacterTest {
 @Test
     public void alliedSoldierMovingTest(){
         // create character add 2 AlliedSoldiers
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Character c = new Character(pos);
         AlliedSoldier ally1 = new AlliedSoldier(pos);
         AlliedSoldier ally2 = new AlliedSoldier(pos);
@@ -135,10 +138,10 @@ public void convertToEnemyTest(){
     Character c = new Character(pos);
     AlliedSoldier ally1 = new AlliedSoldier(pos);
     c.addAlliedSoldier(ally1);
-    AssertFalse(c.getListAlliedSoldiers().isEmpty());
+    assertFalse(c.getListAlliedSoldiers().isEmpty());
     BasicEnemy enemy = c.convertToEnemy(ally1, new Slug(pos));
     assertTrue(c.getListAlliedSoldiers().isEmpty());
-    assertTrue(enemy.instanceof(Slug));
+    assertTrue(enemy instanceof Slug);
 }
 
 /**
@@ -149,19 +152,24 @@ public void convertBackToEnemyTest(){
     PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
     Character c = new Character(pos);
     Slug enemy = new Slug(pos);
-
     // convert to ally
     enemy.convertToFriendly(c);
     // check enemy converted to ally
     assertTrue(enemy.getInTrance());
     assertFalse(c.getListAlliedSoldiers().isEmpty());
 
+    BasicEnemy oldEnemy = null;
     // convert back to enemy
-    for (AlliedSoldier ally : c.getListAlliedSoldiers()) {
-        c.convertBackToEnemy(ally);
-    }
+    List<AlliedSoldier> listAlliedSoldiers = c.getListAlliedSoldiers();
+
+    // Have to get the allied Soldier like this instead of with a for loop
+    // since you called c.convertBackToEnemy(ally) which changes the array in the for loop
+    // which gives an error.
+    AlliedSoldier ally = listAlliedSoldiers.get(0);
+    oldEnemy = c.convertBackToEnemy(ally);
+
     // check ally converted to enemy
-    assertFalse(enemy.getInTrance());
+    assertFalse(oldEnemy.getInTrance());
     assertTrue(c.getListAlliedSoldiers().isEmpty());
 }
 
@@ -179,15 +187,20 @@ public void integrationAttackTest(){
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2);
     // sword does 8 dmg
-    c.setEquippedWeapon(Sword sword = new Sword(0,0));
+    Sword sword = new Sword(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+    c.setEquippedWeapon(sword);
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2-8);
     // stake does 4 dmg
-    c.setEquippedWeapon(Stake stake = new Stake(0,0));
+    Stake stake = new Stake(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+    c.setEquippedWeapon(stake);
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2-8-4);
     // staff does 3 dmg
-    c.setEquippedWeapon(Staff staff = new Staff(0,0));
+    // Since staff has a chance to trance, put an extra field for trance chance so the chance
+    // for it to trance is 0.
+    Staff staff = new Staff(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0), 0);
+    c.setEquippedWeapon(staff);
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2-8-4-3);
 }

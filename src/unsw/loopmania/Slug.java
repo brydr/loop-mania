@@ -1,4 +1,7 @@
 package unsw.loopmania;
+
+import java.util.Random;
+import java.time.Duration;
 public class Slug extends BasicEnemy {
     
     public Slug(PathPosition position) {
@@ -8,6 +11,7 @@ public class Slug extends BasicEnemy {
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);
+        this.setExperienceGain(10);
     }
 
 
@@ -24,6 +28,16 @@ public class Slug extends BasicEnemy {
             super.move();
             this.setSpeed(1);
         } 
+    }
+
+    public AlliedSoldier convertToFriendly(Character character) {
+        Random rand = new Random();
+        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
+        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
+        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
+        character.addAlliedSoldier(transformedSoldier);
+        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
+        return transformedSoldier;
     }
 
     public void attack(Character character) {

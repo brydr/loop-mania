@@ -8,16 +8,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch BasicEnemy",
-            "request": "launch",
-            "mainClass": "unsw.loopmania.BasicEnemy",
-            "projectName": "21T2-cs2511-project_a37eec5c"
-        },
-        {
-            "type": "java",
             "name": "CodeLens (Launch) - LoopManiaApplication",
             "request": "launch",
-            "vmArgs": "--module-path ./lib --add-modules javafx.controls,javafx.fxml,javafx.media -enableassertions",
+            "vmArgs": "--module-path ./lib/symlink_javafx --add-modules javafx.controls,javafx.fxml -enableassertions",
             "mainClass": "unsw.loopmania.LoopManiaApplication"
         }
     ]

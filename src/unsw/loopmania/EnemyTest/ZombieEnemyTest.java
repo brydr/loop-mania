@@ -1,16 +1,13 @@
 package unsw.loopmania.EnemyTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.Character;
@@ -20,8 +17,9 @@ public class ZombieEnemyTest {
     
     @Test
     public void testRadius() {
-
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Zombie zombie = new Zombie(pos);
 
         assertEquals(zombie.getBattleRadius(), 2);
@@ -32,7 +30,10 @@ public class ZombieEnemyTest {
 
     @Test
     public void testMove() {
-        PathPosition pos = new PathPosition(2, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4), new Pair<>(0, 4)));
+        PathPosition pos = new PathPosition( 2, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3),
+                                                              new Pair<>(0, 4)) );
         Zombie zombie = new Zombie(pos);
         zombie.move();
         // Zombies are slow so they do not move on the first tick.
@@ -48,7 +49,9 @@ public class ZombieEnemyTest {
 
     @Test
     public void testAttackAndTakeDamage() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Zombie zombie = new Zombie(pos);
         Character c = new Character(pos);
 
@@ -63,12 +66,16 @@ public class ZombieEnemyTest {
 
     @Test
     public void testCriticalBite() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
-        Zombie zombie = new Zombie(pos);
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
+        Zombie zombie = new Zombie(pos, 0); // A zombie that has 100% to inflict a critical bite.
+        Character c = new Character(pos);
         AlliedSoldier alliedSoldier = new AlliedSoldier(pos);
+        c.addAlliedSoldier(alliedSoldier);
 
-        zombie.attack(alliedSoldier);
+        zombie.attack(c);
 
-        assertTrue(alliedSoldier.getClass() == Zombie.class);
+        assertTrue(c.getListAlliedSoldiers().size() == 0);  // The allied soldier should be removed since it has transformed.
     }
 }

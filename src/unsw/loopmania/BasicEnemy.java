@@ -82,5 +82,6 @@ public abstract class BasicEnemy extends MovingEntity {
         this.setHp(hp - damage);
     }
 
+    public abstract AlliedSoldier convertToFriendly(Character character);
     public abstract void attack(Character character);
 }

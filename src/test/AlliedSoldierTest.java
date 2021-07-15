@@ -14,6 +14,7 @@ import java.util.Arrays;
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.PathPosition;
+import unsw.loopmania.Slug;
 
 public class AlliedSoldierTest {
     @Test
@@ -30,10 +31,10 @@ public class AlliedSoldierTest {
         assertEquals(ally.getHp(), -10);
     }
 
-@Test
+    @Test
     public void tranceTimeTest(){
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
-        BasicEnemy enemy = new BasicEnemy(pos);
+        Slug enemy = new Slug(pos);
         Duration fiveSeconds = Duration.ofSeconds(5);
         Duration threeSeconds = Duration.ofSeconds(3);
         AlliedSoldier ally1 = new AlliedSoldier(pos, fiveSeconds, enemy);
@@ -46,7 +47,7 @@ public class AlliedSoldierTest {
         assertTrue(ally2.isTranceOver(fiveSeconds));
     }
 
-@Test
+    @Test
     public void attackTest(){
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Slug slug = new Slug(pos);
@@ -59,10 +60,10 @@ public class AlliedSoldierTest {
         assertEquals(slug.getHp(), -2);
     }
 
-@Test
+    @Test
     public void reactivateldEnemyTest(){
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2)));
-        BasicEnemy enemy = new BasicEnemy(pos);
+        Slug enemy = new Slug(pos);
         Duration fiveSeconds = Duration.ofSeconds(5);
         AlliedSoldier ally = new AlliedSoldier(pos, fiveSeconds, enemy);
         enemy.setInTrance(true);

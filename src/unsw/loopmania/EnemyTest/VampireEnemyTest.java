@@ -2,7 +2,6 @@ package unsw.loopmania.EnemyTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,8 +17,9 @@ public class VampireEnemyTest {
 
     @Test
     public void testRadius() {
-
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Vampire vampire = new Vampire(pos);
 
         assertEquals(vampire.getBattleRadius(), 2);
@@ -30,7 +30,10 @@ public class VampireEnemyTest {
 
     @Test
     public void testMove() {
-        PathPosition pos = new PathPosition(2, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3), new Pair<>(0, 4), new Pair<>(0, 4)));
+        PathPosition pos = new PathPosition( 2, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3),
+                                                              new Pair<>(0, 4)) );
         Vampire vampire = new Vampire(pos);
         vampire.move();
 
@@ -43,7 +46,9 @@ public class VampireEnemyTest {
 
     @Test
     public void testTakeDamage() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Vampire vampire = new Vampire(pos);
 
         vampire.takeDamage(5);
@@ -53,7 +58,9 @@ public class VampireEnemyTest {
 
     @Test
     public void testCriticalBite() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
+                                                              new Pair<>(0, 2), 
+                                                              new Pair<>(0, 3)) );
         Vampire vampire = new Vampire(pos);
         Character c = new Character(pos);
 

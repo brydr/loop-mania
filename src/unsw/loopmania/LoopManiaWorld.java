@@ -1,13 +1,19 @@
 package unsw.loopmania;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.time.Duration;
 
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.Armour;
+import unsw.loopmania.Helmet;
+import unsw.loopmania.Shield;
+import unsw.loopmania.Staff;
+import unsw.loopmania.Stake;
+import unsw.loopmania.Sword;
 
 /**
  * A backend world.
@@ -50,7 +56,7 @@ public class LoopManiaWorld {
     private List<Entity> unequippedInventoryItems;
 
     // TODO = expand the range of buildings
-    private List<VampireCastleBuilding> buildingEntities;
+    private List<Building> buildingEntities;
 
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
@@ -59,7 +65,7 @@ public class LoopManiaWorld {
 
     /**
      * create the world (constructor)
-     * 
+     *
      * @param width width of world in number of cells
      * @param height height of world in number of cells
      * @param orderedPath ordered list of x, y coordinate pairs representing position of path cells in world
@@ -84,8 +90,13 @@ public class LoopManiaWorld {
         return height;
     }
 
+    // getEnemies and addEnemies is used for testing.
     public List<BasicEnemy> getEnemies() {
         return enemies;
+    }
+
+    public void addEnemies(BasicEnemy e) {
+        enemies.add(e);
     }
     /**
      * set the character. This is necessary because it is loaded as a special entity out of the file
@@ -144,7 +155,7 @@ public class LoopManiaWorld {
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
         List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
         boolean alreadyABattle = false;
-
+        
         BasicEnemy battledEnemy = null;
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
@@ -174,8 +185,7 @@ public class LoopManiaWorld {
         List<AlliedSoldier> transformedEnemies = new ArrayList<AlliedSoldier>();
 
         // End the while if there are no enemies left or the only enemies left are transformedEnemies.
-        while (!(enemiesInRange.equals(transformedEnemies))) {
-            
+        while (enemiesInRange.size() > 0) {
             BasicEnemy e = enemiesInRange.get(i);
             int enemyHealth = e.getHp();
             int charHealth = character.getHp();
@@ -211,26 +221,23 @@ public class LoopManiaWorld {
             }
 
             if (charHealth <= 0) {
-                // Character is dead so game over.    
+                // Character is dead so game over.
             }
 
             if (enemyHealth <= 0) {
                 defeatedEnemies.add(e);
+                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
             // If an enemy did not die it means it was put in trance.
             } else {
-                Random rand = new Random();
-                int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-                Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
-                AlliedSoldier transformedSoldier = new AlliedSoldier(e.getPosition(), tranceTimeDuration, e);
-                
+                // Adds the new allied soldier into the characters array of allied soldiers.
+                AlliedSoldier transformedSoldier = e.convertToFriendly(character); 
                 transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
-                character.addAlliedSoldier(transformedSoldier); // Add the new allied soldier into the characters array of allied soldiers.
                 enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
                 i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
             }
-        
+
             i++;
-            // If it goes past the maximum index then set i back to 0. 
+            // If it goes past the maximum index then set i back to 0.
             if (i >= enemiesInRange.size()) {
                 i = 0;
             }
@@ -256,15 +263,32 @@ public class LoopManiaWorld {
      * spawn a card in the world and return the card entity
      * @return a card to be spawned in the controller as a JavaFX node
      */
-    public VampireCastleCard loadVampireCard(){
+    public Card loadRandomCard(){
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
             removeCard(0);
         }
-        VampireCastleCard vampireCastleCard = new VampireCastleCard(new SimpleIntegerProperty(cardEntities.size()), new SimpleIntegerProperty(0));
-        cardEntities.add(vampireCastleCard);
-        return vampireCastleCard;
+
+        // TODO = Make RandomCardGenerator an instance variable to improve performance
+        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
+
+        cardEntities.add(randCard);
+        return randCard;
+    }
+
+    public Item loadRandomItem(){
+        // if adding more cards than have, remove the first card...
+        if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
+            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            removeItemByPositionInUnequippedInventoryItems(0);;
+        }
+
+        // TODO = Make RandomCardGenerator an instance variable to improve performance
+        Item item = new RandomItemGenerator().nextItem(unequippedInventoryItems.size(), 0);
+
+        unequippedInventoryItems.add(item);
+        return item;
     }
 
     /**
@@ -288,6 +312,7 @@ public class LoopManiaWorld {
         unequippedInventoryItems.add(item);
         return item;
     }
+
 
     /**
      * remove an item by x,y coordinates
@@ -387,7 +412,7 @@ public class LoopManiaWorld {
      */
     private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
-        
+
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
         Random rand = new Random();
         int choice = rand.nextInt(2); // TODO = change based on spec... currently low value for dev purposes...
@@ -418,7 +443,7 @@ public class LoopManiaWorld {
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
      */
-    public VampireCastleBuilding convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+    public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         // start by getting card
         Card card = null;
         for (Card c: cardEntities){
@@ -427,16 +452,29 @@ public class LoopManiaWorld {
                 break;
             }
         }
-        
+        /* FP Alternative
+        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
+        var cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
+        assert cardMatches.count() == 1;
+        Card myCard = cardMatches.findAny().get();
+        */
+
         // now spawn building
-        VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
+                                                   new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
-        // destroy the card
+        // Destroy the card
         card.destroy();
         cardEntities.remove(card);
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;
+    }
+
+    public List<Card> getCards() {
+        return cardEntities;
     }
 }
