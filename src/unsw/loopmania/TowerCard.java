@@ -19,4 +19,11 @@ public class TowerCard extends Card {
         Image towerCardImage = new Image((new File("src/images/tower_card.png")).toURI().toString());
         return towerCardImage;
     }
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathAdjacentTile;
+    }
+
+    
 }

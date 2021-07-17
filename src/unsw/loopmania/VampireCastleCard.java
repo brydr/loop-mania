@@ -24,4 +24,9 @@ public class VampireCastleCard extends Card {
         Image vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
         return vampireCastleCardImage;
     }
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathAdjacentTile;
+    }
 }

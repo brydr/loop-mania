@@ -19,4 +19,9 @@ public class VillageCard extends Card {
         Image villageCardImage = new Image((new File("src/images/village_card.png")).toURI().toString());
         return villageCardImage;
     }
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathTile;
+    }
 }

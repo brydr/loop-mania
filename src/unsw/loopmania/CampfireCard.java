@@ -10,7 +10,7 @@ public class CampfireCard extends Card {
 
     @Override
     public Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY) {
-        CampirefireBuilding newBuilding = new CampirefireBuilding(buildingNodeX, buildingNodeY);
+        CampfireBuilding newBuilding = new CampfireBuilding(buildingNodeX, buildingNodeY);
         return newBuilding;
     }
 
@@ -19,4 +19,12 @@ public class CampfireCard extends Card {
         Image campfireCardImage = new Image((new File("src/images/campfire_card.png")).toURI().toString());
         return campfireCardImage;
     }
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return (tileType == TileType.PathAdjacentTile) 
+            || (tileType == TileType.NonPathTile);
+    }
+
+    
 }

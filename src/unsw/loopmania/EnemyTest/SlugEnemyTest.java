@@ -1,6 +1,4 @@
 package unsw.loopmania.EnemyTest;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import unsw.loopmania.Character;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class SlugEnemyTest {

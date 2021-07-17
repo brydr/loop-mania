@@ -15,4 +15,10 @@ public abstract class Card extends StaticEntity {
 
     public abstract Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY);
     public abstract Image getImage();
+
+    /**
+     * Indicates whether the card can spawn a building on the given {@code TileType} variant. 
+     * @return Returns true if the given {@code TileType} is accepted, otherwise false.
+     */
+    abstract boolean canSpawnOnTile(TileType tileType);
 }

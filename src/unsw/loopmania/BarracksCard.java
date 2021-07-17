@@ -19,4 +19,11 @@ public class BarracksCard extends Card {
         Image barracksCardImage = new Image((new File("src/images/barracks_card.png")).toURI().toString());
         return barracksCardImage;
     }
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathTile;
+    }
+  
+    
 }
