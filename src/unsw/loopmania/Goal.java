@@ -1,12 +1,8 @@
 package unsw.loopmania;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> enemyFrontend
 public class Goal {
     public boolean completed;
-    
+
     private int cyclesRequired;
     private int experienceRequired;
     private int goldRequired;
