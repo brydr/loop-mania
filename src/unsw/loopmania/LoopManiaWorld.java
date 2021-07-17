@@ -149,7 +149,7 @@ public class LoopManiaWorld {
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
         List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
         boolean alreadyABattle = false;
-        
+
         BasicEnemy battledEnemy = null;
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
@@ -224,7 +224,7 @@ public class LoopManiaWorld {
             // If an enemy did not die it means it was put in trance.
             } else {
                 // Adds the new allied soldier into the characters array of allied soldiers.
-                AlliedSoldier transformedSoldier = e.convertToFriendly(character); 
+                AlliedSoldier transformedSoldier = e.convertToFriendly(character);
                 transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
                 enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
                 i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
@@ -301,7 +301,7 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Item addUnequippedItem(Item item){        
+    public Item addUnequippedItem(Item item){
         // now we insert the new sword, as we know we have at least made a slot available...
         unequippedInventoryItems.add(item);
         return item;
