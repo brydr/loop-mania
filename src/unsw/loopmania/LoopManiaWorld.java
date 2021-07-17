@@ -92,6 +92,15 @@ public class LoopManiaWorld {
     public void addEnemies(BasicEnemy e) {
         enemies.add(e);
     }
+
+    // for testing
+    public List<Building> getBuildings() {
+        return buildingEntities;
+    }
+    public void addBuilding(Building newBuilding) {
+        buildingEntities.add(newBuilding);
+    }
+
     /**
      * set the character. This is necessary because it is loaded as a special entity out of the file
      * @param character the character
@@ -400,6 +409,23 @@ public class LoopManiaWorld {
         }
     }
 
+    // Only public for testing purposes
+    // TODO = Revert to private visibility when cycle-complete triggers is implemented
+    public void spawnEnemies() {
+        for (Building building : buildingEntities) {
+            if (building instanceof EnemySpawner) {
+                EnemySpawner enemySpawner = (EnemySpawner) building;
+                enemySpawner.spawn(this);
+            }
+        }
+        /* // FP Alternative
+        buildingEntities.stream()
+            .filter(building -> building instanceof EnemySpawner)
+            .map(building -> (EnemySpawner) building)
+            .forEach(enemySpawner -> enemySpawner.spawn(this));
+        */
+    }
+
     /**
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
@@ -470,5 +496,29 @@ public class LoopManiaWorld {
 
     public List<Card> getCards() {
         return cardEntities;
+    }
+
+    List<Pair<Integer,Integer>> getOrderedPath() {
+        return orderedPath;
+    }
+
+    /**
+     * For a *path adjacent* tile, return the nearest path tile.
+     * @param x x-coordinate of our path-adjacent tile 
+     * @param y y-coordinate of our path-adjacent tile
+     * @throws NoSuchElementException if no adjacent Path tile.
+     * @return A {@code Pair} containing the nearest tile on the path.
+     */
+    public Pair<Integer, Integer> getNearestPathTile(int x, int y) {
+        // Precondition is that tile is adjacent
+        return orderedPath.parallelStream()
+            .filter(tile -> {
+                int xTile = tile.getValue0();
+                int yTile = tile.getValue1();
+                return x - 1 <= xTile && xTile <= x + 1
+                    && y - 1 <= yTile && yTile <= y + 1;
+            })
+            .findAny()
+            .orElseThrow();
     }
 }
