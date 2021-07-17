@@ -564,10 +564,12 @@ public class LoopManiaWorldController {
                 draggedEntity.relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
                 switch (draggableType){
                     case CARD:
-                        draggedEntity.setImage(vampireCastleCardImage);
+                        Image cardImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(cardImage);
                         break;
                     case ITEM:
-                        draggedEntity.setImage(swordImage);
+                        Image itemImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(itemImage);
                         break;
                     default:
                         break;
