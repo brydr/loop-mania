@@ -470,7 +470,7 @@ public class LoopManiaWorldController {
      * @param vampireCastleCard
      */
     private void onLoad(Card card) {
-        ImageView view = new ImageView(card.getImage()); //TODO implement card.getImage()
+        ImageView view = new ImageView(new Image((new File(card.getImage())).toURI().toString()));
 
         // FROM https://stackoverflow.com/questions/41088095/javafx-drag-and-drop-to-gridpane
         // note target setOnDragOver and setOnDragEntered defined in initialize method
@@ -487,7 +487,8 @@ public class LoopManiaWorldController {
      * @param item
      */
     private void onLoad(Item item) {
-        ImageView view = new ImageView(item.getImage()); //TODO implement item.getImage()
+        ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
+
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
         addEntity(item, view);
         unequippedInventory.getChildren().add(view);
@@ -501,7 +502,8 @@ public class LoopManiaWorldController {
      * @param item
      */
     private void onLoadEquipped(Item item) {
-        ImageView view = new ImageView(item);
+        ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
+
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);//TODO may need to remove drageEventHandler here as we don't drag equipped item anywhere?
         addEntity(item, view);
         equippedItems.getChildren().add(view);
@@ -512,7 +514,7 @@ public class LoopManiaWorldController {
      * @param enemy
      */
     private void onLoad(BasicEnemy enemy) {
-        ImageView view = new ImageView(enemy.getImage()); //TODO implement enemy.getImage()
+        ImageView view = new ImageView(new Image((new File(enemy.getImage())).toURI().toString()));
         addEntity(enemy, view);
         squares.getChildren().add(view);
     }
@@ -522,7 +524,7 @@ public class LoopManiaWorldController {
      * @param building
      */
     private void onLoad(Building building){
-        ImageView view = new ImageView(building.getImage()); //TODO implement building.getImage()
+        ImageView view = new ImageView(new Image((new File(building.getImage())).toURI().toString()));
         addEntity(building, view);
         squares.getChildren().add(view);
     }
