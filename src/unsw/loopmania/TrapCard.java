@@ -23,4 +23,5 @@ public class TrapCard extends Card {
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathTile;
     }
+}
     
