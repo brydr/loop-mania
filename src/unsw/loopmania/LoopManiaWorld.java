@@ -4,10 +4,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.util.CustomCollectors;
 
 /**
  * A backend world.
@@ -430,6 +432,35 @@ public class LoopManiaWorld {
         return null;
     }
 
+    private TileType getTileType(final int x, final int y) {
+        // TODO = See if this needs to become a checked/recoverable error
+        assert (x < width) && (y < height);
+
+        final var subjectTile = Pair.with(x, y);
+
+        // See if path matches 
+        boolean isPathTile = orderedPath.parallelStream()
+            .anyMatch(tile -> tile.equals(subjectTile));
+        if (isPathTile)
+            return TileType.PathTile;
+        
+        // Precondition is that tile != subjectTile
+        Predicate<Pair<Integer,Integer>> isAdjacentTo 
+        = tile -> {
+            int tileX = tile.getValue0().intValue();
+            int tileY = tile.getValue1().intValue();
+            return (x - 1 <= tileX) && (tileX <= x + 1)
+                && (y - 1 <= tileY) && (tileY <= y + 1);
+        };
+        boolean isAdjacentTile = orderedPath.parallelStream()
+            .anyMatch(isAdjacentTo);
+        if (isAdjacentTile)
+            return TileType.PathAdjacentTile;
+        else
+            return TileType.NonPathTile;
+    }
+
+    
     /**
      * remove a card by its x, y coordinates
      * @param cardNodeX x index from 0 to width-1 of card to be removed
@@ -438,31 +469,27 @@ public class LoopManiaWorld {
      * @param buildingNodeY y index from 0 to height-1 of building to be added
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
-        // start by getting card
-        Card card = null;
-        for (Card c: cardEntities){
-            if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
-                card = c;
-                break;
-            }
-        }
-        /* FP Alternative
-        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
-        var cardMatches = cardEntities.stream()
-            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
-        assert cardMatches.count() == 1;
-        Card myCard = cardMatches.findAny().get();
-        */
+        Card cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
+            .collect(CustomCollectors.toSingleton());
+        
+        // Check that tile can be spawned here 
+        if (!cardMatches.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
+            // TODO = Change interface to use an `Exception` or `Optional<T>` instead
+            return null;
+        };
+
+
 
         // now spawn building
         // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
-        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
+        Building newBuilding = cardMatches.createBuilding(new SimpleIntegerProperty(buildingNodeX),
                                                    new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
         // Destroy the card
-        card.destroy();
-        cardEntities.remove(card);
+        cardMatches.destroy();
+        cardEntities.remove(cardMatches);
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;

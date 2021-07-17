@@ -280,10 +280,20 @@ public class LoopManiaWorldController {
     /**
      * load a vampire card from the world, and pair it with an image in the GUI
      */
-    private void loadVampireCard() {
+    private void loadRandomCard() {
         // TODO = load more types of card
         Card randomCard = world.loadRandomCard();
         onLoad(randomCard);
+    }
+
+    /**
+     * load a sword from the world, and pair it with an image in the GUI
+     */
+    private void loadRandomItem() {
+        // TODO = load more types of weapon
+        // start by getting first available coordinates
+        Item randomItem = world.loadRandomItem();
+        onLoad(randomItem);
     }
 
     /**
@@ -303,9 +313,9 @@ public class LoopManiaWorldController {
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
-            world.loadRandomCard();
+            loadRandomCard();
         } else {
-            world.loadRandomItem();
+            loadRandomItem();
         }
 
         if (oneRingChance < 3) {
@@ -325,7 +335,7 @@ public class LoopManiaWorldController {
      * load a vampire castle card into the GUI.
      * Particularly, we must connect to the drag detection event handler,
      * and load the image into the cards GridPane.
-     * @param vampireCastleCard
+     * @param card
      */
     private void onLoad(Card card) {
         String cardImageString = card.getImage();
@@ -350,12 +360,30 @@ public class LoopManiaWorldController {
         squares.getChildren().add(view);
     }
 
+        /**
+     * load a sword into the GUI.
+     * Particularly, we must connect to the drag detection event handler,
+     * and load the image into the unequippedInventory GridPane.
+     * @param sword
+     */
+    private void onLoad(Item item) {
+        String itemImageString = item.getImage();
+        Image itemImage = new Image((new File(itemImageString)).toURI().toString());
+        ImageView view = new ImageView(itemImage);
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
+        addEntity(item, view);
+        unequippedInventory.getChildren().add(view);
+    }
+
+
     /**
      * load a building into the GUI
      * @param building
      */
     private void onLoad(Building building){
-        ImageView view = new ImageView(basicBuildingImage);
+        String buildingImageString = building.getImage();
+        Image buildingImage = new Image((new File(buildingImageString)).toURI().toString());
+        ImageView view = new ImageView(buildingImage);
         addEntity(building, view);
         squares.getChildren().add(view);
     }
