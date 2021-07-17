@@ -527,6 +527,8 @@ public class LoopManiaWorldController {
                         //Places at 0,0 - will need to take coordinates once that is implemented
                         ImageView image = new ImageView(db.getImage());
 
+                        boolean placeBack = false;
+
                         int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
                         int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
                         switch (draggableType){
@@ -537,6 +539,8 @@ public class LoopManiaWorldController {
                                 if (newBuilding != null) {
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                     onLoad(newBuilding);
+                                } else {
+                                    placeBack = true;
                                 }
                                 break;
                             case ITEM:
@@ -549,12 +553,18 @@ public class LoopManiaWorldController {
                                 break;
                         }
                         
+                        // Set the dragged item back to true if it got placed in a non valid tile.
+                        if (placeBack == true) {
+                            currentlyDraggedImage.setVisible(true);
+                        }
+
                         draggedEntity.setVisible(false);
                         draggedEntity.setMouseTransparent(false);
                         // remove drag event handlers before setting currently dragged image to null
                         currentlyDraggedImage = null;
                         currentlyDraggedType = null;
                         printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
+
                     }
                 }
                 event.setDropCompleted(true);
@@ -657,10 +667,12 @@ public class LoopManiaWorldController {
                 draggedEntity.relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
                 switch (draggableType){
                     case CARD:
-                        draggedEntity.setImage(vampireCastleCardImage);
+                        Image cardImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(cardImage);
                         break;
                     case ITEM:
-                        draggedEntity.setImage(swordImage);
+                        Image itemImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(itemImage);
                         break;
                     default:
                         break;

@@ -12,7 +12,7 @@ public class VampireCastleBuilding extends Building {
     }
 
     public String getImage() {
-        String vampireCastleBuildingImage = "src/images/vampire_castle_building_transparent.png";
+        String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
         //String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
         return vampireCastleBuildingImage;
     }
