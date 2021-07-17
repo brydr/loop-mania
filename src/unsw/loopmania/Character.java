@@ -7,7 +7,6 @@ import java.util.List;
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
-    //TODO update unarmed xy coord arguments
     private WeaponStrategy equippedWeapon = new Unarmed();
     private Armour equippedArmour;
     private Shield equippedShield;
@@ -16,7 +15,7 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
     private int experience = 0;
     private int cycles = 0;
-    public Gold gold = new Gold();
+    private Gold gold = new Gold();
 
     public Character(PathPosition position) {
         super(position);

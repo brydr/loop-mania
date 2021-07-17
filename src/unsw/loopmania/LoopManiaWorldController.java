@@ -527,6 +527,8 @@ public class LoopManiaWorldController {
                         //Places at 0,0 - will need to take coordinates once that is implemented
                         ImageView image = new ImageView(db.getImage());
 
+                        boolean placeBack = false;
+
                         int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
                         int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
                         switch (draggableType){
@@ -540,15 +542,41 @@ public class LoopManiaWorldController {
                                 }
                                 break;
                             case ITEM:
-                                removeDraggableDragEventHandlers(draggableType, targetGridPane);
-                                // TODO = spawn an item in the new location. The above code for spawning a building will help, it is very similar
-                                removeItemByCoordinates(nodeX, nodeY);
-                                targetGridPane.add(image, x, y, 1, 1);
+                                placeBack = true;
+                                Node targetNode = getNodeFromGridPane(targetGridPane, x, y);
+                                Item item = world.getUnequippedItemTypeByCoordinates(nodeX, nodeY);
+                                if (targetNode.getId().equals("swordCell") && item instanceof Weapon){
+                                    placeBack = false;
+                                }
+                                else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet){
+                                    placeBack = false;
+                                }
+                                else if (targetNode.getId().equals("armourCell") && item instanceof Armour){
+                                    placeBack = false;
+                                }
+                                else if (targetNode.getId().equals("shieldCell") && item instanceof Shield){
+                                    placeBack = false;
+                                }
+                                else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem){
+                                    placeBack = false;
+                                }
+                                else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion){
+                                    placeBack = false;
+                                }
+                                if (!placeBack) {
+                                    removeDraggableDragEventHandlers(draggableType, targetGridPane);
+                                    removeItemByCoordinates(nodeX, nodeY);
+                                    targetGridPane.add(image, x, y, 1, 1);
+                                }
                                 break;
                             default:
                                 break;
                         }
-                        
+                        // Set the dragged item back to true if it got placed in a non valid tile.
+                         if (placeBack == true) {
+                            currentlyDraggedImage.setVisible(true);
+                        }
+
                         draggedEntity.setVisible(false);
                         draggedEntity.setMouseTransparent(false);
                         // remove drag event handlers before setting currently dragged image to null
@@ -677,6 +705,7 @@ public class LoopManiaWorldController {
                 anchorPaneRoot.addEventHandler(DragEvent.DRAG_OVER, anchorPaneRootSetOnDragOver.get(draggableType));
                 anchorPaneRoot.addEventHandler(DragEvent.DRAG_DROPPED, anchorPaneRootSetOnDragDropped.get(draggableType));
 
+                // when entering and exiting possible squares change opacity
                 for (Node n: targetGridPane.getChildren()){
                     // events for entering and exiting are attached to squares children because that impacts opacity change
                     // these do not affect visibility of original image...
@@ -854,5 +883,18 @@ public class LoopManiaWorldController {
         System.out.println("current method = "+currentMethodLabel);
         System.out.println("In application thread? = "+Platform.isFxApplicationThread());
         System.out.println("Current system time = "+java.time.LocalDateTime.now().toString().replace('T', ' '));
+    }
+
+    /**
+     * Helper function sourced from https://stackoverflow.com/questions/20655024/javafx-gridpane-retrieve-specific-cell-content
+     * used to get specific node from a gridpane (used for equippedItems)
+     */
+    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
     }
 }
