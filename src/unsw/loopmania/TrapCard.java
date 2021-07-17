@@ -17,4 +17,10 @@ public class TrapCard extends Card {
         String trapCardImage = "src/images/trap_card.png";
         return trapCardImage;
     }
-}
+
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathTile;
+    }
+    

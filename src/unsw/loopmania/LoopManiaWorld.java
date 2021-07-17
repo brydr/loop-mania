@@ -4,10 +4,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.util.CustomCollectors;
 
 /**
  * A backend world.
@@ -288,6 +290,7 @@ public class LoopManiaWorld {
         return item;
     }
 
+
     /**
      * remove card at a particular index of cards (position in gridpane of unplayed cards)
      * @param index the index of the card, from 0 to length-1
@@ -386,7 +389,7 @@ public class LoopManiaWorld {
      * remove an item from the unequipped inventory
      * @param item item to be removed
      */
-    private void removeUnequippedInventoryItem(Entity item){
+    public void removeUnequippedInventoryItem(Entity item){
         item.destroy();
         unequippedInventoryItems.remove(item);
     }
@@ -398,7 +401,7 @@ public class LoopManiaWorld {
      * @param y y index from 0 to height-1
      * @return unequipped inventory item at the input position
      */
-    private Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
+    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
         for (Entity e: unequippedInventoryItems){
             if ((e.getX() == x) && (e.getY() == y)){
                 return e;
@@ -438,7 +441,7 @@ public class LoopManiaWorld {
      * shift card coordinates down starting from x coordinate
      * @param x x coordinate which can range from 0 to width-1
      */
-    private void shiftCardsDownFromXCoordinate(int x){
+    public void shiftCardsDownFromXCoordinate(int x){
         for (Card c: cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
@@ -449,7 +452,7 @@ public class LoopManiaWorld {
     /**
      * move all enemies
      */
-    private void moveBasicEnemies() {
+    public void moveBasicEnemies() {
         // TODO = expand to more types of enemy
         for (BasicEnemy e: enemies){
             e.move();
@@ -460,7 +463,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
+    public Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
@@ -486,15 +489,45 @@ public class LoopManiaWorld {
         return null;
     }
 
+    private TileType getTileType(final int x, final int y) {
+        // TODO = See if this needs to become a checked/recoverable error
+        assert (x < width) && (y < height);
+
+        final var subjectTile = Pair.with(x, y);
+
+        // See if path matches 
+        boolean isPathTile = orderedPath.parallelStream()
+            .anyMatch(tile -> tile.equals(subjectTile));
+        if (isPathTile)
+            return TileType.PathTile;
+        
+        // Precondition is that tile != subjectTile
+        Predicate<Pair<Integer,Integer>> isAdjacentTo 
+        = tile -> {
+            int tileX = tile.getValue0().intValue();
+            int tileY = tile.getValue1().intValue();
+            return (x - 1 <= tileX) && (tileX <= x + 1)
+                && (y - 1 <= tileY) && (tileY <= y + 1);
+        };
+        boolean isAdjacentTile = orderedPath.parallelStream()
+            .anyMatch(isAdjacentTo);
+        if (isAdjacentTile)
+            return TileType.PathAdjacentTile;
+        else
+            return TileType.NonPathTile;
+    }
+
+    
     /**
      * remove a card by its x, y coordinates
      * @param cardNodeX x index from 0 to width-1 of card to be removed
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
+     * @return {@code Building} the building if successfully created, OR {@code null} if otherwise 
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
-        // start by getting card
+        // Start by getting card
         Card card = null;
         for (Card c: cardEntities){
             if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
@@ -502,17 +535,21 @@ public class LoopManiaWorld {
                 break;
             }
         }
-        /* FP Alternative
+        
+        // TODO = Replace above implementation with below
         // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
-        var cardMatches = cardEntities.stream()
-            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
-        assert cardMatches.count() == 1;
-        Card myCard = cardMatches.findAny().get();
-        */
+        Card cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
+            .collect(CustomCollectors.toSingleton());
+        
+        // Check that tile can be spawned here 
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
+            // TODO = Change interface to use an `Exception` or `Optional<T>` instead
+            return null;
+        };
 
-        // now spawn building
-        // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
-        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
+        // Now spawn building
+        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX), 
                                                    new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
@@ -537,4 +574,12 @@ public class LoopManiaWorld {
         }
     }
 
+    /**
+     * Adds a new card to the world. Currently used for tests.
+     * @param newCard
+     */
+    public void addCard(Card newCard) {
+        cardEntities.add(newCard);
+    } 
 }
+
