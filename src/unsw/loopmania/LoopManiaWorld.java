@@ -287,6 +287,7 @@ public class LoopManiaWorld {
         return item;
     }
 
+
     /**
      * remove card at a particular index of cards (position in gridpane of unplayed cards)
      * @param index the index of the card, from 0 to length-1
@@ -467,29 +468,38 @@ public class LoopManiaWorld {
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
+     * @return {@code Building} the building if successfully created, OR {@code null} if otherwise 
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+        // Start by getting card
+        Card card = null;
+        for (Card c: cardEntities){
+            if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
+                card = c;
+                break;
+            }
+        }
+        
+        // TODO = Replace above implementation with below
+        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
         Card cardMatches = cardEntities.stream()
             .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
             .collect(CustomCollectors.toSingleton());
         
         // Check that tile can be spawned here 
-        if (!cardMatches.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
         };
 
-
-
-        // now spawn building
-        // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
-        Building newBuilding = cardMatches.createBuilding(new SimpleIntegerProperty(buildingNodeX),
+        // Now spawn building
+        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX), 
                                                    new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
         // Destroy the card
-        cardMatches.destroy();
-        cardEntities.remove(cardMatches);
+        card.destroy();
+        cardEntities.remove(card);
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;
@@ -498,4 +508,13 @@ public class LoopManiaWorld {
     public List<Card> getCards() {
         return cardEntities;
     }
+
+    /**
+     * Adds a new card to the world. Currently used for tests.
+     * @param newCard
+     */
+    public void addCard(Card newCard) {
+        cardEntities.add(newCard);
+    } 
 }
+
