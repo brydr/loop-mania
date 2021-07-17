@@ -1,7 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.image.Image;
 
 /**
  * a Card in the world
@@ -14,10 +13,8 @@ public abstract class Card extends StaticEntity {
     }
 
     public abstract Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY);
-<<<<<<< HEAD
 
     public abstract String getImage();
-=======
-    public abstract Image getImage();
->>>>>>> cards
+
+    abstract boolean canSpawnOnTile(TileType tileType);
 }
