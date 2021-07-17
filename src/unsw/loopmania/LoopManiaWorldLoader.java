@@ -49,11 +49,6 @@ public abstract class LoopManiaWorldLoader {
             loadEntity(world, jsonEntities.getJSONObject(i), orderedPath);
         }
 
-        JSONArray jsonGoals = json.getJSONArray("goal-condition");
-        for (int i = 0; i < jsonGoals.length(); i++) {
-            loadGoals(world, jsonGoals.getJSONObject(i));
-        }
-
         return world;
     }
 
@@ -153,23 +148,5 @@ public abstract class LoopManiaWorldLoader {
     public abstract void onLoad(PathTile pathTile, PathTile.Direction into, PathTile.Direction out);
 
     // TODO Create additional abstract methods for the other entities
-
-    public void loadGoals(LoopManiaWorld world, JSONObject goal) {
-        if (goal.getString("goal").equals("experience")) {
-            ObtainExperience expGoal = new ObtainExperience();
-            expGoal.value = goal.getInt("quantity");
-            world.goals.addSubGoal(expGoal);
-        }
-        if (goal.getString("goal").equals("gold")) {
-            AmassGold goldGoal = new AmassGold();
-            goldGoal.value = goal.getInt("quantity");
-            world.goals.addSubGoal(goldGoal);
-        }
-        if (goal.getString("goal").equals("cycles")) {
-            CompleteCycles cycleGoal = new CompleteCycles();
-            cycleGoal.value = goal.getInt("quantity");
-            world.goals.addSubGoal(cycleGoal);
-        }
-    }
 
 }

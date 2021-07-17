@@ -330,7 +330,7 @@ public class LoopManiaWorld {
      * remove an item from the unequipped inventory
      * @param item item to be removed
      */
-    private void removeUnequippedInventoryItem(Entity item){
+    public void removeUnequippedInventoryItem(Entity item){
         item.destroy();
         unequippedInventoryItems.remove(item);
     }
@@ -342,7 +342,7 @@ public class LoopManiaWorld {
      * @param y y index from 0 to height-1
      * @return unequipped inventory item at the input position
      */
-    private Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
+    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
         for (Entity e: unequippedInventoryItems){
             if ((e.getX() == x) && (e.getY() == y)){
                 return e;
@@ -355,7 +355,7 @@ public class LoopManiaWorld {
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
      */
-    private void removeItemByPositionInUnequippedInventoryItems(int index){
+    public void removeItemByPositionInUnequippedInventoryItems(int index){
         Entity item = unequippedInventoryItems.get(index);
         item.destroy();
         unequippedInventoryItems.remove(index);
@@ -365,7 +365,7 @@ public class LoopManiaWorld {
      * get the first pair of x,y coordinates which don't have any items in it in the unequipped inventory
      * @return x,y coordinate pair
      */
-    private Pair<Integer, Integer> getFirstAvailableSlotForItem(){
+    public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y=0; y<unequippedInventoryHeight; y++){
@@ -382,7 +382,7 @@ public class LoopManiaWorld {
      * shift card coordinates down starting from x coordinate
      * @param x x coordinate which can range from 0 to width-1
      */
-    private void shiftCardsDownFromXCoordinate(int x){
+    public void shiftCardsDownFromXCoordinate(int x){
         for (Card c: cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
@@ -393,7 +393,7 @@ public class LoopManiaWorld {
     /**
      * move all enemies
      */
-    private void moveBasicEnemies() {
+    public void moveBasicEnemies() {
         // TODO = expand to more types of enemy
         for (BasicEnemy e: enemies){
             e.move();
@@ -404,7 +404,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
+    public Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
