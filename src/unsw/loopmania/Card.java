@@ -11,4 +11,6 @@ public abstract class Card extends StaticEntity {
     public Card(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y);
     }
+
+    public abstract Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY);
 }

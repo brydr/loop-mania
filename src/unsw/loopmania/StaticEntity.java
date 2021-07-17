@@ -20,18 +20,22 @@ public abstract class StaticEntity extends Entity {
         this.y = y;
     }
 
+    @Override
     public IntegerProperty x() {
         return x;
     }
 
+    @Override
     public IntegerProperty y() {
         return y;
     }
 
+    @Override
     public int getX() {
         return x().get();
     }
 
+    @Override
     public int getY() {
         return y().get();
     }

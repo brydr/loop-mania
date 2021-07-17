@@ -32,6 +32,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
 
 import java.util.EnumMap;
+import java.util.Random;
 
 import java.io.File;
 import java.io.IOException;
@@ -459,8 +460,31 @@ public class LoopManiaWorldController {
         // react to character defeating an enemy
         // in starter code, spawning extra card/weapon...
         // TODO = provide different benefits to defeating the enemy based on the type of enemy
-        loadSword();
-        loadVampireCard();
+        Character character = world.getCharacter();
+        int experienceGain = enemy.getExperienceGain(); // Get the experience obtained from defeating an enemy.
+        character.addExperience(experienceGain);
+        int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+
+        if (randomLoot == 0) {
+            character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+        } else if (randomLoot == 1) {
+            world.loadRandomCard();
+        } else {
+            world.loadRandomItem();
+        }
+
+        if (oneRingChance < 3) {
+            Pair<Integer, Integer> firstAvailableSlot = world.getFirstAvailableSlotForItem();
+            if (firstAvailableSlot == null){
+                // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
+                // TODO = give some cash/experience rewards for the discarding of the oldest sword
+                world.removeItemByPositionInUnequippedInventoryItems(0);
+                firstAvailableSlot = world.getFirstAvailableSlotForItem();
+            }
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+            world.addUnequippedItem(theOneRing);
+        }
     }
 
     /**

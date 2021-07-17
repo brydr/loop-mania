@@ -1,5 +1,6 @@
 package unsw.loopmania;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -50,7 +51,7 @@ public class LoopManiaWorld {
     private List<Entity> unequippedInventoryItems;
 
     // TODO = expand the range of buildings
-    private List<VampireCastleBuilding> buildingEntities;
+    private List<Building> buildingEntities;
 
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
@@ -59,7 +60,7 @@ public class LoopManiaWorld {
 
     /**
      * create the world (constructor)
-     * 
+     *
      * @param width width of world in number of cells
      * @param height height of world in number of cells
      * @param orderedPath ordered list of x, y coordinate pairs representing position of path cells in world
@@ -84,12 +85,24 @@ public class LoopManiaWorld {
         return height;
     }
 
+    // getEnemies and addEnemies is used for testing.
+    public List<BasicEnemy> getEnemies() {
+        return enemies;
+    }
+
+    public void addEnemies(BasicEnemy e) {
+        enemies.add(e);
+    }
     /**
      * set the character. This is necessary because it is loaded as a special entity out of the file
      * @param character the character
      */
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    public Character getCharacter() {
+        return character;
     }
 
     /**
@@ -112,9 +125,9 @@ public class LoopManiaWorld {
         List<BasicEnemy> spawningEnemies = new ArrayList<>();
         if (pos != null){
             int indexInPath = orderedPath.indexOf(pos);
-            BasicEnemy enemy = new BasicEnemy(new PathPosition(indexInPath, orderedPath));
-            enemies.add(enemy);
-            spawningEnemies.add(enemy);
+            Slug slug = new Slug(new PathPosition(indexInPath, orderedPath));
+            enemies.add(slug);
+            spawningEnemies.add(slug);
         }
         return spawningEnemies;
     }
@@ -135,14 +148,103 @@ public class LoopManiaWorld {
     public List<BasicEnemy> runBattles() {
         // TODO = modify this - currently the character automatically wins all battles without any damage!
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
+        List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
+        boolean alreadyABattle = false;
+        
+        BasicEnemy battledEnemy = null;
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
             // TODO = you should implement different RHS on this inequality, based on influence radii and battle radii
-            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) < 4){
-                // fight...
-                defeatedEnemies.add(e);
+            // If an enemy is in range add it into the enemiesInRange array. This enemy will be the enemy the character is battling.
+            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getBattleRadius(), 2)){
+                enemiesInRange.add(e);
+                battledEnemy = e;
+                alreadyABattle = true;
+                break;
             }
         }
+
+        for (BasicEnemy e: enemies) {
+            // Check if there is an enemy that it is battling since supports only help enemies that are battling.
+            if (alreadyABattle == false) {
+                break;
+            // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
+            // These enemies added will be the enemies supporting.
+            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getSupportRadius(), 2)) {
+                enemiesInRange.add(e);
+            }
+        }
+
+        int i = 0;
+        // An array that will store all enemies that have turned into allied soldiers.
+        List<AlliedSoldier> transformedEnemies = new ArrayList<AlliedSoldier>();
+
+        // End the while if there are no enemies left or the only enemies left are transformedEnemies.
+        while (enemiesInRange.size() > 0) {
+            BasicEnemy e = enemiesInRange.get(i);
+            int enemyHealth = e.getHp();
+            int charHealth = character.getHp();
+
+            while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
+                character.attack(e);    // character.attack(e) also makes all allies of it attack too.
+                e.attack(character);    // Attacks allies first.
+                // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
+                if (e.getConvertedToEnemy() != null) {
+                    enemiesInRange.add(e.getConvertedToEnemy());
+                    e.setConvertedToEnemy(null);
+                }
+                charHealth = character.getHp();
+                enemyHealth = e.getHp();
+
+                // An array that will store all allies that need to be removed from the transformedEnemies array due to converting back into an enemy.
+                List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();
+
+                for (AlliedSoldier transedEnemy : transformedEnemies) {
+                    // Check if the transed time is now equal to 0.
+                    // If it is then add the allied soldier into the convertBackAlliedSoldier array.
+                    if (transedEnemy.isTranceOver(Duration.ofSeconds(1))) {
+                        convertBackAlliedSoldier.add(transedEnemy);
+                    }
+                }
+
+                // Loop through the convertBackAlliedSoldier to check for any allied soldiers that are converting back into an enemy.
+                for (AlliedSoldier convertBackAllied : convertBackAlliedSoldier) {
+                    BasicEnemy oldEnemy = character.convertBackToEnemy(convertBackAllied);
+                    enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
+                    transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
+                }
+            }
+
+            if (charHealth <= 0) {
+                // Character is dead so game over.
+            }
+
+            if (enemyHealth <= 0) {
+                defeatedEnemies.add(e);
+                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
+            // If an enemy did not die it means it was put in trance.
+            } else {
+                // Adds the new allied soldier into the characters array of allied soldiers.
+                AlliedSoldier transformedSoldier = e.convertToFriendly(character); 
+                transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
+                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
+                i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
+            }
+
+            i++;
+            // If it goes past the maximum index then set i back to 0.
+            if (i >= enemiesInRange.size()) {
+                i = 0;
+            }
+        }
+
+        // If the fight ends whilst the enemy is in a trance, the enemy dies.
+        for (AlliedSoldier transedEnemy : transformedEnemies) {
+            transedEnemy.reactivateOldEnemy();
+            BasicEnemy oldEnemy = transedEnemy.getOldEnemy();
+            defeatedEnemies.add(oldEnemy);
+        }
+
         for (BasicEnemy e: defeatedEnemies){
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
@@ -152,7 +254,11 @@ public class LoopManiaWorld {
         return defeatedEnemies;
     }
 
-    public int getCardEntitiesSizeRemoveIfFull() {
+    /**
+     * spawn a card in the world and return the card entity
+     * @return a card to be spawned in the controller as a JavaFX node
+     */
+    public Card loadRandomCard(){
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
@@ -160,15 +266,26 @@ public class LoopManiaWorld {
             payout();
             removeCard(0);
         }
-        return cardEntities.size();
+
+        // TODO = Make RandomCardGenerator an instance variable to improve performance
+        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
+
+        cardEntities.add(randCard);
+        return randCard;
     }
 
-    /**
-     * spawn a card in the world and return the card entity
-     * @return a card to be spawned in the controller as a JavaFX node
-     */
-    public void loadCard(Card card){
-        cardEntities.add(card);
+    public Item loadRandomItem(){
+        // if adding more cards than have, remove the first card...
+        if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
+            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            removeItemByPositionInUnequippedInventoryItems(0);;
+        }
+
+        // TODO = Make RandomCardGenerator an instance variable to improve performance
+        Item item = new RandomItemGenerator().nextItem(unequippedInventoryItems.size(), 0);
+
+        unequippedInventoryItems.add(item);
+        return item;
     }
 
     /**
@@ -245,6 +362,7 @@ public class LoopManiaWorld {
         unequippedInventoryItems.add(newItem);
         return newItem;
     }
+
 
     /**
      * remove an item by x,y coordinates
@@ -344,7 +462,7 @@ public class LoopManiaWorld {
      */
     private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
-        
+
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
         Random rand = new Random();
         int choice = rand.nextInt(2); // TODO = change based on spec... currently low value for dev purposes...
@@ -375,7 +493,7 @@ public class LoopManiaWorld {
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
      */
-    public VampireCastleBuilding convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+    public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         // start by getting card
         Card card = null;
         for (Card c: cardEntities){
@@ -384,16 +502,29 @@ public class LoopManiaWorld {
                 break;
             }
         }
-        
+        /* FP Alternative
+        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
+        var cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
+        assert cardMatches.count() == 1;
+        Card myCard = cardMatches.findAny().get();
+        */
+
         // now spawn building
-        VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
+                                                   new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
-        // destroy the card
+        // Destroy the card
         card.destroy();
         cardEntities.remove(card);
         shiftCardsDownFromXCoordinate(cardNodeX);
 
         return newBuilding;
+    }
+
+    public List<Card> getCards() {
+        return cardEntities;
     }
 }
