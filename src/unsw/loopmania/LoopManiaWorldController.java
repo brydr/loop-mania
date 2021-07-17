@@ -277,73 +277,11 @@ public class LoopManiaWorldController {
     }
 
     /**
-     * load a vampire card from the world, and pair it with an image in the GUI
+     * load a random card from the world, and pair it with an image in the GUI
      */
-    private void loadVampireCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        VampireCastleCard vampireCastleCard = new VampireCastleCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(vampireCastleCard);
-        onLoad(vampireCastleCard);
-    }
-
-    /**
-     * load a trap card from the world, and pair it with an image in the GUI
-     */
-    private void loadTrapCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        TrapCard trapCard = new TrapCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(trapCard);
-        onLoad(trapCard);
-    }
-
-    /**
-     * load a Campfire card from the world, and pair it with an image in the GUI
-     */
-    private void loadCampfireCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        CampfireCard campfireCard = new CampfireCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(campfireCard);
-        onLoad(campfireCard);
-    }
-
-    /**
-     * load a Tower card from the world, and pair it with an image in the GUI
-     */
-    private void loadTowerCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        TowerCard towerCard = new TowerCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(towerCard);
-        onLoad(towerCard);
-    }
-
-    /**
-     * load a Village card from the world, and pair it with an image in the GUI
-     */
-    private void loadVillageCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        VillageCard villageCard = new VillageCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(villageCard);
-        onLoad(villageCard);
-    }
-
-    /**
-     * load a Barracks card from the world, and pair it with an image in the GUI
-     */
-    private void loadBarracksCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        BarracksCard barracksCard = new BarracksCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(barracksCard);
-        onLoad(barracksCard);
-    }
-
-    /**
-     * load a ZombiePit card from the world, and pair it with an image in the GUI
-     */
-    private void loadZombiePitCard() {
-        int cardEntitiesSize = world.getCardEntitiesSizeRemoveIfFull();
-        ZombiePitCard zombiePitCard = new ZombiePitCard(new SimpleIntegerProperty(cardEntitiesSize), new SimpleIntegerProperty(0));
-        world.loadCard(zombiePitCard);
-        onLoad(zombiePitCard);
+    private void loadRandomCard() {
+        Card card = world.loadRandomCard();
+        onLoad(card);
     }
 
     /**
@@ -595,7 +533,7 @@ public class LoopManiaWorldController {
                             case CARD:
                                 removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                 // TODO = spawn a building here of different types
-                                VampireCastleBuilding newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
+                                Building newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
                                 onLoad(newBuilding);
                                 break;
                             case ITEM:
@@ -676,7 +614,7 @@ public class LoopManiaWorldController {
      * @param buildingNodeY the y coordinate of the drop location for the card, where the building will spawn, from 0 to height-1
      * @return building entity returned from the world
      */
-    private VampireCastleBuilding convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+    private Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         return world.convertCardToBuildingByCoordinates(cardNodeX, cardNodeY, buildingNodeX, buildingNodeY);
     }
 

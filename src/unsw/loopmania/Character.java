@@ -2,14 +2,13 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
     //TODO update unarmed xy coord arguments
-    private WeaponStrategy equippedWeapon = new Unarmed(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+    private WeaponStrategy equippedWeapon = new Unarmed();
     private Armour equippedArmour;
     private Shield equippedShield;
     private Helmet equippedHelmet;

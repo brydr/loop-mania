@@ -527,4 +527,14 @@ public class LoopManiaWorld {
     public List<Card> getCards() {
         return cardEntities;
     }
+
+    public void payout() {
+        if (new Random().nextInt(100) >= 85) {
+            character.addGold(new Random().nextInt(90)+10);
+        }
+        if (new Random().nextInt(100) >= 50) {
+            character.addExperience(new Random().nextInt(20)+10);
+        }
+    }
+
 }

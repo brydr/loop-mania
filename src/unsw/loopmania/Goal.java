@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Goal {
     public boolean completed;
