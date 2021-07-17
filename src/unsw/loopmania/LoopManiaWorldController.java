@@ -424,6 +424,8 @@ public class LoopManiaWorldController {
                         //Places at 0,0 - will need to take coordinates once that is implemented
                         ImageView image = new ImageView(db.getImage());
 
+                        boolean placeBack = false;
+
                         int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
                         int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
                         switch (draggableType){
@@ -434,6 +436,8 @@ public class LoopManiaWorldController {
                                 if (newBuilding != null) {
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                     onLoad(newBuilding);
+                                } else {
+                                    placeBack = true;
                                 }
                                 break;
                             case ITEM:
@@ -446,12 +450,18 @@ public class LoopManiaWorldController {
                                 break;
                         }
                         
+                        // Set the dragged item back to true if it got placed in a non valid tile.
+                        if (placeBack == true) {
+                            currentlyDraggedImage.setVisible(true);
+                        }
+
                         draggedEntity.setVisible(false);
                         draggedEntity.setMouseTransparent(false);
                         // remove drag event handlers before setting currently dragged image to null
                         currentlyDraggedImage = null;
                         currentlyDraggedType = null;
                         printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
+
                     }
                 }
                 event.setDropCompleted(true);
