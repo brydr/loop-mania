@@ -41,7 +41,17 @@ public class convertCardToBuildingByCoordinatesTest {
         LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, path);
         Card newCard = newWorld.loadRandomCard();
         
-        Building newBuilding = newWorld.convertCardToBuildingByCoordinates(newCard.getX(), newCard.getY(), 1, 1);
+        // We need to place a building to test the correct type
+        // However, for this to work without issues, we need to spawn it on the correct kind of tile
+        int buildingX = 1, buildingY = 1; // Set to path-adjacent tile
+        if ((newCard instanceof VillageCard) || 
+            (newCard instanceof BarracksCard) || 
+            (newCard instanceof TrapCard)) {
+            buildingX = 0; buildingY = 1; // Change to path tile
+        }
+        
+        
+        Building newBuilding = newWorld.convertCardToBuildingByCoordinates(newCard.getX(), newCard.getY(), buildingX, buildingY);
 
         // We require that BOTH or NEITHER are true; i.e. logical XNOR or `==`
         assertTrue((newCard instanceof BarracksCard)      == (newBuilding instanceof BarracksBuilding));
@@ -111,11 +121,12 @@ public class convertCardToBuildingByCoordinatesTest {
         assertNull(newCampfire0);
         
         // Attempt to place a `CampfireCard` (0, 0) on a non-path tile (path-adjacent): (1, 1)
-        Building newCampfire1 = world.convertCardToBuildingByCoordinates(0, 0, 0, 1);
+        Building newCampfire1 = world.convertCardToBuildingByCoordinates(0, 0, 1, 1);
         assertTrue(newCampfire1 instanceof CampfireBuilding);
 
         // Re-add our `CampfireCard` since it would've been removed from the world
-        world.addCard(campfireCard);
+        world.addCard( new CampfireCard(new SimpleIntegerProperty(0),
+                                        new SimpleIntegerProperty(0)) );
 
         // Attempt to place a `CampfireCard` (0, 0) on a non-path tile: (10, 10)
         Building newCampfire2 = world.convertCardToBuildingByCoordinates(0, 0, 10, 10);
