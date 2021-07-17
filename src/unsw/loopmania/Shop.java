@@ -8,7 +8,7 @@ public class Shop {
 	private final ShopStrategy shopStrategy;
 	private final LoopManiaWorld world;
 	private final RandomItemGenerator itemGenerator;
-	private final static int MAX_SHOP_INVENTORY = 20;
+	public final static int MAX_SHOP_INVENTORY = 9;
 	private final List<BasicItem> purchaseHistory = new ArrayList<BasicItem>();
 	private final Character character;
 

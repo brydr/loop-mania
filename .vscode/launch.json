@@ -8,6 +8,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch ShopTest",
+            "request": "launch",
+            "mainClass": "test.ShopTest.ShopTest",
+            "projectName": "21T2-cs2511-project_a89b416f"
+        },
+        {
+            "type": "java",
             "name": "Launch GoalEvaluator",
             "request": "launch",
             "mainClass": "unsw.loopmania.GoalEvaluator",

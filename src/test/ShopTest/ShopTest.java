@@ -24,6 +24,7 @@ import unsw.loopmania.Shop;
 import unsw.loopmania.Stake;
 import unsw.loopmania.StandardMode;
 import unsw.loopmania.SurvivalMode;
+import unsw.loopmania.Sword;
 
 public class ShopTest {
 	private final PathPosition pos = new PathPosition(0,
@@ -32,31 +33,35 @@ public class ShopTest {
 	private final LoopManiaWorld world = new LoopManiaWorld(20, 20,
 			Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 	private final Random random = new Random();
-	private final static int SEED = 12345;
+	private final static long SEED = 22223;
 
 	/**
-	 * Shop inventory for seed 12345
-	 * Shield
-	 * Stake
-	 * Armour
-	 * Helmet
-	 * Stake
-	 * Armour
-	 * Stake
-	 * Armour
-	 * Helmet
-	 * Staff
-	 * Staff
-	 * Staff
-	 * HealthPotion
-	 * Stake
-	 * HealthPotion
-	 * Sword
-	 * HealthPotion
-	 * Staff
-	 * HealthPotion
-	 * Armour
+	 * Shop inventory for seed 22223:
+	 * 0 Armour
+	 * 1 Helmet
+	 * 2 HealthPotion
+	 * 3 HealthPotion
+	 * 4 Shield
+	 * 5 Stake
+	 * 6 Armour
+	 * 7 Sword
+	 * 8 Shield
 	 */
+
+	// Main function for printing out shop item generation for a seed
+	public static void main(String args[]) {
+		ShopTest test = new ShopTest();
+		test.printInventory(22223);
+	}
+
+	// Helper function for setting up tests
+	private void printInventory(long seed) {
+		Shop shop = new Shop(world, new StandardMode(), seed);
+
+		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
+			System.out.println(shop.getInventory().get(i).getClass());
+		}
+	}
 
 	@Test
 	public void testNoMoney() {
@@ -64,7 +69,7 @@ public class ShopTest {
 		assertTrue(world.getInventory().isEmpty());
 		Shop shop = new Shop(world, new StandardMode(), SEED);
 
-		BasicItem shield = shop.getInventory().get(0);
+		BasicItem shield = shop.getInventory().get(8);
 		assertTrue(shield instanceof Shield);
 		assertTrue(character.getGold() == 0);
 
@@ -86,10 +91,10 @@ public class ShopTest {
 		assertTrue(world.getInventory().isEmpty());
 		Shop shop = new Shop(world, new StandardMode(), SEED);
 
-		BasicItem shield = shop.getInventory().get(0);
+		BasicItem shield = shop.getInventory().get(8);
 		assertTrue(shield instanceof Shield);
 		assertTrue(character.getGold() == 0);
-		BasicItem stake = shop.getInventory().get(1);
+		BasicItem stake = shop.getInventory().get(5);
 		assertTrue(stake instanceof Stake);
 
 		character.addGold(1000);
@@ -125,21 +130,21 @@ public class ShopTest {
 		assertTrue(world.getInventory().isEmpty());
 		Shop shop = new Shop(world, new BerserkerMode(), SEED);
 
-		BasicItem shield = shop.getInventory().get(0);
-		BasicItem stake = shop.getInventory().get(1);
-		BasicItem armour = shop.getInventory().get(2);
-		BasicItem stake2 = shop.getInventory().get(4);
+		BasicItem shield = shop.getInventory().get(4);
+		BasicItem stake = shop.getInventory().get(5);
+		BasicItem armour = shop.getInventory().get(0);
+		BasicItem sword = shop.getInventory().get(7);
 
 		assertTrue(shield instanceof Shield);
 		assertTrue(stake instanceof Stake);
 		assertTrue(armour instanceof Armour);
-		assertTrue(stake2 instanceof Stake);
+		assertTrue(sword instanceof Sword);
 
 		// Should be able to buy 2 weapons no problem
 		assertTrue(shop.buy(stake));
-		assertTrue(shop.buy(stake2));
+		assertTrue(shop.buy(sword));
 		assertTrue(world.getInventory().contains(stake));
-		assertTrue(world.getInventory().contains(stake2));
+		assertTrue(world.getInventory().contains(sword));
 
 		// Should be able to buy 1 protective gear
 		assertTrue(shop.buy(armour));
@@ -151,7 +156,7 @@ public class ShopTest {
 		assertTrue(shop.getInventory().contains(shield));
 
 		// Asserts they were charged the right amount
-		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() * 2 - armour.getBuyPrice());
+		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() - sword.getBuyPrice() - armour.getBuyPrice());
 	}
 
 	@Test
@@ -164,26 +169,25 @@ public class ShopTest {
 		assertTrue(world.getInventory().isEmpty());
 		Shop shop = new Shop(world, new SurvivalMode(), SEED);
 
-		BasicItem shield = shop.getInventory().get(0);
-		BasicItem stake = shop.getInventory().get(1);
-		BasicItem armour = shop.getInventory().get(2);
-		BasicItem stake2 = shop.getInventory().get(4);
-		BasicItem healthPotion = shop.getInventory().get(12);
-		BasicItem healthPotion2 = shop.getInventory().get(14);
-
+		BasicItem shield = shop.getInventory().get(8);
+		BasicItem stake = shop.getInventory().get(5);
+		BasicItem armour = shop.getInventory().get(6);
+		BasicItem sword = shop.getInventory().get(7);
+		BasicItem healthPotion = shop.getInventory().get(2);
+		BasicItem healthPotion2 = shop.getInventory().get(3);
 
 		assertTrue(shield instanceof Shield);
 		assertTrue(stake instanceof Stake);
 		assertTrue(armour instanceof Armour);
-		assertTrue(stake2 instanceof Stake);
+		assertTrue(sword instanceof Sword);
 		assertTrue(healthPotion instanceof HealthPotion);
 		assertTrue(healthPotion2 instanceof HealthPotion);
 
 		// Should be able to buy 2 weapons no problem
 		assertTrue(shop.buy(stake));
-		assertTrue(shop.buy(stake2));
+		assertTrue(shop.buy(sword));
 		assertTrue(world.getInventory().contains(stake));
-		assertTrue(world.getInventory().contains(stake2));
+		assertTrue(world.getInventory().contains(sword));
 
 		// Should be able to buy 2 protective gears no problem
 		assertTrue(shop.buy(armour));
@@ -201,9 +205,9 @@ public class ShopTest {
 		assertFalse(world.getInventory().contains(healthPotion2));
 
 		// Asserts they were charged the right amount
-		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() * 2 - armour.getBuyPrice() - shield.getBuyPrice() - healthPotion.getBuyPrice());
+		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() - sword.getBuyPrice() - armour.getBuyPrice()
+				- shield.getBuyPrice() - healthPotion.getBuyPrice());
 	}
-
 
 	@Test
 	@RepeatedTest(1000)
@@ -214,7 +218,7 @@ public class ShopTest {
 		Shop shop = new Shop(world, new StandardMode(), seed);
 		List<BasicItem> inventory = shop.getInventory();
 
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
 			assertTrue(itemGenerator.nextItem(0, 0).getClass().equals(inventory.get(i).getClass()));
 		}
 	}
