@@ -47,7 +47,7 @@ public class LoopManiaWorld {
     private List<Card> cardEntities;
 
     // TODO = expand the range of items
-    private List<Entity> unequippedInventoryItems;
+    private List<Item> unequippedInventoryItems;
 
     // TODO = expand the range of buildings
     private List<Building> buildingEntities;
@@ -330,7 +330,7 @@ public class LoopManiaWorld {
      * remove an item from the unequipped inventory
      * @param item item to be removed
      */
-    private void removeUnequippedInventoryItem(Entity item){
+    protected void removeUnequippedInventoryItem(Entity item){
         item.destroy();
         unequippedInventoryItems.remove(item);
     }
@@ -470,5 +470,9 @@ public class LoopManiaWorld {
 
     public List<Card> getCards() {
         return cardEntities;
+    }
+
+    public List<Item> getInventory() {
+        return this.unequippedInventoryItems;
     }
 }

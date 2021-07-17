@@ -7,7 +7,9 @@ public class BerserkerMode implements ShopStrategy {
 
 	@Override
 	public boolean checkItemLimits(BasicItem wantToBuy, List<BasicItem> purchaseHistory) {
-		return countProtectiveGear(purchaseHistory) < BerserkerMode.MAX_PROTECTIVE_GEAR;
+		return wantToBuy instanceof ProtectiveGear
+				? countProtectiveGear(purchaseHistory) < BerserkerMode.MAX_PROTECTIVE_GEAR
+				: true;
 	}
 
 	private int countProtectiveGear(List<BasicItem> purchaseHistory) {

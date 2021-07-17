@@ -7,7 +7,8 @@ public class SurvivalMode implements ShopStrategy {
 
 	@Override
 	public boolean checkItemLimits(BasicItem wantToBuy, List<BasicItem> purchaseHistory) {
-		return countHealthPotions(purchaseHistory) < SurvivalMode.MAX_HEALTH_POTIONS;
+		return wantToBuy instanceof HealthPotion ? countHealthPotions(purchaseHistory) < SurvivalMode.MAX_HEALTH_POTIONS
+				: true;
 	}
 
 	private int countHealthPotions(List<BasicItem> purchaseHistory) {

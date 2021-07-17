@@ -16,9 +16,9 @@ public class Stake extends Weapon implements AttackAbility {
 	public int getDamage(BasicEnemy enemy) {
 		if (enemy.getClass().equals(Vampire.class)) {
 			// Do extra damage to vampires
-			return VAMPIRE_DAMAGE;
+			return Stake.VAMPIRE_DAMAGE;
 		}
-		return ATTACK_POWER;
+		return Stake.ATTACK_POWER;
 	}
 
 	public String getImage() {
