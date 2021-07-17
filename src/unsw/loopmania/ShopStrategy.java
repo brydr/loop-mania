@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface ShopStrategy {
 	// TODO
-	public boolean checkItemLimit(Item wantToBuy, List<Item> purchased);
+	public boolean checkItemLimits(BasicItem wantToBuy, List<BasicItem> purchaseHistory);
 }
