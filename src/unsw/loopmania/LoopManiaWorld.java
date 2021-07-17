@@ -59,6 +59,8 @@ public class LoopManiaWorld {
      */
     private List<Pair<Integer, Integer>> orderedPath;
 
+    private PathPosition firstPath;
+
     /**
      * create the world (constructor)
      *
@@ -76,6 +78,7 @@ public class LoopManiaWorld {
         unequippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
+        firstPath = null;
     }
 
     public int getWidth() {
@@ -325,7 +328,15 @@ public class LoopManiaWorld {
      * run moves which occur with every tick without needing to spawn anything immediately
      */
     public void runTickMoves(){
+        if (firstPath == null) {
+            firstPath = character.getPosition();
+            firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
+        }
         character.moveDownPath();
+
+        if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
+            character.addCycles();
+        }
         moveBasicEnemies();
     }
 

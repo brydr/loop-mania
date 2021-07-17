@@ -35,6 +35,13 @@ public class PathPosition{
         resetCoordinatesBasedOnPositionInPath();
     }
 
+    public int getCurrentPositionInPath() {
+        return currentPositionInPath;
+    }
+
+    public List<Pair<Integer, Integer>> getOrderedPath() {
+        return orderedPath;
+    }
     /**
      * move forward through the path i.e. clockwise
      */

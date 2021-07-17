@@ -27,10 +27,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
 import javafx.util.Duration;
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 import java.util.EnumMap;
 import java.util.Random;
@@ -102,6 +106,17 @@ public class LoopManiaWorldController {
 
     @FXML
     private GridPane unequippedInventory;
+
+    @FXML
+    private GridPane characterStats;
+    @FXML
+    private Label hp;
+    @FXML 
+    private Label gold;
+    @FXML
+    private Label exp;
+    @FXML
+    private Label cycles;
 
     // all image views including tiles, character, enemies, cards... even though cards in separate gridpane...
     private List<ImageView> entityImages;
@@ -220,6 +235,13 @@ public class LoopManiaWorldController {
                 unequippedInventory.add(emptySlotView, x, y);
             }
         }
+
+        Character character = world.getCharacter();
+
+        hp.textProperty().bind(character.hpProperty().asString());
+        gold.textProperty().bind(character.goldProperty().asString());
+        exp.textProperty().bind(character.expProperty().asString());
+        cycles.textProperty().bind(character.cycleProperty().asString());
 
         // create the draggable icon
         draggedEntity = new DragIcon();

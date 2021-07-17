@@ -3,6 +3,7 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
 
 /**
  * represents the main character in the backend of the game world
@@ -15,12 +16,16 @@ public class Character extends MovingEntity {
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
     private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
-    private int experience = 0;
-    private int cycles = 0;
+    private IntegerProperty experience;
+    private IntegerProperty cycles;
     public Gold gold = new Gold();
 
     public Character(PathPosition position) {
         super(position);
+        this.experience = new SimpleIntegerProperty();
+        this.cycles = new SimpleIntegerProperty();
+        experience.setValue(0);
+        cycles.setValue(0);
         this.setHp(100);
     }
 
@@ -65,24 +70,30 @@ public class Character extends MovingEntity {
     }
 
     public int getCycles() {
-        return cycles;
+        return cycles.get();
     }
 
     public int addCycles() {
-        return cycles = cycles + 1;
+        cycles.setValue(cycles.getValue() + 1);
+        return cycles.get() + 1;
     }
 
     public int getExperience() {
-        return experience;
+        return experience.get();
     }
 
     public int addExperience(int exp) {
-        return experience = experience + exp;
+        experience.setValue(experience.getValue() + exp);
+        return experience.get() + exp;
          
     }
 
     public int getGold() {
         return gold.getGold();
+    }
+
+    public IntegerProperty getGoldProperty() {
+        return gold.getGoldProperty();
     }
 
     public void addGold(int gold) {
@@ -219,6 +230,22 @@ public class Character extends MovingEntity {
         return enemy;
     }
 
+    public IntegerProperty hpProperty() {
+        IntegerProperty charHp = this.hp;
+        return charHp;
+    }
+    public IntegerProperty goldProperty() {
+        IntegerProperty charGold = this.getGoldProperty();
+        return charGold;
+    }
+    public IntegerProperty expProperty() {
+        IntegerProperty charExp = this.experience;
+        return charExp;
+    }
+    public IntegerProperty cycleProperty() {
+        IntegerProperty charCycle = this.cycles;
+        return charCycle;
+    }
     public String getImage() {
         String characterImage = "src/images/human_new.png";
         return characterImage;
