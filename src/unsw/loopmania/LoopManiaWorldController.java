@@ -407,9 +407,9 @@ public class LoopManiaWorldController {
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
-            world.loadRandomCard();
+            loadRandomCard();
         } else {
-            world.loadRandomItem();
+            loadRandomBasicItem();
         }
 
         if (oneRingChance < 3) {
