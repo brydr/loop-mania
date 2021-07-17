@@ -21,4 +21,10 @@ public class VampireCastleCard extends Card {
         String vampireCastleCardImage = "src/images/vampire_castle_card.png";
         return vampireCastleCardImage;
     }
+
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathAdjacentTile;
+    }
 }

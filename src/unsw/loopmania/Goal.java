@@ -1,8 +1,9 @@
 package unsw.loopmania;
 
-import java.util.ArrayList;
-import java.util.List;
+<<<<<<< HEAD
 
+=======
+>>>>>>> enemyFrontend
 public class Goal {
     public boolean completed;
     

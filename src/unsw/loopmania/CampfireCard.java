@@ -16,4 +16,11 @@ public class CampfireCard extends Card {
         String campfireCardImage = "src/images/campfire_card.png";
         return campfireCardImage;
     }
+
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return (tileType == TileType.PathAdjacentTile) 
+            || (tileType == TileType.NonPathTile);
+    }
 }
