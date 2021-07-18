@@ -32,6 +32,7 @@ public class SpawnZombieTest {
         ZombiePitBuilding zombiePitBuilding = new ZombiePitBuilding(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
         world.addBuilding(zombiePitBuilding);
         
+        
         // Didnt know how to change this into a relative path.
         String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
         JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
