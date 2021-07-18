@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.javatuples.Pair;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -16,6 +17,7 @@ import unsw.loopmania.Vampire;
 import unsw.loopmania.VampireCastleBuilding;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Character;
+import unsw.loopmania.GoalEvaluator;
 
 public class SpawnVampireTest {
     @Test
@@ -30,6 +32,11 @@ public class SpawnVampireTest {
         VampireCastleBuilding vampireCastleBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(0),
         new SimpleIntegerProperty(0));
         world.addBuilding(vampireCastleBuilding);
+
+        // Didnt know how to change this into a relative path.
+        String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
+        JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
+        world.setGoals(JSONGoals);
 
         assertEquals(world.getEnemies().size(), 0);
         // Trigger end-of-cycle
