@@ -527,6 +527,9 @@ public class LoopManiaWorld {
                     if (e.getHp() <= 0) {
                         killedEnemies.add(e);
                     }
+                    if (!(building.shouldExist().get())) {
+                        buildingEntities.remove(building);
+                    }
                 }
 
                 for (BasicEnemy e: killedEnemies) {
