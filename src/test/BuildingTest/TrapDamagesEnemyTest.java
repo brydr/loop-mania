@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 
 import org.javatuples.Pair;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.Character;
+import unsw.loopmania.GoalEvaluator;
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.TrapBuilding;
@@ -18,28 +20,24 @@ public class TrapDamagesEnemyTest {
     @Test
     public void trapDamagesEnemyTest() {
         // Setup world
-        var path = Arrays.asList(
-            new Pair<>(0, 1),
-            new Pair<>(0, 2),
-            new Pair<>(0, 3),
-            new Pair<>(0, 4),
-            new Pair<>(0, 5),
-            new Pair<>(0, 6),
-            new Pair<>(0, 7)
-        );
-        PathPosition characterPos = new PathPosition(path.indexOf(new Pair<>(0, 7)), path);
-        Character theCharacter = new Character(characterPos);
-        LoopManiaWorld world = new LoopManiaWorld(20, 20, path);
-        world.setCharacter(theCharacter);
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        LoopManiaWorld world = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+
+        Character c = new Character(pos);
+        
+        world.setCharacter(c);
+        
+        // Didnt know how to change this into a relative path.
+        String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
+        JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
+        world.setGoals(JSONGoals);
 
         // Setup trap
         TrapBuilding trap = new TrapBuilding(new SimpleIntegerProperty(0), new SimpleIntegerProperty(2));
         world.addBuilding(trap);
         
         // Spawn a vampire near a trap
-        Vampire vampire = new Vampire(
-            new PathPosition(path.indexOf(new Pair<>(0, 1)), path)
-        );
+        Vampire vampire = new Vampire(pos);
         world.addEnemies(vampire);
 
         // Assert pre-condition that Vampire has full health
