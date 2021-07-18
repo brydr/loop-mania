@@ -4,11 +4,13 @@ import java.io.File;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 public class ShopController {
@@ -29,6 +31,11 @@ public class ShopController {
 	public void initialiseShop(LoopManiaWorld world, ShopStrategy strategy) {
 		shop = new Shop(world, strategy);
 		this.world = world;
+		updateGridPanes();
+		world.getCharacter().addGold(100000000);
+	}
+
+	private void updateGridPanes() {
 		updateShopGridPanes();
 		updateCharacterPanes();
 	}
@@ -40,12 +47,18 @@ public class ShopController {
 				shopPane.getChildren().remove(node);
 
 				int listIndex = this.getIndexFrom2dCoordinates(i, j, Shop.SHOP_WIDTH);
+
+				if (listIndex >= shop.getInventory().size()) {
+					continue;
+				}
+
 				System.out.print(listIndex + " ");
 				System.out.println(shop.getInventory().get(listIndex).getClass());
 				Item itemAtNode = shop.getInventory().get(listIndex);
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
 				image.hoverProperty().addListener(new HoverListener(itemAtNode, false));
+				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickListener(itemAtNode, false));
 				image.setCursor(Cursor.HAND);
 				image.setScaleX(2);
 				image.setScaleY(2);
@@ -72,6 +85,7 @@ public class ShopController {
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
 				image.hoverProperty().addListener(new HoverListener(itemAtNode, true));
+				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickListener(itemAtNode, true));
 				image.setCursor(Cursor.HAND);
 				image.setScaleX(1.5);
 				image.setScaleY(1.5);
@@ -101,6 +115,32 @@ public class ShopController {
 	@FXML
 	private void initialize() {
 		priceLabel.setText(LABEL_DEFAULT_TEXT);
+	}
+
+	private class ClickListener implements EventHandler<MouseEvent> {
+		private final Item item;
+		private final boolean selling;
+
+		public ClickListener(Item item, boolean selling) {
+			this.item = item;
+			this.selling = selling;
+		}
+
+		@Override
+		public void handle(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			System.out.println("Clicked on" + item.toString());
+			if (item instanceof BasicItem) {
+				if (selling) {
+					System.out.println("Selling " + item.toString());
+					shop.sell((BasicItem) item);
+				} else {
+					System.out.println("Buying "  + item.toString());
+					shop.buy((BasicItem) item);
+				}
+				updateShopGridPanes();
+			}
+		}
 	}
 
 	private class HoverListener implements ChangeListener<Boolean> {

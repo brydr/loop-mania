@@ -3,8 +3,6 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.collections.ObservableList;
-
 public class Shop {
 	public final static int SHOP_WIDTH = 3;
 	public final static int SHOP_HEIGHT = 3;
