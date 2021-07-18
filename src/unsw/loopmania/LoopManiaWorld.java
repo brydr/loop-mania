@@ -421,6 +421,7 @@ public class LoopManiaWorld {
         character.moveDownPath();
         moveBasicEnemies();
         possiblySpawnAlliedSoldiers();
+        applyTrapAttacks();
     }
 
     /**
@@ -436,6 +437,14 @@ public class LoopManiaWorld {
                 && character.getY() == building.getY())
             .map(building -> (BarracksBuilding) building)
             .forEach(barracks -> barracks.spawnAlliedSoldiers(character));
+    }
+
+    public void applyTrapAttacks() {
+        for (Building building : buildingEntities) {
+            if (building instanceof TrapBuilding) {
+                ((TrapBuilding)building).damageAnyEnemies(enemies);
+            }
+        }
     }
 
     /**

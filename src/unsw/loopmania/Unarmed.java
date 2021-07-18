@@ -20,4 +20,9 @@ public class Unarmed extends Weapon {
 		super(x, y, ATTACK_POWER, -1, -1);
 	}
 
+	// TODO = This is a standin to get tests to compile. This should be removed as we better-define how Unarmed is implemented.
+	public Unarmed() {
+		super(new SimpleIntegerProperty(1), new SimpleIntegerProperty(1), ATTACK_POWER, -1, -1);
+	}
+
 }

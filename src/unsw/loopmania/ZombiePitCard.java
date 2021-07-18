@@ -1,9 +1,6 @@
 package unsw.loopmania;
 
-import java.io.File;
-
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.image.Image;
 
 public class ZombiePitCard extends Card {
     public ZombiePitCard(SimpleIntegerProperty x, SimpleIntegerProperty y) {

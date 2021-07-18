@@ -1,9 +1,5 @@
 package unsw.loopmania;
 
-<<<<<<< HEAD
-
-=======
->>>>>>> enemyFrontend
 public class Goal {
     public boolean completed;
     

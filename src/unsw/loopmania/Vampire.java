@@ -8,10 +8,13 @@ public class Vampire extends BasicEnemy implements Undead {
     public double criticalChance;
     private int criticalDuration;
     private boolean alreadyInCritical;
+
+    public static final int STARTING_HP = 60;
+
     public Vampire(PathPosition position) {
         super(position);
         this.setAttack(12);
-        this.setHp(60);
+        this.setHp(STARTING_HP);
         this.setSpeed(1);
         this.setBattleRadius(2);
         this.setSupportRadius(3);
