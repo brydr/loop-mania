@@ -218,22 +218,8 @@ public class LoopManiaWorld {
         List<RandomPathLoot> pickedUp = new ArrayList<RandomPathLoot>();
 
         for (RandomPathLoot randPathLoot : worldPathLoot) {
-            int pickUpVal = randPathLoot.onPickUp();
-
             // If the character's position is directly on top of a path loot.
             if (Math.pow((character.getX()-randPathLoot.getX()), 2) +  Math.pow((character.getY()-randPathLoot.getY()), 2) == 0) {
-                // If they picked up gold.
-                if (pickUpVal == 0) {
-                    character.addGold(new Random().nextInt(91) + 10);   // Give the character a gold payout between 10 and 100 inclusive.
-                // If they picked up a potion.
-                } else if (pickUpVal == 1) {
-                    Pair<Integer, Integer> firstSlot = getFirstSlotRemoveIfFull();
-                    SimpleIntegerProperty x = new SimpleIntegerProperty(firstSlot.getValue0());
-                    SimpleIntegerProperty y = new SimpleIntegerProperty(firstSlot.getValue1());
-
-                    HealthPotion newHpPot = new HealthPotion(x, y);
-                    unequippedInventoryItems.add(newHpPot);     // Give the character a potion in their inventory.
-                }   
                 pickedUp.add(randPathLoot);
             }
         }

@@ -279,6 +279,10 @@ public class LoopManiaWorldController {
             }
 
             List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
+            for (RandomPathLoot pathLoot: pickedUpLoot){
+                reactToLootPicked(pathLoot);
+            }
+
             List<RandomPathLoot> newPathLoot = world.possiblyDropPathLoot();
             for (RandomPathLoot pathLoot: newPathLoot){
                 onLoad(pathLoot);
@@ -461,6 +465,23 @@ public class LoopManiaWorldController {
             TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
             world.addUnequippedItem(theOneRing);
         }
+    }
+
+    /**
+     * run GUI events after an path loot is picked up.
+     * @param randPathLoot the random path loot that needs to be reacted to.
+     */
+    private void reactToLootPicked(RandomPathLoot randPathLoot) {
+        Character character = world.getCharacter();
+        int pickUpVal = randPathLoot.onPickUp();
+
+        // If they picked up gold.
+        if (pickUpVal == 0) {
+            character.addGold(new Random().nextInt(91) + 10);   // Give the character a gold payout between 10 and 100 inclusive.
+        // If they picked up a potion.
+        } else if (pickUpVal == 1) {
+            loadHealthPotion();
+        }   
     }
 
     /**
