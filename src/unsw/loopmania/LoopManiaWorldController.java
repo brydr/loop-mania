@@ -141,6 +141,7 @@ public class LoopManiaWorldController {
 
     private Image vampireCastleCardImage;
     private Image swordImage;
+    private ImageView potionSlot;
 
     /**
      * the image currently being dragged, if there is one, otherwise null.
@@ -189,6 +190,7 @@ public class LoopManiaWorldController {
         entityImages = new ArrayList<>(initialEntities);
         vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
         swordImage = new Image((new File("src/images/basic_sword.png")).toURI().toString());
+        potionSlot = new ImageView(new Image((new File("src/images/potion_slot.png")).toURI().toString()));
         currentlyDraggedImage = null;
         currentlyDraggedType = null;
 
@@ -448,7 +450,6 @@ public class LoopManiaWorldController {
         character.addExperience(experienceGain);
         int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
         int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
@@ -633,21 +634,33 @@ public class LoopManiaWorldController {
                                 Item item = world.getUnequippedItemTypeByCoordinates(nodeX, nodeY);
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon){
                                     placeBack = false;
+                                    Weapon weapon = (Weapon)item;
+                                    world.getCharacter().setEquippedWeapon(weapon);
                                 }
                                 else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet){
                                     placeBack = false;
+                                    Helmet helmet = (Helmet)item;
+                                    world.getCharacter().setEquippedHelmet(helmet);
                                 }
                                 else if (targetNode.getId().equals("armourCell") && item instanceof Armour){
                                     placeBack = false;
+                                    Armour armour = (Armour)item;
+                                    world.getCharacter().setEquippedArmour(armour);
                                 }
                                 else if (targetNode.getId().equals("shieldCell") && item instanceof Shield){
                                     placeBack = false;
+                                    Shield shield = (Shield)item;
+                                    world.getCharacter().setEquippedShield(shield);
                                 }
                                 else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem){
                                     placeBack = false;
+                                    RareItem rareItem = (RareItem)item;
+                                    world.getCharacter().setEquippedRareItem(rareItem);
                                 }
                                 else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion){
                                     placeBack = false;
+                                    HealthPotion healthPotion = (HealthPotion)item;
+                                    world.getCharacter().setEquippedHealthPotion(healthPotion);
                                 }
                                 if (!placeBack) {
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
@@ -869,7 +882,7 @@ public class LoopManiaWorldController {
             }
             break;
         case Q:
-            //world.consumeHealthPotion();
+            useHealthPotion(equippedItems);
             //TODO implement consumehealthpotion in backend as well as removing item in frontend
             break;
         default:
@@ -991,5 +1004,14 @@ public class LoopManiaWorldController {
             }
         }
         return null;
+    }
+
+    private void useHealthPotion(GridPane gridPane) {
+        world.getCharacter().consumePotion();
+        Node node = getNodeFromGridPane(gridPane, 1, 1);
+        gridPane.getChildren().remove(node);
+        gridPane.add(new ImageView(new Image((new File("src/images/potion_slot.png")).toURI().toString())), 1, 1);
+        Node newNode = getNodeFromGridPane(gridPane, 1, 1);
+        newNode.setId("potionCell");
     }
 }

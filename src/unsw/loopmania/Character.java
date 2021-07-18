@@ -18,7 +18,9 @@ public class Character extends MovingEntity {
     private IntegerProperty experience;
     private IntegerProperty cycles;
     private IntegerProperty alliedSoldierNum;
-    public Gold gold;
+    private Gold gold;
+    private HealthPotion equippedHealthPotion;
+    private final static int maxHp = 200;
 
     public Character(PathPosition position) {
         super(position);
@@ -28,7 +30,7 @@ public class Character extends MovingEntity {
         experience.setValue(0);
         cycles.setValue(0);
         alliedSoldierNum.setValue(0);
-        this.setHp(100);
+        this.setHp(maxHp);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
@@ -72,6 +74,14 @@ public class Character extends MovingEntity {
 
     public void setEquippedRareItem(RareItem equippedRareItem) {
         this.equippedRareItem = equippedRareItem;
+    }
+
+    public HealthPotion getEquippedHealthPotion() {
+        return equippedHealthPotion;
+    }
+
+    public void setEquippedHealthPotion(HealthPotion healthPotion) {
+        this.equippedHealthPotion = healthPotion;
     }
 
     public int getCycles() {
@@ -134,6 +144,16 @@ public class Character extends MovingEntity {
 
     public void removeAlliedSoldier(AlliedSoldier soldier) {
         this.listAlliedSoldiers.remove(soldier);
+    }
+
+    /**
+     * if health potion is equipped, remove potion and reset hp to max
+     */
+    public void consumePotion() {
+        if (this.equippedHealthPotion != null) {
+            this.equippedHealthPotion = null;
+            this.setHp(maxHp);
+        }
     }
 
     /**
