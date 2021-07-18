@@ -160,12 +160,12 @@
                   </ImageView>
                   <ImageView fitHeight="25.0" fitWidth="25.0" GridPane.rowIndex="2">
                      <image>
-                        <Image url="@../../images/empty_slot.png" />
+                        <Image url="@../../images/exp.png" />
                      </image>
                   </ImageView>
                   <ImageView fitHeight="25.0" fitWidth="25.0" GridPane.rowIndex="3">
                      <image>
-                        <Image url="@../../images/empty_slot.png" />
+                        <Image url="@../../images/cycles.png" />
                      </image>
                   </ImageView>
                   <Label fx:id="hp" text="100" GridPane.columnIndex="1" />
