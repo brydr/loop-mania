@@ -2,6 +2,7 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
@@ -34,7 +35,6 @@ import javafx.scene.control.CheckBox;
 import javafx.util.Duration;
 
 import java.util.EnumMap;
-import java.util.Random;
 
 import java.io.File;
 import java.io.IOException;
@@ -273,6 +273,9 @@ public class LoopManiaWorldController {
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
+            // if (new Random().nextInt(100) >= 90) {
+            //     loadHealthPotion();
+            // }
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -753,6 +756,7 @@ public class LoopManiaWorldController {
                                     n.setOpacity(0.7);
                                 }
                             }
+                            
                             event.consume();
                         }
                     });
@@ -762,7 +766,7 @@ public class LoopManiaWorldController {
                             if (currentlyDraggedType == draggableType){
                                 n.setOpacity(1);
                             }
-                
+                                            
                             event.consume();
                         }
                     });
@@ -811,9 +815,14 @@ public class LoopManiaWorldController {
                 pause();
             }
             break;
+        case Q:
+            //world.consumeHealthPotion();
+            //TODO implement consumehealthpotion in backend as well as removing item in frontend
+            break;
         default:
             break;
         }
+        
     }
 
     public void setMainMenuSwitcher(MenuSwitcher mainMenuSwitcher){

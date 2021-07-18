@@ -106,6 +106,16 @@
                         <Image url="@../../images/sword_unequipped.png" />
                      </image>
                   </ImageView>
+                  <ImageView id="potionCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/potion_slot.png"/>
+                     </image>
+                  </ImageView>
+                  <ImageView id="ringCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/ring_slot.png"/>
+                     </image>
+                  </ImageView>
                </children>
             </GridPane>
 

@@ -44,6 +44,7 @@ public class LoopManiaWorld {
     private Character character;
 
     // TODO = add more lists for other entities, for equipped inventory items, etc...
+    private List<Entity> equippedInventoryItems;
 
     private List<BasicEnemy> enemies;
 
@@ -81,6 +82,7 @@ public class LoopManiaWorld {
         enemies = new ArrayList<>();
         cardEntities = new ArrayList<>();
         unequippedInventoryItems = new ArrayList<>();
+        equippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
         firstPath = null;
@@ -493,6 +495,20 @@ public class LoopManiaWorld {
         return null;
     }
 
+    public Entity getEquippedInventoryItemEntityByCoordinates(int x, int y){
+        for (Entity e: equippedInventoryItems){
+            if ((e.getX() == x) && (e.getY() == y)){
+                return e;
+            }
+        }
+        return null;
+    }
+
+    private void removeEquippedInventoryItem(Entity item){
+        item.destroy();
+        equippedInventoryItems.remove(item);
+    }
+
     /**
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
@@ -740,4 +756,5 @@ public class LoopManiaWorld {
     public JSONObject getWorldGoals() {
         return worldGoals;
     }
+
 }
