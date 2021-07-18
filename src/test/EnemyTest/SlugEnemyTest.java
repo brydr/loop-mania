@@ -1,10 +1,7 @@
-<<<<<<< HEAD:src/test/EnemyTest/SlugEnemyTest.java
 package test.EnemyTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-=======
 package unsw.loopmania.EnemyTest;
->>>>>>> cards:src/unsw/loopmania/EnemyTest/SlugEnemyTest.java
 
 import java.util.Arrays;
 import java.util.List;
