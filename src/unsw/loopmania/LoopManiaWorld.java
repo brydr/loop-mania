@@ -18,7 +18,6 @@ import unsw.loopmania.util.CustomCollectors;
  * entity can occupy the same square.
  */
 public class LoopManiaWorld {
-    // TODO = add additional backend functionality
 
     public static final int unequippedInventoryWidth = 4;
     public static final int unequippedInventoryHeight = 4;
@@ -43,16 +42,12 @@ public class LoopManiaWorld {
 
     // TODO = add more lists for other entities, for equipped inventory items, etc...
 
-    // TODO = expand the range of enemies
     private List<BasicEnemy> enemies;
 
-    // TODO = expand the range of cards
     private List<Card> cardEntities;
 
-    // TODO = expand the range of items
     private List<Item> unequippedInventoryItems;
 
-    // TODO = expand the range of buildings
     private List<Building> buildingEntities;
 
     /**
@@ -77,34 +72,6 @@ public class LoopManiaWorld {
         unequippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
-    }
-
-    private TileType getTileType(final int x, final int y) {
-        // TODO = See if this needs to become a checked/recoverable error
-        assert (x < width) && (y < height);
-
-        final var subjectTile = Pair.with(x, y);
-
-        // See if path matches 
-        boolean isPathTile = orderedPath.parallelStream()
-            .anyMatch(tile -> tile.equals(subjectTile));
-        if (isPathTile)
-            return TileType.PathTile;
-        
-        // Precondition is that tile != subjectTile
-        Predicate<Pair<Integer,Integer>> isAdjacentTo 
-        = tile -> {
-            int tileX = tile.getValue0().intValue();
-            int tileY = tile.getValue1().intValue();
-            return (x - 1 <= tileX) && (tileX <= x + 1)
-                && (y - 1 <= tileY) && (tileY <= y + 1);
-        };
-        boolean isAdjacentTile = orderedPath.parallelStream()
-            .anyMatch(isAdjacentTo);
-        if (isAdjacentTile)
-            return TileType.PathAdjacentTile;
-        else
-            return TileType.NonPathTile;
     }
 
     public int getWidth() {
