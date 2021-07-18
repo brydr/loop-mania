@@ -9,5 +9,4 @@ public abstract class Building extends StaticEntity {
     }
 
     public abstract String getImage();
-    
 }

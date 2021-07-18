@@ -607,6 +607,24 @@ public class LoopManiaWorld {
         return newBuilding;
     }
 
+    /**
+     * remove a card by its x, y coordinates
+     * @param itemNodeX x index from 0 to width-1 of card to be removed
+     * @param itemNodeY y index from 0 to height-1 of card to be removed
+     * @return item in location in unequipped inventory
+     */
+    public Item getUnequippedItemTypeByCoordinates(int itemNodeX, int itemNodeY) {
+        // Start by getting card
+        Item item = null;
+        for (Item i: unequippedInventoryItems){
+            if ((i.getX() == itemNodeX) && (i.getY() == itemNodeY)){
+                item = i;
+                break;
+            }
+        }
+        return item;
+    }
+
     public List<Card> getCards() {
         return cardEntities;
     }
