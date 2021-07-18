@@ -430,7 +430,9 @@ public class LoopManiaWorldController {
      * load random BasicItem from the world, and pair it with an image in the GUI
      */
     private void loadRandomBasicItem(){
-        Item item = world.loadRandomItem();
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        BasicItem item = world.addUnequippedRandomBasicItem(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
         onLoad(item);
     }
 

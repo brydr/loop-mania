@@ -575,6 +575,39 @@ public class LoopManiaWorld {
         equippedInventoryItems.remove(item);
     }
 
+    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+        Random randomGenerator = new Random();
+        BasicItem newItem;
+        int numBasicItems = 7;
+        switch (randomGenerator.nextInt(numBasicItems)) {
+            case 0:
+                newItem = new HealthPotion(x, y);
+                break;
+            case 1:
+                newItem = new Staff(x, y);
+                break;
+            case 2:
+                newItem = new Stake(x, y);
+                break;
+            case 3:
+                newItem = new Sword(x, y);
+                break;
+            case 4:
+                newItem = new Armour(x, y);
+                break;
+            case 5:
+                newItem = new Shield(x, y);
+                break;
+            case 6:
+                newItem = new Helmet(x, y);
+                break;
+            default: throw new RuntimeException("Can't generate random item");
+        }
+        unequippedInventoryItems.add(newItem);
+        return newItem;
+    }
+
+
     /**
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
