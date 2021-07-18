@@ -68,7 +68,7 @@ public class VampireEnemyTest {
 
         // The least damage a vampire can do in criticalBite state is 12 + 4 = 16 whilst the max is 12 + 20 = 32. 
         // Therefore the value must be in between 68 and 84 inclusive.
-        if (c.getHp() < 88) {
+        if (c.getHp() < 188) {
             assertTrue( 168 <= c.getHp() && c.getHp() <= 184);       
         } else {
             assertEquals(c.getHp(), 188);
