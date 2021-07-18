@@ -270,8 +270,10 @@ public class LoopManiaWorldController {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             world.runTickMoves();
             List<BasicEnemy> defeatedEnemies = world.runBattles();
-            for (BasicEnemy e: defeatedEnemies){
-                reactToEnemyDefeat(e);
+            if (defeatedEnemies.size() > 0) {
+                for (BasicEnemy e: defeatedEnemies){
+                    reactToEnemyDefeat(e);
+                }
                 runBattleResults(defeatedEnemies);
             }
             List<BasicEnemy> newEnemies = world.possiblySpawnEnemies();
