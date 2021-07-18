@@ -2,24 +2,36 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
 
 /**
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
-    private WeaponStrategy equippedWeapon = new Unarmed();
+    private WeaponStrategy equippedWeapon;
     private Armour equippedArmour;
     private Shield equippedShield;
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
-    private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
-    private int experience = 0;
-    private int cycles = 0;
-    private Gold gold = new Gold();
+    private List<AlliedSoldier> listAlliedSoldiers;
+    private IntegerProperty experience;
+    private IntegerProperty cycles;
+    private IntegerProperty alliedSoldierNum;
+    public Gold gold;
 
     public Character(PathPosition position) {
         super(position);
+        this.experience = new SimpleIntegerProperty();
+        this.cycles = new SimpleIntegerProperty();
+        this.alliedSoldierNum = new SimpleIntegerProperty();
+        experience.setValue(0);
+        cycles.setValue(0);
+        alliedSoldierNum.setValue(0);
         this.setHp(100);
+        listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+        gold = new Gold();
+        equippedWeapon = new Unarmed();
     }
 
     public WeaponStrategy getEquippedWeapon() {
@@ -63,24 +75,29 @@ public class Character extends MovingEntity {
     }
 
     public int getCycles() {
-        return cycles;
+        return cycles.get();
     }
 
     public int addCycles() {
-        return cycles = cycles + 1;
+        cycles.setValue(cycles.getValue() + 1);
+        return cycles.get() + 1;
     }
 
     public int getExperience() {
-        return experience;
+        return experience.get();
     }
 
     public int addExperience(int exp) {
-        return experience = experience + exp;
-
+        experience.setValue(experience.getValue() + exp);
+        return experience.get() + exp;
     }
 
     public int getGold() {
         return gold.getGold();
+    }
+
+    public IntegerProperty getGoldProperty() {
+        return gold.getGoldProperty();
     }
 
     public void addGold(int gold) {
@@ -217,6 +234,27 @@ public class Character extends MovingEntity {
         return enemy;
     }
 
+    public IntegerProperty hpProperty() {
+        IntegerProperty charHp = this.hp;
+        return charHp;
+    }
+    public IntegerProperty goldProperty() {
+        IntegerProperty charGold = this.getGoldProperty();
+        return charGold;
+    }
+    public IntegerProperty expProperty() {
+        IntegerProperty charExp = this.experience;
+        return charExp;
+    }
+    public IntegerProperty cycleProperty() {
+        IntegerProperty charCycle = this.cycles;
+        return charCycle;
+    }
+    public IntegerProperty alliedSoldierProperty() {
+        alliedSoldierNum.setValue(listAlliedSoldiers.size());
+        IntegerProperty charalliedSoldierNum = this.alliedSoldierNum;
+        return charalliedSoldierNum;
+    }
     public String getImage() {
         String characterImage = "src/images/human_new.png";
         return characterImage;

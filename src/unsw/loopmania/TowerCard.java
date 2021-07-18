@@ -12,15 +12,16 @@ public class TowerCard extends Card {
         TowerBuilding newBuilding = new TowerBuilding(buildingNodeX, buildingNodeY);
         return newBuilding;
     }
-    
+
+    @Override
     public String getImage() {
         String towerCardImage = "src/images/tower_card.png";
         return towerCardImage;
     }
 
-
     @Override
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathAdjacentTile;
     }
+
 }

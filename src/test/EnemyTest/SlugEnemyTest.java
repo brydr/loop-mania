@@ -14,11 +14,11 @@ import unsw.loopmania.Slug;
 
 
 public class SlugEnemyTest {
-    
+
     @Test
     public void testRadius() {
-        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
-                                                              new Pair<>(0, 2), 
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
 
@@ -46,8 +46,8 @@ public class SlugEnemyTest {
 
     @Test
     public void testAttackAndTakeDamage() {
-        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
-                                                              new Pair<>(0, 2), 
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
         Character c = new Character(pos);

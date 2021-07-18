@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import java.io.File;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class ZombiePitCard extends Card {
@@ -15,6 +13,7 @@ public class ZombiePitCard extends Card {
         return newBuilding;
     }
 
+    @Override
     public String getImage() {
         String zombiePitCardImage = "src/images/zombie_pit_card.png";
         return zombiePitCardImage;

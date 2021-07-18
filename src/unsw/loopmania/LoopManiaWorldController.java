@@ -2,6 +2,7 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
@@ -29,10 +30,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.util.Duration;
 
 import java.util.EnumMap;
-import java.util.Random;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +104,25 @@ public class LoopManiaWorldController {
     @FXML
     private GridPane unequippedInventory;
 
+    @FXML
+    private GridPane characterStats;
+    @FXML
+    private Label hp;
+    @FXML
+    private Label gold;
+    @FXML
+    private Label exp;
+    @FXML
+    private Label cycles;
+
+    @FXML
+    private Label alliedSoldierNum;
+
+    @FXML
+    private CheckBox goalComplete;
+    @FXML
+    private Label allGoals;
+
     // all image views including tiles, character, enemies, cards... even though cards in separate gridpane...
     private List<ImageView> entityImages;
 
@@ -119,9 +140,7 @@ public class LoopManiaWorldController {
     private Timeline timeline;
 
     private Image vampireCastleCardImage;
-    private Image basicEnemyImage;
     private Image swordImage;
-    private Image basicBuildingImage;
 
     /**
      * the image currently being dragged, if there is one, otherwise null.
@@ -169,9 +188,7 @@ public class LoopManiaWorldController {
         this.world = world;
         entityImages = new ArrayList<>(initialEntities);
         vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
-        basicEnemyImage = new Image((new File("src/images/slug.png")).toURI().toString());
         swordImage = new Image((new File("src/images/basic_sword.png")).toURI().toString());
-        basicBuildingImage = new Image((new File("src/images/vampire_castle_building_purple_background.png")).toURI().toString());
         currentlyDraggedImage = null;
         currentlyDraggedType = null;
 
@@ -220,6 +237,21 @@ public class LoopManiaWorldController {
             }
         }
 
+        Character character = world.getCharacter();
+
+        hp.textProperty().bind(character.hpProperty().asString());
+        gold.textProperty().bind(character.goldProperty().asString());
+        exp.textProperty().bind(character.expProperty().asString());
+        cycles.textProperty().bind(character.cycleProperty().asString());
+        alliedSoldierNum.textProperty().bind(character.alliedSoldierProperty().asString());
+
+        goalComplete.selectedProperty().bind(world.goalProperty());
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(world.getWorldGoals(), character);
+        String goalsToComplete = GoalEvaluator.prettyPrint(finalGoal);
+        allGoals.setText(goalsToComplete);
+
+
         // create the draggable icon
         draggedEntity = new DragIcon();
         draggedEntity.setVisible(false);
@@ -245,6 +277,9 @@ public class LoopManiaWorldController {
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
+            // if (new Random().nextInt(100) >= 90) {
+            //     loadHealthPotion();
+            // }
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -368,17 +403,17 @@ public class LoopManiaWorldController {
     //     onLoad(healthPotion);
     // }
 
-    // /**
-    //  * load TheOneRing from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadTheOneRing(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add TheOneRing to list of unequipped items in backend
-    //     world.addUnequippedItem(theOneRing);
-    //     onLoad(theOneRing);
-    // }
+    /**
+     * load TheOneRing from the world, and pair it with an image in the GUI
+     */
+    private void loadTheOneRing(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add TheOneRing to list of unequipped items in backend
+        world.addUnequippedItem(theOneRing);
+        onLoad(theOneRing);
+    }
 
     /**
      * load random BasicItem from the world, and pair it with an image in the GUI
@@ -432,8 +467,7 @@ public class LoopManiaWorldController {
                 world.removeItemByPositionInUnequippedInventoryItems(0);
                 firstAvailableSlot = world.getFirstAvailableSlotForItem();
             }
-            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-            world.addUnequippedItem(theOneRing);
+            loadTheOneRing();
         }
     }
 
@@ -738,6 +772,7 @@ public class LoopManiaWorldController {
                                     n.setOpacity(0.7);
                                 }
                             }
+
                             event.consume();
                         }
                     });
@@ -747,7 +782,6 @@ public class LoopManiaWorldController {
                             if (currentlyDraggedType == draggableType){
                                 n.setOpacity(1);
                             }
-
                             event.consume();
                         }
                     });
@@ -796,9 +830,14 @@ public class LoopManiaWorldController {
                 pause();
             }
             break;
+        case Q:
+            //world.consumeHealthPotion();
+            //TODO implement consumehealthpotion in backend as well as removing item in frontend
+            break;
         default:
             break;
         }
+
     }
 
     public void setMainMenuSwitcher(MenuSwitcher mainMenuSwitcher){

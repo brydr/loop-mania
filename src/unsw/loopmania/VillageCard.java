@@ -12,6 +12,7 @@ public class VillageCard extends Card {
         return newBuilding;
     }
 
+    @Override
     public String getImage() {
         String villageCardImage = "src/images/village_card.png";
         return villageCardImage;

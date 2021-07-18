@@ -8,9 +8,22 @@ public class BarracksBuilding extends Building {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String barracksBuildingImage = "src/images/barracks.png";
         return barracksBuildingImage;
+    }
+
+    /**
+     * Spawn an allied soldier.
+     * @precondition "The Character" is at the barracks: 
+     * {@code theCharacter.getX() == getX() && theCharacter.getY() == getY()}
+     * @param theCharacter reference to "The Character" of the game.
+     */
+    public void spawnAlliedSoldiers(Character theCharacter) {
+        // New soldier has reference to PathPosition of `theCharacter`
+        AlliedSoldier newSoldier = new AlliedSoldier(theCharacter.getPosition());
+        theCharacter.addAlliedSoldier(newSoldier);
     }
     
 }

@@ -1,26 +1,29 @@
 package unsw.loopmania;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
+
 public class Gold extends Currency {
-    public int amount;
+    public IntegerProperty amount;
 
     public Gold() {
-        this.amount = 0;
+        amount = new SimpleIntegerProperty();
+        amount.setValue(0);
     }
     
     public int getGold() {
+        return amount.get();
+    }
+
+    public IntegerProperty getGoldProperty() {
         return amount;
     }
 
     public void addGold(int add) {
-        amount = amount + add;
+        amount.setValue(amount.get() + add);
     }
 
     public void subtractGold(int sub) {
-        amount = amount - sub;
-    }
-
-    public String getImage() {
-        String goldImage = "src/images/gold_pile.png";
-        return goldImage;
+        amount.setValue(amount.get() - sub);
     }
 }

@@ -4,7 +4,7 @@ import java.util.Random;
 import javafx.beans.property.SimpleIntegerProperty;
 
 /**
- * Generates a Card instance from a random subclass by wrapping a {@code java.util.Random} instance.
+ * Generates a Card instance from a random subclass by composing a {@code java.util.Random} instance.
  */
 public class RandomCardGenerator {
     // Number of subclasses of Card 

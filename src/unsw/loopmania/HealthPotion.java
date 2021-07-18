@@ -9,7 +9,8 @@ public class HealthPotion extends Consumable {
     public HealthPotion(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y, HealthPotion.BUY_PRICE, HealthPotion.SELL_PRICE);
     }
-
+    
+    @Override
     public String getImage() {
         String healthPotionImage = "src/images/brilliant_blue_new.png";
         return healthPotionImage;

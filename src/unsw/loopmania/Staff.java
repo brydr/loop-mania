@@ -32,6 +32,7 @@ public class Staff extends Weapon implements MagicAbility {
 		return Math.random() < TRANCE_CHANCE;
 	}
 
+	@Override
 	public String getImage() {
         String staffImage = "src/images/staff.png";
         return staffImage;

@@ -1,7 +1,9 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
+
 public abstract class Weapon extends EquippableItem implements WeaponStrategy {
+
 	private final int attackPower;
 
 	public Weapon(SimpleIntegerProperty x, SimpleIntegerProperty y, int attackPower, int buyPrice, int sellPrice) {

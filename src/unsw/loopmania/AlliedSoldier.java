@@ -5,15 +5,15 @@ import java.time.Duration;
 
 public class AlliedSoldier extends MovingEntity {
 
-    private BasicEnemy oldEnemy;
-    private Duration tranceTime;
-    private static final int attackDamage = 8;
+    private BasicEnemy oldEnemy = null;
+    private Duration tranceTime = null;
+    private static final int ATTACK_DAMAGE = 8;
+    private static final int NEW_SOLDIER_HP = 50;
 
     // constructor for basic AlliedSoldier
-    public AlliedSoldier(PathPosition pos) {
-        super(pos);
-        int hp = 50;
-        this.setHp(hp);
+    public AlliedSoldier(PathPosition position) {
+        super(position);
+        super.setHp(NEW_SOLDIER_HP);
     }
 
     // constructor for when enemy is put in trance
@@ -28,6 +28,10 @@ public class AlliedSoldier extends MovingEntity {
         return oldEnemy;
     }
 
+    public boolean isTrancedEnemy() {
+        return (oldEnemy != null) && (tranceTime != null);
+    }
+
     /**
      * reduce hp of AlliedSoldier
      * @return true if dead, false if alive
@@ -40,10 +44,14 @@ public class AlliedSoldier extends MovingEntity {
      * update tranceTime
      * @return true if time is over (<=0), return false if still in trance
      */
-    public Boolean isTranceOver(Duration timePassed) {
+    public boolean isTranceOver(Duration timePassed) {
+        if (tranceTime == null)
+            return false;
         tranceTime = this.tranceTime.minus(timePassed);
-        if (tranceTime.isNegative() || tranceTime.isZero()) return true;
-        else return false;
+        if (tranceTime.isNegative() || tranceTime.isZero()) 
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -51,7 +59,7 @@ public class AlliedSoldier extends MovingEntity {
      * outputs damage to given enemy
      */
     public void attack(BasicEnemy enemy) {
-        enemy.takeDamage(attackDamage);
+        enemy.takeDamage(ATTACK_DAMAGE);
     }
 
     /**

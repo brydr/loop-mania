@@ -8,10 +8,13 @@ public class Vampire extends BasicEnemy implements Undead {
     public double criticalChance;
     private int criticalDuration;
     private boolean alreadyInCritical;
+
+    public static final int STARTING_HP = 60;
+
     public Vampire(PathPosition position) {
         super(position);
         this.setAttack(12);
-        this.setHp(60);
+        this.setHp(STARTING_HP);
         this.setSpeed(1);
         this.setBattleRadius(2);
         this.setSupportRadius(3);
@@ -21,6 +24,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.alreadyInCritical = false;
     }
 
+    @Override
     public void move() {
         // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
         // This is implemented this way in case the user may add items that may stun the enemy causing it not to move. In that case the speed to can be set to the amount of rounds the
@@ -88,6 +92,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.setAttack(attackPower + criticalBiteDamage);
     }
 
+    @Override
     public String getImage() {
         String vampireImage = "src/images/vampire.png";
         return vampireImage;
