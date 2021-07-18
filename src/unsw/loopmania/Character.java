@@ -17,14 +17,17 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers;
     private IntegerProperty experience;
     private IntegerProperty cycles;
+    private IntegerProperty alliedSoldierNum;
     public Gold gold;
 
     public Character(PathPosition position) {
         super(position);
         this.experience = new SimpleIntegerProperty();
         this.cycles = new SimpleIntegerProperty();
+        this.alliedSoldierNum = new SimpleIntegerProperty();
         experience.setValue(0);
         cycles.setValue(0);
+        alliedSoldierNum.setValue(0);
         this.setHp(100);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
@@ -246,6 +249,11 @@ public class Character extends MovingEntity {
     public IntegerProperty cycleProperty() {
         IntegerProperty charCycle = this.cycles;
         return charCycle;
+    }
+    public IntegerProperty alliedSoldierProperty() {
+        alliedSoldierNum.setValue(listAlliedSoldiers.size());
+        IntegerProperty charalliedSoldierNum = this.alliedSoldierNum;
+        return charalliedSoldierNum;
     }
     public String getImage() {
         String characterImage = "src/images/human_new.png";

@@ -16,7 +16,7 @@
 <!-- TODO = modify and expand the GUI? -->
 <!-- anchorPaneRoot is the background of the main game -->
 
-<AnchorPane fx:id="anchorPaneRoot" onKeyPressed="#handleKeyPress" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPaneRoot" onKeyPressed="#handleKeyPress" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <!-- HBox is used to stack items horizontally left to right -->
    <HBox>
       <!-- VBox is used to stack items vertically top to bottom -->
@@ -160,6 +160,24 @@
                   <Label fx:id="gold" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="exp" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="cycles" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+            <Label text="AlliedSoldiers" />
+            <GridPane fx:id="AlliedSoldiers" prefHeight="28.0" prefWidth="113.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="4.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="78.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="alliedSoldierNum" prefHeight="17.0" prefWidth="101.0" text="0" GridPane.columnIndex="1" />
+                  <ImageView fitHeight="25.0" fitWidth="25.0">
+                     <image>
+                        <Image url="@../../images/deep_elf_master_archer.png" />
+                     </image>
+                  </ImageView>
                </children>
             </GridPane>
             <Label text="Goals" />
