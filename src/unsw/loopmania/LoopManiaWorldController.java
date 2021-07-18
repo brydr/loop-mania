@@ -277,9 +277,16 @@ public class LoopManiaWorldController {
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
-            // if (new Random().nextInt(100) >= 90) {
-            //     loadHealthPotion();
-            // }
+
+            List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
+            for (RandomPathLoot pathLoot: pickedUpLoot){
+                reactToLootPicked(pathLoot);
+            }
+
+            List<RandomPathLoot> newPathLoot = world.possiblyDropPathLoot();
+            for (RandomPathLoot pathLoot: newPathLoot){
+                onLoad(pathLoot);
+            }
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -472,6 +479,23 @@ public class LoopManiaWorldController {
     }
 
     /**
+     * run GUI events after an path loot is picked up.
+     * @param randPathLoot the random path loot that needs to be reacted to.
+     */
+    private void reactToLootPicked(RandomPathLoot randPathLoot) {
+        Character character = world.getCharacter();
+        int pickUpVal = randPathLoot.onPickUp();
+
+        // If they picked up gold.
+        if (pickUpVal == 0) {
+            character.addGold(new Random().nextInt(91) + 10);   // Give the character a gold payout between 10 and 100 inclusive.
+        // If they picked up a potion.
+        } else if (pickUpVal == 1) {
+            loadHealthPotion();
+        }   
+    }
+
+    /**
      * load a vampire castle card into the GUI.
      * Particularly, we must connect to the drag detection event handler,
      * and load the image into the cards GridPane.
@@ -534,6 +558,16 @@ public class LoopManiaWorldController {
     private void onLoad(Building building){
         ImageView view = new ImageView(new Image((new File(building.getImage())).toURI().toString()));
         addEntity(building, view);
+        squares.getChildren().add(view);
+    }
+
+    /**
+     * load a random path drop into the GUI
+     * @param randomPathLoot
+     */
+    private void onLoad(RandomPathLoot randomPathLoot) {
+        ImageView view = new ImageView(new Image((new File(randomPathLoot.getImage())).toURI().toString()));
+        addEntity(randomPathLoot, view);
         squares.getChildren().add(view);
     }
 

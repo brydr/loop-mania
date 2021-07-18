@@ -82,28 +82,40 @@
                         <Image url="@../../images/helmet_slot.png" />
                      </image>
                   </ImageView>
-                  <!-- armourCell is the cell where a shield intended to be equipped will be dragged by the human player -->
+                  <!-- armourCell is the cell where a armour intended to be equipped will be dragged by the human player -->
                   <ImageView fx:id="armourCell" GridPane.columnIndex="2" GridPane.rowIndex="0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">    
                      <image>
                         <Image url="@../../images/armour_slot.png" />
                      </image>
                   </ImageView>
                   <!-- shieldCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView fx:id="shieldCell" GridPane.columnIndex="3">
+                  <ImageView fx:id="shieldCell" GridPane.columnIndex="3" GridPane.rowIndex="0">
                      <image>
                         <Image url="@../../images/shield_unequipped.png" />
                      </image>
                   </ImageView>
-                  <!-- rareItemCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView fx:id="rareItemCell" GridPane.rowIndex="1">
+                  <!-- rareItemCell is the cell where a rareItem intended to be equipped will be dragged by the human player -->
+                  <ImageView fx:id="rareItemCell" GridPane.rowIndex="1" GridPane.columnIndex="0">
                      <image>
                         <Image url="@../../images/ring_slot.png" />
                      </image>
                   </ImageView>
-                  <!-- potionCell is the cell where a shield intended to be equipped will be dragged by the human player -->
+                  <!-- potionCell is the cell where a potion intended to be equipped will be dragged by the human player -->
                   <ImageView fx:id="potionCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="1">    
                      <image>
                         <Image url="@../../images/potion_slot.png"/>
+                     </image>
+                  </ImageView>
+                  <!-- empty cell -->
+                  <ImageView fx:id="emptyCell1"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/image_just_black_tiny.png"/>
+                     </image>
+                  </ImageView>
+                  <!-- empty cell -->
+                  <ImageView fx:id="emptyCell2"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="3" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/image_just_black_tiny.png"/>
                      </image>
                   </ImageView>
                </children>
