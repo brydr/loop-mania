@@ -21,6 +21,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.alreadyInCritical = false;
     }
 
+    @Override
     public void move() {
         // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
         // This is implemented this way in case the user may add items that may stun the enemy causing it not to move. In that case the speed to can be set to the amount of rounds the

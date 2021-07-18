@@ -95,6 +95,15 @@ public class LoopManiaWorld {
     public void addEnemies(BasicEnemy e) {
         enemies.add(e);
     }
+
+    // for testing
+    public List<Building> getBuildings() {
+        return buildingEntities;
+    }
+    public void addBuilding(Building newBuilding) {
+        buildingEntities.add(newBuilding);
+    }
+
     /**
      * set the character. This is necessary because it is loaded as a special entity out of the file
      * @param character the character
@@ -383,6 +392,22 @@ public class LoopManiaWorld {
     public void runTickMoves(){
         character.moveDownPath();
         moveBasicEnemies();
+        possiblySpawnAlliedSoldiers();
+    }
+
+    /**
+     * If The Character is at a barracks, spawn an AlliedSoldier.
+     * @param item
+     */
+    public void possiblySpawnAlliedSoldiers() {
+        // NOTE = Currently there is a double check on the building matching the Character's position.
+        // We can decide which of these checks can be removed.
+        buildingEntities.parallelStream()
+            .filter(building -> building instanceof BarracksBuilding
+                && character.getX() == building.getX() 
+                && character.getY() == building.getY())
+            .map(building -> (BarracksBuilding) building)
+            .forEach(barracks -> barracks.spawnAlliedSoldiers(character));
     }
 
     /**
@@ -457,6 +482,23 @@ public class LoopManiaWorld {
         for (BasicEnemy e: enemies){
             e.move();
         }
+    }
+
+    // Only public for testing purposes
+    // TODO = Revert to private visibility when cycle-complete triggers is implemented
+    public void spawnEnemies() {
+        for (Building building : buildingEntities) {
+            if (building instanceof EnemySpawner) {
+                EnemySpawner enemySpawner = (EnemySpawner) building;
+                enemySpawner.spawn(this);
+            }
+        }
+        /* // FP Alternative
+        buildingEntities.stream()
+            .filter(building -> building instanceof EnemySpawner)
+            .map(building -> (EnemySpawner) building)
+            .forEach(enemySpawner -> enemySpawner.spawn(this));
+        */
     }
 
     /**
@@ -564,6 +606,29 @@ public class LoopManiaWorld {
     public List<Card> getCards() {
         return cardEntities;
     }
+
+    List<Pair<Integer,Integer>> getOrderedPath() {
+        return orderedPath;
+    }
+
+    /**
+     * For a *path adjacent* tile, return the nearest path tile.
+     * @param x x-coordinate of our path-adjacent tile 
+     * @param y y-coordinate of our path-adjacent tile
+     * @throws NoSuchElementException if no adjacent Path tile.
+     * @return A {@code Pair} containing the nearest tile on the path.
+     */
+    public Pair<Integer, Integer> getNearestPathTile(int x, int y) {
+        // Precondition is that tile is adjacent
+        return orderedPath.parallelStream()
+            .filter(tile -> {
+                int xTile = tile.getValue0();
+                int yTile = tile.getValue1();
+                return x - 1 <= xTile && xTile <= x + 1
+                    && y - 1 <= yTile && yTile <= y + 1;
+            })
+            .findAny()
+            .orElseThrow();
 
     public List<Item> getInventory() {
         return this.unequippedInventoryItems;
