@@ -1,6 +1,7 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
+
 public class CampfireCard extends Card {
     public CampfireCard(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y);
@@ -12,6 +13,7 @@ public class CampfireCard extends Card {
         return newBuilding;
     }
 
+    @Override
     public String getImage() {
         String campfireCardImage = "src/images/campfire_card.png";
         return campfireCardImage;

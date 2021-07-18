@@ -6,6 +6,7 @@ public class TheOneRing extends RareItem {
 		super(x, y);
 	}
 
+    @Override
 	public String getImage() {
         String oneRingImage = "src/images/the_one_ring.png";
         return oneRingImage;

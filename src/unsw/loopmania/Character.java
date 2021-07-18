@@ -219,6 +219,7 @@ public class Character extends MovingEntity {
         return enemy;
     }
 
+    @Override
     public String getImage() {
         String characterImage = "src/images/human_new.png";
         return characterImage;

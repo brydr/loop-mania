@@ -26,6 +26,7 @@ public class Shield extends ProtectiveGear {
 		return Math.random() < ALL_NEGATION_CHANCE;
 	}
 
+	@Override
 	public String getImage() {
         String shieldImage = "src/images/shield.png";
         return shieldImage;

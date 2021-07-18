@@ -89,6 +89,7 @@ public class Vampire extends BasicEnemy implements Undead {
         this.setAttack(attackPower + criticalBiteDamage);
     }
 
+    @Override
     public String getImage() {
         String vampireImage = "src/images/vampire.png";
         return vampireImage;

@@ -19,6 +19,7 @@ public class Gold extends Currency {
         amount = amount - sub;
     }
 
+    @Override
     public String getImage() {
         String goldImage = "src/images/gold_pile.png";
         return goldImage;

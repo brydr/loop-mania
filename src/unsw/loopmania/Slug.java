@@ -44,6 +44,7 @@ public class Slug extends BasicEnemy {
         character.takeDamage(attackPower);
     }
 
+    @Override
     public String getImage() {
         String slugImage = "src/images/slug.png";
         return slugImage;

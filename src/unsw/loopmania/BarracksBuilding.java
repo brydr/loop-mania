@@ -8,6 +8,7 @@ public class BarracksBuilding extends Building {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String barracksBuildingImage = "src/images/barracks.png";
         return barracksBuildingImage;

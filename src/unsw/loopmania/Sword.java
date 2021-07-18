@@ -14,6 +14,7 @@ public class Sword extends Weapon implements AttackAbility {
 		super(x, y, Sword.ATTACK_POWER, Sword.BUY_PRICE, Sword.SELL_PRICE);
 	}
 
+	@Override
 	public String getImage() {
         String swordImage = "src/images/basic_sword.png";
         return swordImage;

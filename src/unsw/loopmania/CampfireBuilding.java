@@ -8,6 +8,7 @@ public class CampfireBuilding extends Building {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String campfireBuildingImage = "src/images/campfire.png";
         return campfireBuildingImage;

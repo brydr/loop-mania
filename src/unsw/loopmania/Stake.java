@@ -20,7 +20,8 @@ public class Stake extends Weapon implements AttackAbility {
 		}
 		return Stake.ATTACK_POWER;
 	}
-
+	
+	@Override
 	public String getImage() {
 		String stakeImage = "src/images/stake.png";
 		return stakeImage;
