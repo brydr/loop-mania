@@ -549,5 +549,6 @@ public class LoopManiaWorld {
     public void addCard(Card newCard) {
         cardEntities.add(newCard);
     } 
+
 }
 
