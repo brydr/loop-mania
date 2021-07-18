@@ -7,8 +7,11 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import org.javatuples.Pair;
+import org.json.JSONObject;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.BooleanProperty;
 import unsw.loopmania.util.CustomCollectors;
 
 /**
@@ -55,6 +58,14 @@ public class LoopManiaWorld {
      */
     private List<Pair<Integer, Integer>> orderedPath;
 
+    private PathPosition firstPath;
+
+    private JSONObject worldGoals;
+
+    private BooleanProperty goalComplete;
+
+    private String goalsToComplete;
+
     /**
      * create the world (constructor)
      *
@@ -72,6 +83,8 @@ public class LoopManiaWorld {
         unequippedInventoryItems = new ArrayList<>();
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
+        firstPath = null;
+        goalComplete = new SimpleBooleanProperty(false);
     }
 
     public int getWidth() {
@@ -109,6 +122,10 @@ public class LoopManiaWorld {
 
     public Character getCharacter() {
         return character;
+    }
+
+    public void setGoals(JSONObject goals) {
+        worldGoals = goals;
     }
 
     /**
@@ -271,6 +288,17 @@ public class LoopManiaWorld {
             // TODO may have to edit payout based on what is being deleted
             payout();
             removeCard(0);
+            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+    
+            // Give the character gold, exp or a random weapon.
+            if (randomLoot == 0) {
+                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+            } else if (randomLoot == 1) {
+                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+                character.addExperience(randomExp);
+            } else {
+                loadRandomItem();
+            }
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -284,7 +312,18 @@ public class LoopManiaWorld {
         // if adding more cards than have, remove the first card...
         if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
-            removeItemByPositionInUnequippedInventoryItems(0);;
+            removeItemByPositionInUnequippedInventoryItems(0);
+
+            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+            // Give the character gold, exp or a random card.
+            if (randomLoot == 0) {
+                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+            } else if (randomLoot == 1) {
+                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+                character.addExperience(randomExp);
+            } else {
+                loadRandomCard();
+            }
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -385,7 +424,22 @@ public class LoopManiaWorld {
      * run moves which occur with every tick without needing to spawn anything immediately
      */
     public void runTickMoves(){
+        if (firstPath == null) {
+            firstPath = character.getPosition();
+            firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
+        }
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
+
+        if (GoalEvaluator.evaluate(finalGoal) == true) {
+            // Character achieved all goals
+            goalComplete.setValue(true);
+        }
         character.moveDownPath();
+
+        if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
+            character.addCycles();
+        }
         moveBasicEnemies();
         possiblySpawnAlliedSoldiers();
         applyTrapAttacks();
@@ -672,5 +726,18 @@ public class LoopManiaWorld {
      */
     public void addCard(Card newCard) {
         cardEntities.add(newCard);
+    } 
+
+    public BooleanProperty goalProperty() {
+        BooleanProperty charGoalComplete = this.goalComplete;
+        return charGoalComplete;
+    }
+
+    public String getGoalString() {
+        return goalsToComplete;
+    }
+
+    public JSONObject getWorldGoals() {
+        return worldGoals;
     }
 }

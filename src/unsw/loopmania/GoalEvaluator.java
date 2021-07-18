@@ -1,8 +1,13 @@
 package unsw.loopmania;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.javatuples.Pair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class GoalEvaluator {
     public static boolean evaluate(GoalNode expression) {
@@ -12,67 +17,67 @@ public class GoalEvaluator {
 
     public static String prettyPrint(GoalNode expression) {
         // Pretty print the expression
-        System.out.println(expression.print());
         return expression.print();
     }
 
-    public static void main(String[] args) {
-        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
-        new Pair<>(0, 2), 
-        new Pair<>(0, 3)) );
-        Character c = new Character(pos);
+    public static JSONObject parseJSON(String filename) {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filename)));
+            JSONObject jsonObject = new JSONObject(content);
+            JSONObject goals = (JSONObject) jsonObject.get("goal-condition");
+            return goals;
+        } catch (IOException e) {
+            return null;
+        }
+    }
 
-        // Set goals, goal g1 requires cycles of 5 
-        // goal g2 requires gold of 300
-        // goal g3 requires experience of 50
-        // goal g4 requires gold of 400 and experience of 100
-        Goal g1 = new Goal(5, 0, 0);
-        Goal g2 = new Goal(0, 0, 300);
-        Goal g3 = new Goal(0, 50, 0);
-        Goal g4 = new Goal(0, 100, 400);
+    public static GoalNode evaluateGoals(JSONObject goal, Character c) {
+        List<GoalNode> allSubGoals = new ArrayList<GoalNode>();
+        GoalNode returnGoal = null;
 
-        GoalNode goal1 = new GoalBase(c, g1);
-        GoalNode goal2 = new GoalBase(c, g2);
+        // Base cases when goal equals experience, gold or cycles.
+        if (goal.getString("goal").equals("experience")) {
+            int expValue = goal.getInt("quantity");
+            returnGoal = new GoalBaseExperience(c, expValue);
 
-        // See if goals g AND g1 are accomplished
-        GoalAnd goalAnd = new GoalAnd(goal1, goal2);
-        System.out.println(GoalEvaluator.evaluate(goalAnd));    // Should be false
-        GoalEvaluator.prettyPrint(goalAnd);
+        } else if (goal.getString("goal").equals("gold")) {
+            int goldValue = goal.getInt("quantity");
+            returnGoal = new GoalBaseGold(c, goldValue);
 
-        c.addGold(300); // add 300 gold to the character
-        goal2 = new GoalBase(c, g2);
-        System.out.println(GoalEvaluator.evaluate(goal2));  // Should be true  now
-        GoalEvaluator.prettyPrint(goal2);
+        } else if (goal.getString("goal").equals("cycles")) {
+            int cycleValue = goal.getInt("quantity");
+            returnGoal = new GoalBaseCycles(c, cycleValue);
 
-        // Add 10 cycles
-        for (int i = 0; i < 10; i++) {
-            c.addCycles();
-        } 
+        // Recursive cases for when goal equals an OR and AND.
+        } else if (goal.getString("goal").equals("OR")) {
+            // First get all the subgoals.
+            JSONArray subGoals = (JSONArray) goal.get("subgoals");
+            // Recursively evaluate all the subgoals and add them into the allSubGoals Array.
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalNode goalOr = evaluateGoals(subGoals.getJSONObject(i), c);
+                allSubGoals.add(goalOr);
+            }
 
-        goal1 = new GoalBase(c, g1);
-        goal2 = new GoalBase(c, g2);
-        goalAnd = new GoalAnd(goal1, goal2);
-        System.out.println(GoalEvaluator.evaluate(goalAnd));    // Should be true now
-        GoalEvaluator.prettyPrint(goalAnd);
+            // Now OR all the subGoals together.
+            returnGoal = allSubGoals.get(0);
+            for (int i = 1; i < allSubGoals.size(); i++) {
+                returnGoal = new GoalOr(returnGoal, allSubGoals.get(i));
+            }
 
-        GoalNode goal3 = new GoalBase(c, g3);
-        GoalAnd goalAnd2 = new GoalAnd(goal3, goalAnd); // Create a new goal where goal1 AND goal2 AND goal3 all must be completed.
-        System.out.println(GoalEvaluator.evaluate(goalAnd2));    // Should be false now
-        GoalEvaluator.prettyPrint(goalAnd2);
+        } else if (goal.getString("goal").equals("AND")) {
+            JSONArray subGoals = (JSONArray) goal.get("subgoals");
+            for (int i = 0; i < subGoals.length(); i++) {
+                GoalNode goalAnd = evaluateGoals(subGoals.getJSONObject(i), c);
+                allSubGoals.add(goalAnd);
+            }
 
-        c.addExperience(50);
+            // AND all the subgoals together.
+            returnGoal = allSubGoals.get(0);
+            for (int i = 1; i < allSubGoals.size(); i++) {
+                returnGoal = new GoalAnd(returnGoal, allSubGoals.get(i));
+            }
+        }
 
-        goal1 = new GoalBase(c, g1);
-        goal2 = new GoalBase(c, g2);
-        goalAnd = new GoalAnd(goal1, goal2);
-        goal3 = new GoalBase(c, g3);
-        goalAnd2 = new GoalAnd(goal3, goalAnd); 
-        System.out.println(GoalEvaluator.evaluate(goalAnd2));    // Should be true now
-        GoalEvaluator.prettyPrint(goalAnd2);
-
-        GoalNode goal4 = new GoalBase(c, g4);   // Goal 4 should not be achieved but if you OR it with goalAnd2 then it should be true.
-        GoalOr goalOr = new GoalOr(goal4, goalAnd2);
-        System.out.println(GoalEvaluator.evaluate(goalOr));    // Should be true now
-        GoalEvaluator.prettyPrint(goalOr);
+        return returnGoal;
     }
 }

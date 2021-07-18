@@ -1,6 +1,7 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.IntegerProperty;
 
 /**
  * The moving entity
@@ -11,7 +12,7 @@ public abstract class MovingEntity extends Entity {
      * object holding position in the path
      */
     private PathPosition position;
-    private int hp;
+    public IntegerProperty hp;
     private int speed;
     private BasicEnemy convertedToEnemy;
 
@@ -22,6 +23,7 @@ public abstract class MovingEntity extends Entity {
     public MovingEntity(PathPosition position) {
         super();
         this.position = position;
+        this.hp = new SimpleIntegerProperty();
         convertedToEnemy = null;
     }
 
@@ -56,7 +58,7 @@ public abstract class MovingEntity extends Entity {
     }
 
     public int getHp() {
-        return hp;
+        return hp.get();
     }
 
     public int getSpeed() {
@@ -64,7 +66,7 @@ public abstract class MovingEntity extends Entity {
     }
 
     public void setHp(int hp) {
-        this.hp = hp;
+        this.hp.setValue(hp);
     }
 
     public void setSpeed(int speed) {

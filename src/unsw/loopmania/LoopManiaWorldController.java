@@ -29,6 +29,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.util.Duration;
 
 import java.util.EnumMap;
@@ -101,6 +103,22 @@ public class LoopManiaWorldController {
 
     @FXML
     private GridPane unequippedInventory;
+
+    @FXML
+    private GridPane characterStats;
+    @FXML
+    private Label hp;
+    @FXML 
+    private Label gold;
+    @FXML
+    private Label exp;
+    @FXML
+    private Label cycles;
+
+    @FXML
+    private CheckBox goalComplete;
+    @FXML
+    private Label allGoals;
 
     // all image views including tiles, character, enemies, cards... even though cards in separate gridpane...
     private List<ImageView> entityImages;
@@ -215,6 +233,20 @@ public class LoopManiaWorldController {
                 unequippedInventory.add(emptySlotView, x, y);
             }
         }
+
+        Character character = world.getCharacter();
+
+        hp.textProperty().bind(character.hpProperty().asString());
+        gold.textProperty().bind(character.goldProperty().asString());
+        exp.textProperty().bind(character.expProperty().asString());
+        cycles.textProperty().bind(character.cycleProperty().asString());
+
+        goalComplete.selectedProperty().bind(world.goalProperty());
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(world.getWorldGoals(), character);
+        String goalsToComplete = GoalEvaluator.prettyPrint(finalGoal);
+        allGoals.setText(goalsToComplete);
+
 
         // create the draggable icon
         draggedEntity = new DragIcon();
@@ -535,6 +567,8 @@ public class LoopManiaWorldController {
                                 if (newBuilding != null) {
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                     onLoad(newBuilding);
+                                } else {
+                                    placeBack = true;
                                 }
                                 break;
                             case ITEM:
@@ -579,6 +613,7 @@ public class LoopManiaWorldController {
                         currentlyDraggedImage = null;
                         currentlyDraggedType = null;
                         printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
+
                     }
                 }
                 event.setDropCompleted(true);
@@ -681,10 +716,12 @@ public class LoopManiaWorldController {
                 draggedEntity.relocateToPoint(new Point2D(event.getSceneX(), event.getSceneY()));
                 switch (draggableType){
                     case CARD:
-                        draggedEntity.setImage(vampireCastleCardImage);
+                        Image cardImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(cardImage);
                         break;
                     case ITEM:
-                        draggedEntity.setImage(swordImage);
+                        Image itemImage = currentlyDraggedImage.getImage();
+                        draggedEntity.setImage(itemImage);
                         break;
                     default:
                         break;
