@@ -44,9 +44,9 @@ public class CharacterTest {
         Character c = new Character(pos);
         // check not dead
         c.takeDamage(50);
-        assertEquals(c.getHp(), 50);
+        assertEquals(c.getHp(), 150);
         // check neg dmg and dead
-        c.takeDamage(60);
+        c.takeDamage(160);
         assertEquals(c.getHp(), -10);
     }
 

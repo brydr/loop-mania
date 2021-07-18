@@ -1,7 +1,6 @@
 package test.EnemyTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-package unsw.loopmania.EnemyTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,16 +12,13 @@ import unsw.loopmania.Character;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 public class SlugEnemyTest {
-    
+
     @Test
     public void testRadius() {
-        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
-                                                              new Pair<>(0, 2), 
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
 
@@ -50,15 +46,15 @@ public class SlugEnemyTest {
 
     @Test
     public void testAttackAndTakeDamage() {
-        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
-                                                              new Pair<>(0, 2), 
+        PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
+                                                              new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
         Slug slug = new Slug(pos);
         Character c = new Character(pos);
 
         slug.attack(c);
 
-        assertEquals(c.getHp(), 97);
+        assertEquals(c.getHp(), 197);
 
         slug.takeDamage(5);
 

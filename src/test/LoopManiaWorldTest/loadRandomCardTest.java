@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import unsw.loopmania.Card;
 import unsw.loopmania.LoopManiaWorld;
+import unsw.loopmania.PathPosition;
+import unsw.loopmania.Character;
 
 public class loadRandomCardTest {
     
@@ -17,20 +19,19 @@ public class loadRandomCardTest {
     public void testMaximumCard() {
         // NOTE: This is fixed-size, and List.of is immutable, so we should use 
         // ArrayList< >(List.of( ... )) if we want mutability & growability
-        var path = Arrays.asList(
-            new Pair<Integer, Integer>(0, 1), 
-            new Pair<Integer, Integer>(0, 2), 
-            new Pair<Integer, Integer>(0, 3), 
-            new Pair<Integer, Integer>(0, 4)
-        );
-        LoopManiaWorld newWorld = new LoopManiaWorld(9, 9, path);
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        LoopManiaWorld world = new LoopManiaWorld(9, 9, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+
+        Character c = new Character(pos);
+        world.setCharacter(c);
         
         for (int i = 0; i < 10; i++) {
-            newWorld.loadRandomCard();
+            world.loadRandomCard();
         }
 
-        List<Card> cardEntities = newWorld.getCards();
+        List<Card> cardEntities = world.getCards();
         // Only a maximum of 9 cards so the first card should be removed.
+        System.out.println(cardEntities.size());
         assertEquals(cardEntities.size(), 9);
     }
 

@@ -61,6 +61,7 @@
     * Helmet: 120 gold (buy), 60 gold (sell)
     * Health Potions: 50 gold (buy), 20 gold (sell)
 * Each path tile in the game has a 1% chance of gold spawning on them every time *The Character* completes a full cycle.
+* Once an item is sold at the shop, the character can't buy the same item back
 
 # Buildings
 * A **trap** deals 30 HP of damage.

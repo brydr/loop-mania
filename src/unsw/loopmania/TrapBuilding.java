@@ -22,6 +22,7 @@ public class TrapBuilding extends Building implements BuildingAttackers {
     */
     public void attackEnemy(BasicEnemy enemy) {
         if (Math.pow((enemy.getX()-this.getX()), 2) +  Math.pow((enemy.getY()-this.getY()), 2) == 0) {
+            this.destroy();
             enemy.takeDamage(TRAP_DAMAGE);
         } 
     }

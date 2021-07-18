@@ -6,30 +6,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 
 import org.javatuples.Pair;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.BarracksBuilding;
 import unsw.loopmania.Character;
+import unsw.loopmania.GoalEvaluator;
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 
 public class SpawnAlliedSoldierTest {
     @Test
     public void spawnAlliedSoldierTest() {
-        var orderedPath = Arrays.asList(new Pair<>(0, 1), 
-                                        new Pair<>(0, 2), 
-                                        new Pair<>(0, 3), 
-                                        new Pair<>(0, 4));
-        PathPosition characterPos = new PathPosition(0, orderedPath);
-        Character theCharacter = new Character(characterPos);
-        LoopManiaWorld world = new LoopManiaWorld(20, 20, orderedPath);
-        world.setCharacter(theCharacter);
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+        LoopManiaWorld world = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
+
+        Character c = new Character(pos);
+        
+        world.setCharacter(c);
+
+        // Didnt know how to change this into a relative path.
+        String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
+        JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
+        world.setGoals(JSONGoals);
 
         // Testing precondition that The Character has no allied soldiers, and is at (0, 1)
-        assertTrue(theCharacter.getX() == 0 
-                && theCharacter.getY() == 1);
-        assertEquals(theCharacter.getListAlliedSoldiers().size(), 0);
+        assertTrue(c.getX() == 0 
+                && c.getY() == 1);
+        assertEquals(c.getListAlliedSoldiers().size(), 0);
         
         // Make a barracks
         final int barracksX = 0, barracksY = 2;
@@ -41,15 +46,15 @@ public class SpawnAlliedSoldierTest {
         world.runTickMoves();
 
         // Testing precondition that character is now at (0, 2)
-        assertTrue(theCharacter.getX() == barracksX 
-                && theCharacter.getY() == barracksY);
+        assertTrue(c.getX() == barracksX 
+                && c.getY() == barracksY);
         
-        // The soldier should now have an allied soldier
-        assertEquals(theCharacter.getListAlliedSoldiers().size(), 1);
+        // The character should now have an allied soldier
+        assertEquals(c.getListAlliedSoldiers().size(), 1);
         
         world.runTickMoves();
 
-        // The soldier should still have an allied soldier
-        assertEquals(theCharacter.getListAlliedSoldiers().size(), 1);
+        // The character should still have an allied soldier
+        assertEquals(c.getListAlliedSoldiers().size(), 1);
     }
 }
