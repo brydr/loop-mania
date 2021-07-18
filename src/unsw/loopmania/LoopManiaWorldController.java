@@ -1,6 +1,9 @@
 package unsw.loopmania;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +23,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -30,14 +35,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.CheckBox;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-
-import java.util.EnumMap;
-
-import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -270,8 +270,11 @@ public class LoopManiaWorldController {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             boolean isAtCastle = world.runTickMoves();
             List<BasicEnemy> defeatedEnemies = world.runBattles();
-            for (BasicEnemy e: defeatedEnemies){
-                reactToEnemyDefeat(e);
+            if (defeatedEnemies.size() > 0) {
+                for (BasicEnemy e: defeatedEnemies){
+                    reactToEnemyDefeat(e);
+                }
+                runBattleResults(defeatedEnemies);
             }
             List<BasicEnemy> newEnemies = world.possiblySpawnEnemies();
             for (BasicEnemy newEnemy: newEnemies){
@@ -492,6 +495,19 @@ public class LoopManiaWorldController {
             loadTheOneRing();
         }
     }
+
+    public void runBattleResults(List<BasicEnemy> defeatedEnemies) {
+        BattleResultsController results = new BattleResultsController(defeatedEnemies, world.getCharacter().getHp());
+        pause();
+        Stage test = results.BattleResults();
+        test.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                test.close();
+                startTimer();
+            }
+        });
+    }
+
 
     /**
      * run GUI events after an path loot is picked up.

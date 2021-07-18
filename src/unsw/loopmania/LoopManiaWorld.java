@@ -729,7 +729,7 @@ public class LoopManiaWorld {
             .collect(CustomCollectors.toSingleton());
 
         // Check that tile can be spawned here
-        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) || ((buildingNodeX == firstPath.getX().getValue()) && (buildingNodeY == firstPath.getY().getValue()))) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
         };
@@ -743,7 +743,6 @@ public class LoopManiaWorld {
         card.destroy();
         cardEntities.remove(card);
         shiftCardsDownFromXCoordinate(cardNodeX);
-
         return newBuilding;
     }
 
