@@ -116,6 +116,9 @@ public class LoopManiaWorldController {
     private Label cycles;
 
     @FXML
+    private Label alliedSoldierNum;
+
+    @FXML
     private CheckBox goalComplete;
     @FXML
     private Label allGoals;
@@ -240,6 +243,7 @@ public class LoopManiaWorldController {
         gold.textProperty().bind(character.goldProperty().asString());
         exp.textProperty().bind(character.expProperty().asString());
         cycles.textProperty().bind(character.cycleProperty().asString());
+        alliedSoldierNum.textProperty().bind(character.alliedSoldierProperty().asString());
 
         goalComplete.selectedProperty().bind(world.goalProperty());
 
