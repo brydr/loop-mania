@@ -67,6 +67,10 @@ public class LoopManiaWorld {
 
     private String goalsToComplete;
 
+    private boolean nextCycle;
+
+    private List<RandomPathLoot> worldPathLoot;
+
     /**
      * create the world (constructor)
      *
@@ -86,6 +90,8 @@ public class LoopManiaWorld {
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
         firstPath = null;
+        nextCycle = false;
+        worldPathLoot = new ArrayList<>();
         goalComplete = new SimpleBooleanProperty(false);
     }
 
@@ -158,12 +164,86 @@ public class LoopManiaWorld {
     }
 
     /**
+     * Drops random path loot at a 1% chance for each tile.
+     * @return list of loot that will be dropped.
+     */
+    public List<RandomPathLoot> possiblyDropPathLoot(){
+        List<RandomPathLoot> droppingPathLoot = new ArrayList<>();
+
+        int orderedPathSize = orderedPath.size();
+
+        if (!(nextCycle)) {
+            return droppingPathLoot;
+        }
+
+        int i = 0;
+        // For random gold drops.
+        while (i < orderedPathSize) {
+            if (new Random().nextInt(100) == 99) {   // If a random number between 0 and 99 inclusive is equal to 99. 1% chance.
+                RandomPathGold randPathGold = new RandomPathGold(new PathPosition(i, orderedPath));
+                droppingPathLoot.add(randPathGold);
+                worldPathLoot.add(randPathGold);
+            }
+            i++;
+        }
+
+        // For random pot drops.
+        i = 0;
+        while (i < orderedPathSize) {
+            if (new Random().nextInt(100) == 99) {   // If a random number between 0 and 99 inclusive is equal to 99. 1% chance.
+                RandomPathPot randPathPot = new RandomPathPot(new PathPosition(i, orderedPath));
+                droppingPathLoot.add(randPathPot);
+                worldPathLoot.add(randPathPot);
+            }
+            i++;
+        }
+
+        return droppingPathLoot;
+    }
+
+    /**
      * kill an enemy
      * @param enemy enemy to be killed
      */
     private void killEnemy(BasicEnemy enemy){
         enemy.destroy();
         enemies.remove(enemy);
+    }
+
+    /**
+     * Check if the character is on top of any randomly spawned path loot.
+     * @return list of path loot that got picked up.
+     */
+    public List<RandomPathLoot> pickUpLoot() {
+        List<RandomPathLoot> pickedUp = new ArrayList<RandomPathLoot>();
+
+        for (RandomPathLoot randPathLoot : worldPathLoot) {
+            int pickUpVal = randPathLoot.onPickUp();
+
+            // If the character's position is directly on top of a path loot.
+            if (Math.pow((character.getX()-randPathLoot.getX()), 2) +  Math.pow((character.getY()-randPathLoot.getY()), 2) == 0) {
+                // If they picked up gold.
+                if (pickUpVal == 0) {
+                    character.addGold(new Random().nextInt(91) + 10);   // Give the character a gold payout between 10 and 100 inclusive.
+                // If they picked up a potion.
+                } else if (pickUpVal == 1) {
+                    Pair<Integer, Integer> firstSlot = getFirstSlotRemoveIfFull();
+                    SimpleIntegerProperty x = new SimpleIntegerProperty(firstSlot.getValue0());
+                    SimpleIntegerProperty y = new SimpleIntegerProperty(firstSlot.getValue1());
+
+                    HealthPotion newHpPot = new HealthPotion(x, y);
+                    unequippedInventoryItems.add(newHpPot);     // Give the character a potion in their inventory.
+                }   
+                pickedUp.add(randPathLoot);
+            }
+        }
+
+        for (RandomPathLoot lootPickedUp : pickedUp){
+            lootPickedUp.destroy();
+            worldPathLoot.remove(lootPickedUp);
+        }
+
+        return pickedUp;
     }
 
     /**
@@ -426,6 +506,7 @@ public class LoopManiaWorld {
      * run moves which occur with every tick without needing to spawn anything immediately
      */
     public void runTickMoves(){
+        nextCycle = false;
         if (firstPath == null) {
             firstPath = character.getPosition();
             firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
@@ -441,6 +522,7 @@ public class LoopManiaWorld {
 
         if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
             character.addCycles();
+            nextCycle = true;
         }
         moveBasicEnemies();
         possiblySpawnAlliedSoldiers();

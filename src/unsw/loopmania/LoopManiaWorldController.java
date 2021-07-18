@@ -277,9 +277,12 @@ public class LoopManiaWorldController {
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
-            // if (new Random().nextInt(100) >= 90) {
-            //     loadHealthPotion();
-            // }
+
+            List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
+            List<RandomPathLoot> newPathLoot = world.possiblyDropPathLoot();
+            for (RandomPathLoot pathLoot: newPathLoot){
+                onLoad(pathLoot);
+            }
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -523,6 +526,16 @@ public class LoopManiaWorldController {
     private void onLoad(Building building){
         ImageView view = new ImageView(new Image((new File(building.getImage())).toURI().toString()));
         addEntity(building, view);
+        squares.getChildren().add(view);
+    }
+
+    /**
+     * load a random path drop into the GUI
+     * @param randomPathLoot
+     */
+    private void onLoad(RandomPathLoot randomPathLoot) {
+        ImageView view = new ImageView(new Image((new File(randomPathLoot.getImage())).toURI().toString()));
+        addEntity(randomPathLoot, view);
         squares.getChildren().add(view);
     }
 
