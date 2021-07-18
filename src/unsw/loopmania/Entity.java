@@ -20,10 +20,10 @@ public abstract class Entity {
      * using a BooleanProperty here allows us to attach JavaFX ChangeListeners, so that when this BooleanProperty switches to False,
      * a teardown function for the corresponding Node is triggered.
      * This is an example of the Observer pattern!
-     * 
+     *
      * Note for some entitites this field is redundant e.g. for character, since character is never removed
      * However we have control externally over which ChangeListeners are added (should be done from Controller)
-     * 
+     *
      * A nice feature of ChangeListeners attached in another class is that the variable scope of the ChangeListener matches the method it was declared in.
      * For example, when setting the ChangeListener for shouldExist for enemies from within the controller, we are able to apply a teardown function which can remove the corresponding JavaFX node from its GridPane
      * which is within the scope of the method defining the ChangeListener.

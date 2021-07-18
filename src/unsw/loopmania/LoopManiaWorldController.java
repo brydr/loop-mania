@@ -284,101 +284,101 @@ public class LoopManiaWorldController {
         onLoad(card);
     }
 
-    /**
-     * load a sword from the world, and pair it with an image in the GUI
-     */
-    private void loadSword(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add sword to list of unequipped items in backend
-        world.addUnequippedItem(sword);
-        onLoad(sword);
-    }
+    // // TODO do we need these load functions?
+    // /**
+    //  * load a sword from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadSword(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add sword to list of unequipped items in backend
+    //     world.addUnequippedItem(sword);
+    //     onLoad(sword);
+    // }
 
-    /**
-     * load a staff from the world, and pair it with an image in the GUI
-     */
-    private void loadStaff(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Staff staff = new Staff(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add staff to list of unequipped items in backend
-        world.addUnequippedItem(staff);
-        onLoad(staff);
-    }
+    // /**
+    //  * load a staff from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadStaff(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Staff staff = new Staff(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add staff to list of unequipped items in backend
+    //     world.addUnequippedItem(staff);
+    //     onLoad(staff);
+    // }
 
-    /**
-     * load a stake from the world, and pair it with an image in the GUI
-     */
-    private void loadStake(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Stake stake = new Stake(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add stake to list of unequipped items in backend
-        world.addUnequippedItem(stake);
-        onLoad(stake);
-    }
+    // /**
+    //  * load a stake from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadStake(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Stake stake = new Stake(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add stake to list of unequipped items in backend
+    //     world.addUnequippedItem(stake);
+    //     onLoad(stake);
+    // }
 
-    /**
-     * load a shield from the world, and pair it with an image in the GUI
-     */
-    private void loadShield(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Shield shield = new Shield(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add shield to list of unequipped items in backend
-        world.addUnequippedItem(shield);
-        onLoad(shield);
-    }
+    // /**
+    //  * load a shield from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadShield(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Shield shield = new Shield(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add shield to list of unequipped items in backend
+    //     world.addUnequippedItem(shield);
+    //     onLoad(shield);
+    // }
+    // /**
+    //  * load a Armour from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadArmour(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Armour armour = new Armour(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add Armour to list of unequipped items in backend
+    //     world.addUnequippedItem(armour);
+    //     onLoad(armour);
+    // }
 
-    /**
-     * load a Armour from the world, and pair it with an image in the GUI
-     */
-    private void loadArmour(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Armour armour = new Armour(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add Armour to list of unequipped items in backend
-        world.addUnequippedItem(armour);
-        onLoad(armour);
-    }
+    // /**
+    //  * load a Helmet from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadHelmet(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     Helmet helmet = new Helmet(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add Helmet to list of unequipped items in backend
+    //     world.addUnequippedItem(helmet);
+    //     onLoad(helmet);
+    // }
 
-    /**
-     * load a Helmet from the world, and pair it with an image in the GUI
-     */
-    private void loadHelmet(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        Helmet helmet = new Helmet(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add Helmet to list of unequipped items in backend
-        world.addUnequippedItem(helmet);
-        onLoad(helmet);
-    }
+    // /**
+    //  * load a HealthPotion from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadHealthPotion(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add HealthPotion to list of unequipped items in backend
+    //     world.addUnequippedItem(healthPotion);
+    //     onLoad(healthPotion);
+    // }
 
-    /**
-     * load a HealthPotion from the world, and pair it with an image in the GUI
-     */
-    private void loadHealthPotion(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add HealthPotion to list of unequipped items in backend
-        world.addUnequippedItem(healthPotion);
-        onLoad(healthPotion);
-    }
-
-    /**
-     * load TheOneRing from the world, and pair it with an image in the GUI
-     */
-    private void loadTheOneRing(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add TheOneRing to list of unequipped items in backend
-        world.addUnequippedItem(theOneRing);
-        onLoad(theOneRing);
-    }
+    // /**
+    //  * load TheOneRing from the world, and pair it with an image in the GUI
+    //  */
+    // private void loadTheOneRing(){
+    //     // start by getting first available coordinates
+    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+    //     TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+    //     // add TheOneRing to list of unequipped items in backend
+    //     world.addUnequippedItem(theOneRing);
+    //     onLoad(theOneRing);
+    // }
 
     /**
      * load random BasicItem from the world, and pair it with an image in the GUI
@@ -387,6 +387,18 @@ public class LoopManiaWorldController {
         // start by getting first available coordinates
         Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
         BasicItem item = world.addUnequippedRandomBasicItem(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        onLoad(item);
+    }
+
+    /**
+     * Loads an item that already exists but has invalid X and Y values
+     *
+     * @param item The item being loaded
+     */
+    public void loadItem(Item item) {
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
+        item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
         onLoad(item);
     }
 

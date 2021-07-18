@@ -328,6 +328,10 @@ public class LoopManiaWorld {
         unequippedInventoryItems.add(item);
     }
 
+    public void receiveItem(Item item) {
+        loadItem(item);
+    }
+
     /**
      * spawn a random BasicItem (no rare items)
      * All items have equal chance of spawn
