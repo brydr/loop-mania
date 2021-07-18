@@ -32,7 +32,7 @@ public class Shop {
 	 * Shop class for purchasing and selling items, seed defaults to nanoTime
 	 *
 	 * @param world   Current world
-	 * @param stratgy Difficulty setting to determine whether the player can buy an
+	 * @param strategy Difficulty setting to determine whether the player can buy an
 	 *                item
 	 */
 	public Shop(LoopManiaWorld world, ShopStrategy strategy) {

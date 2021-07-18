@@ -11,6 +11,8 @@ import org.javatuples.Pair;
 import org.junit.Test;
 import org.junit.jupiter.api.RepeatedTest;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import junit.framework.TestFailure;
 import unsw.loopmania.Armour;
 import unsw.loopmania.BasicItem;
 import unsw.loopmania.BerserkerMode;
@@ -62,6 +64,22 @@ public class ShopTest {
 			System.out.println(shop.getInventory().get(i).getClass());
 		}
 	}
+
+	@Test
+	public void testSell() {
+		world.setCharacter(character);
+		assertTrue(world.getInventory().isEmpty());
+		Shop shop = new Shop(world, new StandardMode(), SEED);
+		character.addGold(10);
+		Sword sword = new Sword(new SimpleIntegerProperty(0), new SimpleIntegerProperty(1));
+		world.addUnequippedItem(sword);
+		assertFalse(shop.getInventory().contains(sword));
+
+		shop.sell(sword);
+
+		assertFalse(world.getInventory().contains(sword));
+		assertTrue(character.getGold() == 10 + sword.getSellPrice());
+}
 
 	@Test
 	public void testNoMoney() {
