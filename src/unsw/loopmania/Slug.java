@@ -29,16 +29,6 @@ public class Slug extends BasicEnemy {
         } 
     }
 
-    public AlliedSoldier convertToFriendly(Character character) {
-        Random rand = new Random();
-        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
-        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
-        character.addAlliedSoldier(transformedSoldier);
-        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
-        return transformedSoldier;
-    }
-
     public void attack(Character character) {
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);

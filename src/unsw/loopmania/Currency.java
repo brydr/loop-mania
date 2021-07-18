@@ -1,5 +1,5 @@
 package unsw.loopmania;
 
-public class Currency {
+public abstract class Currency {
 
 }

@@ -71,16 +71,6 @@ public class Vampire extends BasicEnemy implements Undead {
         this.setAttack(12);
     }
 
-    public AlliedSoldier convertToFriendly(Character character) {
-        Random rand = new Random();
-        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
-        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
-        character.addAlliedSoldier(transformedSoldier);
-        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
-        return transformedSoldier;
-    }
-
     public void criticalBite() {
         int criticalBiteDamage = (new Random()).nextInt(17) + 4; // A random number between 4 and 20 inclusive
         // This prevents the vampire from entering a criticalBite state whilst it is already in a criticalBite state.

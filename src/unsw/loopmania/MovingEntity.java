@@ -14,7 +14,6 @@ public abstract class MovingEntity extends Entity {
     private PathPosition position;
     public IntegerProperty hp;
     private int speed;
-    private BasicEnemy convertedToEnemy;
 
     /**
      * Create a moving entity which moves up and down the path in position
@@ -24,7 +23,6 @@ public abstract class MovingEntity extends Entity {
         super();
         this.position = position;
         this.hp = new SimpleIntegerProperty();
-        convertedToEnemy = null;
     }
 
     /**
@@ -72,15 +70,6 @@ public abstract class MovingEntity extends Entity {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-
-    public BasicEnemy getConvertedToEnemy() {
-        return convertedToEnemy;
-    }
-
-    public void setConvertedToEnemy(BasicEnemy e) {
-        this.convertedToEnemy = e;
-    }
-
 
     public PathPosition getPosition() {
         return position;
