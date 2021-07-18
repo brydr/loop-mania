@@ -17,7 +17,6 @@ public class GoalEvaluator {
 
     public static String prettyPrint(GoalNode expression) {
         // Pretty print the expression
-        System.out.println(expression.print());
         return expression.print();
     }
 

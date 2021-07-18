@@ -7,8 +7,11 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import org.javatuples.Pair;
+import org.json.JSONObject;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.BooleanProperty;
 import unsw.loopmania.util.CustomCollectors;
 
 /**
@@ -61,6 +64,12 @@ public class LoopManiaWorld {
 
     private PathPosition firstPath;
 
+    private JSONObject worldGoals;
+
+    private BooleanProperty goalComplete;
+
+    private String goalsToComplete;
+
     /**
      * create the world (constructor)
      *
@@ -79,6 +88,7 @@ public class LoopManiaWorld {
         this.orderedPath = orderedPath;
         buildingEntities = new ArrayList<>();
         firstPath = null;
+        goalComplete = new SimpleBooleanProperty(false);
     }
 
     public int getWidth() {
@@ -107,6 +117,10 @@ public class LoopManiaWorld {
 
     public Character getCharacter() {
         return character;
+    }
+
+    public void setGoals(JSONObject goals) {
+        worldGoals = goals;
     }
 
     /**
@@ -354,6 +368,13 @@ public class LoopManiaWorld {
             firstPath = character.getPosition();
             firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
         }
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
+
+        if (GoalEvaluator.evaluate(finalGoal) == true) {
+            // Character achieved all goals
+            goalComplete.setValue(true);
+        }
         character.moveDownPath();
 
         if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
@@ -550,5 +571,17 @@ public class LoopManiaWorld {
         cardEntities.add(newCard);
     } 
 
+    public BooleanProperty goalProperty() {
+        BooleanProperty charGoalComplete = this.goalComplete;
+        return charGoalComplete;
+    }
+
+    public String getGoalString() {
+        return goalsToComplete;
+    }
+
+    public JSONObject getWorldGoals() {
+        return worldGoals;
+    }
 }
 

@@ -28,6 +28,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.util.Duration;
 import org.javatuples.Pair;
 
@@ -117,6 +118,11 @@ public class LoopManiaWorldController {
     private Label exp;
     @FXML
     private Label cycles;
+
+    @FXML
+    private CheckBox goalComplete;
+    @FXML
+    private Label allGoals;
 
     // all image views including tiles, character, enemies, cards... even though cards in separate gridpane...
     private List<ImageView> entityImages;
@@ -242,6 +248,13 @@ public class LoopManiaWorldController {
         gold.textProperty().bind(character.goldProperty().asString());
         exp.textProperty().bind(character.expProperty().asString());
         cycles.textProperty().bind(character.cycleProperty().asString());
+
+        goalComplete.selectedProperty().bind(world.goalProperty());
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(world.getWorldGoals(), character);
+        String goalsToComplete = GoalEvaluator.prettyPrint(finalGoal);
+        allGoals.setText(goalsToComplete);
+
 
         // create the draggable icon
         draggedEntity = new DragIcon();
