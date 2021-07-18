@@ -462,8 +462,7 @@ public class LoopManiaWorldController {
                 world.removeItemByPositionInUnequippedInventoryItems(0);
                 firstAvailableSlot = world.getFirstAvailableSlotForItem();
             }
-            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-            world.addUnequippedItem(theOneRing);
+            loadTheOneRing();
         }
     }
 
