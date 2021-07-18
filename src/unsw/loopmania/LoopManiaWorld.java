@@ -333,6 +333,22 @@ public class LoopManiaWorld {
     public void runTickMoves(){
         character.moveDownPath();
         moveBasicEnemies();
+        possiblySpawnAlliedSoldiers();
+    }
+
+    /**
+     * If The Character is at a barracks, spawn an AlliedSoldier.
+     * @param item
+     */
+    public void possiblySpawnAlliedSoldiers() {
+        // NOTE = Currently there is a double check on the building matching the Character's position.
+        // We can decide which of these checks can be removed.
+        buildingEntities.parallelStream()
+            .filter(building -> building instanceof BarracksBuilding
+                && character.getX() == building.getX() 
+                && character.getY() == building.getY())
+            .map(building -> (BarracksBuilding) building)
+            .forEach(barracks -> barracks.spawnAlliedSoldiers(character));
     }
 
     /**

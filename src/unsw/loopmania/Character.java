@@ -14,7 +14,7 @@ public class Character extends MovingEntity {
     private Shield equippedShield;
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
-    private List<AlliedSoldier> listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+    private List<AlliedSoldier> listAlliedSoldiers;
     private int experience = 0;
     private int cycles = 0;
     public Gold gold = new Gold();
@@ -22,6 +22,7 @@ public class Character extends MovingEntity {
     public Character(PathPosition position) {
         super(position);
         this.setHp(100);
+        listAlliedSoldiers = new ArrayList<AlliedSoldier>();
     }
 
     public WeaponStrategy getEquippedWeapon() {
