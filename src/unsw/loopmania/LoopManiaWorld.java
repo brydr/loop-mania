@@ -381,7 +381,7 @@ public class LoopManiaWorld {
             payout();
             removeCard(0);
             int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-    
+
             // Give the character gold, exp or a random weapon.
             if (randomLoot == 0) {
                 character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
@@ -516,7 +516,7 @@ public class LoopManiaWorld {
                     PathPosition pos = new PathPosition(buildingPosIndex, orderedPath);
 
                     BasicEnemy enemy = enemySpawner.spawnEnemy(pos);
-                    
+
                     enemies.add(enemy);
                 }
             } else if (building instanceof TrapBuilding) {
@@ -778,7 +778,7 @@ public class LoopManiaWorld {
 
     /**
      * For a *path adjacent* tile, return the nearest path tile.
-     * @param x x-coordinate of our path-adjacent tile 
+     * @param x x-coordinate of our path-adjacent tile
      * @param y y-coordinate of our path-adjacent tile
      * @throws NoSuchElementException if no adjacent Path tile.
      * @return A {@code Pair} containing the nearest tile on the path.
@@ -815,7 +815,7 @@ public class LoopManiaWorld {
      */
     public void addCard(Card newCard) {
         cardEntities.add(newCard);
-    } 
+    }
 
     public BooleanProperty goalProperty() {
         BooleanProperty charGoalComplete = this.goalComplete;
