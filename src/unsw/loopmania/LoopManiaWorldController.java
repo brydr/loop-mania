@@ -278,7 +278,8 @@ public class LoopManiaWorldController {
                 }
                 runBattleResults(defeatedEnemies);
             }
-            List<BasicEnemy> newEnemies = world.possiblySpawnEnemies();
+            world.possiblySpawnEnemies();
+            List<BasicEnemy> newEnemies = world.getEnemies();
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }

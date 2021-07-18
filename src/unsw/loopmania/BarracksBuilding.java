@@ -1,8 +1,10 @@
 package unsw.loopmania;
 
+import java.util.List;
+
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class BarracksBuilding extends Building {
+public class BarracksBuilding extends Building implements BuildingHelpers {
 
     public BarracksBuilding(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y);
@@ -16,14 +18,16 @@ public class BarracksBuilding extends Building {
 
     /**
      * Spawn an allied soldier.
-     * @precondition "The Character" is at the barracks: 
-     * {@code theCharacter.getX() == getX() && theCharacter.getY() == getY()}
+     * @precondition "character" is at the barracks: 
+     * {@code character.getX() == getX() && character.getY() == getY()}
      * @param theCharacter reference to "The Character" of the game.
      */
-    public void spawnAlliedSoldiers(Character theCharacter) {
-        // New soldier has reference to PathPosition of `theCharacter`
-        AlliedSoldier newSoldier = new AlliedSoldier(theCharacter.getPosition());
-        theCharacter.addAlliedSoldier(newSoldier);
+    public void helpChar(Character character) {
+        // New soldier has reference to PathPosition of `character`
+        if (Math.pow((character.getX()-this.getX()), 2) +  Math.pow((character.getY()-this.getY()), 2) == 0) {
+            AlliedSoldier newSoldier = new AlliedSoldier(character.getPosition());
+            character.addAlliedSoldier(newSoldier);
+        }
     }
     
 }

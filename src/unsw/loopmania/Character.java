@@ -21,6 +21,7 @@ public class Character extends MovingEntity {
     private Gold gold;
     private HealthPotion equippedHealthPotion;
     private final static int maxHp = 200;
+    private boolean attackTwice;
 
     public Character(PathPosition position) {
         super(position);
@@ -34,8 +35,16 @@ public class Character extends MovingEntity {
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
+        this.attackTwice = false;
     }
 
+    public boolean getAttackTwice() {
+        return attackTwice;
+    }
+
+    public void setAttackTwice(boolean bool) {
+        this.attackTwice = bool;
+    }
     public WeaponStrategy getEquippedWeapon() {
         return equippedWeapon;
     }
@@ -227,7 +236,6 @@ public class Character extends MovingEntity {
      * Move character and allied soldiers down path
      */
     public void moveDown() {
-        System.out.println("test");
         moveDownPath();
         Boolean isDownPath = true;
         notifyObserversPosition(isDownPath);
@@ -270,8 +278,11 @@ public class Character extends MovingEntity {
         IntegerProperty charCycle = this.cycles;
         return charCycle;
     }
-    public IntegerProperty alliedSoldierProperty() {
+
+    public void setAlliedSoldierNum() {
         alliedSoldierNum.setValue(listAlliedSoldiers.size());
+    }
+    public IntegerProperty alliedSoldierProperty() {
         IntegerProperty charalliedSoldierNum = this.alliedSoldierNum;
         return charalliedSoldierNum;
     }
