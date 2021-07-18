@@ -315,12 +315,7 @@ public class LoopManiaWorldController {
         timeline.play();
     }
 
-    // @FXML
-    // private void openShop() {
-    //     pause();
-    //     System.out.println("OPENING SHOP");
-    //     shopSwitcher.switchMenu();
-    // }
+
 
 
     /**
@@ -542,6 +537,14 @@ public class LoopManiaWorldController {
         ShopController shopController = shopLoader.getController();
         shopController.initialiseShop(world, strategy);
         shopStage.show();
+
+        shopStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                shopStage.close();
+                startTimer();
+            }
+        });
     }
 
     /**
