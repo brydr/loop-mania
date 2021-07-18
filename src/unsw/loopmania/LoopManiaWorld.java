@@ -491,7 +491,7 @@ public class LoopManiaWorld {
     /**
      * run moves which occur with every tick without needing to spawn anything immediately
      */
-    public void runTickMoves(){
+    public boolean runTickMoves(){
         nextCycle = false;
         if (firstPath == null) {
             firstPath = character.getPosition();
@@ -513,6 +513,8 @@ public class LoopManiaWorld {
         moveBasicEnemies();
         possiblySpawnAlliedSoldiers();
         applyTrapAttacks();
+
+        return nextCycle;
     }
 
     /**

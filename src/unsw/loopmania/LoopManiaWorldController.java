@@ -268,7 +268,7 @@ public class LoopManiaWorldController {
         isPaused = false;
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
-            world.runTickMoves();
+            boolean isAtCastle = world.runTickMoves();
             List<BasicEnemy> defeatedEnemies = world.runBattles();
             for (BasicEnemy e: defeatedEnemies){
                 reactToEnemyDefeat(e);
@@ -287,11 +287,25 @@ public class LoopManiaWorldController {
             for (RandomPathLoot pathLoot: newPathLoot){
                 onLoad(pathLoot);
             }
+
+            if (isAtCastle) {
+                // TODO open shop after loop 1, 3, 5......
+                openShop();
+            }
+
+
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
     }
+
+
+    private void openShop() {
+        pause();
+
+    }
+
 
     /**
      * pause the execution of the game loop
@@ -305,6 +319,7 @@ public class LoopManiaWorldController {
 
     public void terminate(){
         pause();
+
     }
 
     /**
@@ -492,7 +507,7 @@ public class LoopManiaWorldController {
         // If they picked up a potion.
         } else if (pickUpVal == 1) {
             loadHealthPotion();
-        }   
+        }
     }
 
     /**
