@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.RepeatedTest;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import junit.framework.TestFailure;
 import unsw.loopmania.Armour;
 import unsw.loopmania.BasicItem;
 import unsw.loopmania.BerserkerMode;
