@@ -19,6 +19,7 @@ public class Character extends MovingEntity {
     private IntegerProperty cycles;
     private IntegerProperty alliedSoldierNum;
     public Gold gold;
+    private boolean attackTwice;
 
     public Character(PathPosition position) {
         super(position);
@@ -32,8 +33,16 @@ public class Character extends MovingEntity {
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
+        this.attackTwice = false;
     }
 
+    public boolean getAttackTwice() {
+        return attackTwice;
+    }
+
+    public void setAttackTwice(boolean bool) {
+        this.attackTwice = bool;
+    }
     public WeaponStrategy getEquippedWeapon() {
         return equippedWeapon;
     }

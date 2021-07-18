@@ -4,7 +4,7 @@ import java.util.List;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class TrapBuilding extends Building {
+public class TrapBuilding extends Building implements BuildingAttackers {
     public static final int TRAP_DAMAGE = 30;
 
     public TrapBuilding(SimpleIntegerProperty x, SimpleIntegerProperty y) {
@@ -19,19 +19,10 @@ public class TrapBuilding extends Building {
 
     /**
      * Deal damage to any enemies on the Trap, potentially killing them.
-     * @param enemyList A list of all {@code BasicEnemy} in the world
-     * @implNote A reference to {@code LoopManiaWorld} could alternatively be used, with world.killEnemy() used
-     */
-    public void damageAnyEnemies(List<BasicEnemy> enemyList) {
-        for (BasicEnemy enemy : enemyList) {
-            if (enemy.getX() == getX() && enemy.getY() == getY()) {
-                enemy.takeDamage(TRAP_DAMAGE);
-                // Enemy has been killed
-                if (enemy.getHp() <= 0) {
-                    enemy.destroy();
-                    enemyList.remove(enemy);
-                }
-            }
-        }
+    */
+    public void attackEnemy(BasicEnemy enemy) {
+        if (Math.pow((enemy.getX()-this.getX()), 2) +  Math.pow((enemy.getY()-this.getY()), 2) == 0) {
+            enemy.takeDamage(TRAP_DAMAGE);
+        } 
     }
 }

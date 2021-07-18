@@ -54,6 +54,12 @@ public class LoopManiaWorld {
 
     private List<Building> buildingEntities;
 
+    private List<EnemySpawner> buildingSpawners;
+
+    private List<BuildingHelpers> buildingHelpers;
+
+    private List<BuildingAttackers> buildingAttackers;
+
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
      */
@@ -635,6 +641,22 @@ public class LoopManiaWorld {
                 enemySpawner.spawn(this);
             }
         }
+
+            /**
+     * Actually performs a spawn of a vampire, trigged by spawn(). 
+     * @param world A reference to the {@code LoopManiaWorld} instance.
+     */
+    private void doSpawn(LoopManiaWorld world) {
+        var orderedPath = world.getOrderedPath();
+        Pair<Integer, Integer> spawnLoc = world.getNearestPathTile(getX(), getY());
+        int buildingPosIndex = orderedPath.indexOf(spawnLoc);
+
+        Vampire newVampire = new Vampire(
+            new PathPosition(buildingPosIndex, orderedPath)
+        );
+        
+        world.addEnemies(newVampire);
+    }
         /* // FP Alternative
         buildingEntities.stream()
             .filter(building -> building instanceof EnemySpawner)
