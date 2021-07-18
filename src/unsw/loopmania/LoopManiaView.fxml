@@ -89,13 +89,13 @@
                      </image>
                   </ImageView>
                   <!-- shieldCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView fx:id="shieldCell" GridPane.columnIndex="3">
+                  <ImageView fx:id="shieldCell" GridPane.columnIndex="3" GridPane.rowIndex="0">
                      <image>
                         <Image url="@../../images/shield_unequipped.png" />
                      </image>
                   </ImageView>
                   <!-- rareItemCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView fx:id="rareItemCell" GridPane.rowIndex="1">
+                  <ImageView fx:id="rareItemCell" GridPane.rowIndex="1" GridPane.columnIndex="0">
                      <image>
                         <Image url="@../../images/ring_slot.png" />
                      </image>
