@@ -17,7 +17,7 @@
     * A player with a **sword** does 8 HP of damage.
 
 ## Health Potions
-* A health potion restores **30 HP** of health to *The Character*.
+* A health potion restores the health of *The Character* to 200.
 * A health potion has a 10% chance of dropping from defeating enemies.
 * Each path tile in the game has a 1% chance of a health potion spawning on them every time *The Character* completes a full cycle.
 
