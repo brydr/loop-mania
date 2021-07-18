@@ -66,7 +66,7 @@
 * A **trap** deals 30 HP of damage.
 * A **tower** has a shooting radius of 4 units and deals 5 HP of damage.
 * A **campfire** battle radius is 3 units.
-* *The Character* regains 10 HP of health when passing through a **village**.
+* *The Character* regains 20 HP of health when passing through a **village**.
 * A **Zombie Pit** has a spawn radius of 1 unit and zombies will spawn on any path tiles within that radius.
 * A **Vampire Castle** has a spawn radius of 1 unit and vampires will spawn on any path tiles within that radius.
 
