@@ -27,6 +27,7 @@ public class GoalEvaluator {
             JSONObject goals = (JSONObject) jsonObject.get("goal-condition");
             return goals;
         } catch (IOException e) {
+            System.err.print(e.toString());
             return null;
         }
     }
