@@ -2,7 +2,7 @@ package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class Unarmed extends Weapon implements WeaponStrategy {
+public class Unarmed extends Weapon {
 	private final static int ATTACK_POWER = 2;
 
 	@Override
@@ -10,8 +10,14 @@ public class Unarmed extends Weapon implements WeaponStrategy {
 		return Unarmed.ATTACK_POWER;
 	}
 
-	public Unarmed(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-		super(x, y, ATTACK_POWER);
+	@Override
+	public String getImage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
-	
+
+	public Unarmed(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+		super(x, y, ATTACK_POWER, -1, -1);
+	}
+
 }

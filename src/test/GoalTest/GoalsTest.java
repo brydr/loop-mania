@@ -33,7 +33,7 @@ public class GoalsTest {
         Character character = new Character(pos);
         world.goldGoal.gold = 50;
         assertFalse(world.goldGoal.getCompletion());
-        character.gold.addGold(50);
+        character.addGold(50);
         assertTrue(world.goldGoal.getCompletion());
     }
 

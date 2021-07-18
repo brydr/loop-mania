@@ -594,11 +594,7 @@ public class LoopManiaWorld {
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
-<<<<<<< HEAD
      * @return {@code Building} the building if successfully created, OR {@code null} if otherwise
-=======
-     * @return {@code Building} the building if successfully created, OR {@code null} if otherwise 
->>>>>>> cards
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         // Start by getting card
@@ -609,34 +605,21 @@ public class LoopManiaWorld {
                 break;
             }
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> cards
         // TODO = Replace above implementation with below
         // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
         Card cardMatches = cardEntities.stream()
             .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
             .collect(CustomCollectors.toSingleton());
-<<<<<<< HEAD
 
         // Check that tile can be spawned here
-=======
-        
-        // Check that tile can be spawned here 
->>>>>>> cards
         if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
         };
 
         // Now spawn building
-<<<<<<< HEAD
         Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
-=======
-        Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX), 
->>>>>>> cards
                                                    new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
 
@@ -652,7 +635,6 @@ public class LoopManiaWorld {
         return cardEntities;
     }
 
-<<<<<<< HEAD
     List<Pair<Integer,Integer>> getOrderedPath() {
         return orderedPath;
     }
@@ -675,6 +657,7 @@ public class LoopManiaWorld {
             })
             .findAny()
             .orElseThrow();
+    }
 
     public List<Item> getInventory() {
         return this.unequippedInventoryItems;
@@ -689,17 +672,11 @@ public class LoopManiaWorld {
         }
     }
 
-=======
->>>>>>> cards
     /**
      * Adds a new card to the world. Currently used for tests.
      * @param newCard
      */
     public void addCard(Card newCard) {
         cardEntities.add(newCard);
-<<<<<<< HEAD
     }
-=======
-    } 
->>>>>>> cards
 }

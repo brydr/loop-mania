@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Character extends MovingEntity {
     //TODO update unarmed xy coord arguments
-    private WeaponStrategy equippedWeapon = new Unarmed();
+    private WeaponStrategy equippedWeapon;
     private Armour equippedArmour;
     private Shield equippedShield;
     private Helmet equippedHelmet;
@@ -16,12 +16,14 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers;
     private int experience = 0;
     private int cycles = 0;
-    private Gold gold = new Gold();
+    private Gold gold;
 
     public Character(PathPosition position) {
         super(position);
         this.setHp(100);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+        gold = new Gold();
+        equippedWeapon = new Unarmed();
     }
 
     public WeaponStrategy getEquippedWeapon() {
@@ -219,7 +221,6 @@ public class Character extends MovingEntity {
         return enemy;
     }
 
-    @Override
     public String getImage() {
         String characterImage = "src/images/human_new.png";
         return characterImage;
