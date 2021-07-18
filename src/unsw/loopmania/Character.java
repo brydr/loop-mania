@@ -38,6 +38,15 @@ public class Character extends MovingEntity {
         this.attackTwice = false;
     }
 
+    @Override
+    public void setHp(int hp) {
+        if (hp > maxHp) {
+            this.hp.setValue(maxHp);
+        } else {
+            this.hp.setValue(hp);
+        }
+    }
+
     public boolean getAttackTwice() {
         return attackTwice;
     }
