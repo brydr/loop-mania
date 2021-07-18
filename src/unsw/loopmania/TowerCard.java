@@ -18,9 +18,9 @@ public class TowerCard extends Card {
         return towerCardImage;
     }
 
-
     @Override
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathAdjacentTile;
     }
+
 }

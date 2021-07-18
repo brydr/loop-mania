@@ -69,13 +69,22 @@ public class ZombieEnemyTest {
         PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1), 
                                                               new Pair<>(0, 2), 
                                                               new Pair<>(0, 3)) );
+<<<<<<< HEAD:src/test/EnemyTest/ZombieEnemyTest.java
         Zombie zombie = new Zombie(pos, 0); // A zombie that has 100% to inflict a critical bite.
         Character c = new Character(pos);
+=======
+        Zombie zombie = new Zombie(pos);
+>>>>>>> cards:src/unsw/loopmania/EnemyTest/ZombieEnemyTest.java
         AlliedSoldier alliedSoldier = new AlliedSoldier(pos);
         c.addAlliedSoldier(alliedSoldier);
 
         zombie.attack(c);
 
+<<<<<<< HEAD:src/test/EnemyTest/ZombieEnemyTest.java
         assertTrue(c.getListAlliedSoldiers().size() == 0);  // The allied soldier should be removed since it has transformed.
+=======
+        // TODO = Test for this some other way, since this WON'T work
+        assertTrue(alliedSoldier instanceof Zombie);
+>>>>>>> cards:src/unsw/loopmania/EnemyTest/ZombieEnemyTest.java
     }
 }

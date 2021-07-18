@@ -19,7 +19,6 @@ public class BarracksCard extends Card {
         return barracksCardImage;
     }
 
-
     @Override
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathTile;

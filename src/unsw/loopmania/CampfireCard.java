@@ -17,10 +17,10 @@ public class CampfireCard extends Card {
         return campfireCardImage;
     }
 
-
     @Override
     boolean canSpawnOnTile(TileType tileType) {
         return (tileType == TileType.PathAdjacentTile) 
             || (tileType == TileType.NonPathTile);
     }
+
 }

@@ -30,7 +30,7 @@ public class PathTile extends StaticEntity {
         }
 
         /**
-         * Calculates a direction from the provided points, given the direction goes from x1, y1 -> x2, y2
+         * Calculates a direction from the provided points, given the direction goes from (x1, y1) -> (x2, y2)
          */
         public static Direction getDirectionFromOffset(int x1, int y1, int x2, int y2) {
             int xOffset = x2 - x1;
