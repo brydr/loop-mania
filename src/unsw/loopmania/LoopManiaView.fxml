@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <!-- TODO = modify and expand the GUI? -->
-
 <!-- anchorPaneRoot is the background of the main game -->
-<AnchorPane fx:id="anchorPaneRoot" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" onKeyPressed="#handleKeyPress">
+
+<AnchorPane fx:id="anchorPaneRoot" onKeyPressed="#handleKeyPress" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <!-- HBox is used to stack items horizontally left to right -->
    <HBox>
       <!-- VBox is used to stack items vertically top to bottom -->
@@ -56,30 +58,64 @@
          <children>
             <!-- equippedItems contains the equipment equipped by the character in special slots -->
             <!-- TODO = extend this to have slots for equipping armour, shields, helmets, and any other equippable items -->
-            <GridPane fx:id="equippedItems" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+            <GridPane fx:id="equippedItems" prefHeight="34.0" prefWidth="112.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
                <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
                   <ColumnConstraints />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints />
+                  <RowConstraints />
                </rowConstraints>
                <children>
                   <!-- swordCell is the cell where a sword intended to be equipped will be dragged by the human player -->
-                  <ImageView id="swordCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="0" GridPane.rowIndex="0">    
+                  <ImageView fx:id="swordCell" GridPane.columnIndex="0" GridPane.rowIndex="0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">    
                      <image>
-                        <Image url="@../../images/sword_unequipped.png"/>
+                        <Image url="@../../images/sword_unequipped.png" />
                      </image>
                   </ImageView>
-                  <!-- blankCell is an empty cell -->
-                  <ImageView id="blankCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="0">    
+                  <!-- helmetCell is an empty cell -->
+                  <ImageView fx:id="helmetCell" GridPane.columnIndex="1" GridPane.rowIndex="0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">    
+                     <image>
+                        <Image url="@../../images/helmet_slot.png" />
+                     </image>
+                  </ImageView>
+                  <!-- armourCell is the cell where a armour intended to be equipped will be dragged by the human player -->
+                  <ImageView fx:id="armourCell" GridPane.columnIndex="2" GridPane.rowIndex="0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">    
+                     <image>
+                        <Image url="@../../images/armour_slot.png" />
+                     </image>
+                  </ImageView>
+                  <!-- shieldCell is the cell where a shield intended to be equipped will be dragged by the human player -->
+                  <ImageView fx:id="shieldCell" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                     <image>
+                        <Image url="@../../images/shield_unequipped.png" />
+                     </image>
+                  </ImageView>
+                  <!-- rareItemCell is the cell where a rareItem intended to be equipped will be dragged by the human player -->
+                  <ImageView fx:id="rareItemCell" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                     <image>
+                        <Image url="@../../images/ring_slot.png" />
+                     </image>
+                  </ImageView>
+                  <!-- potionCell is the cell where a potion intended to be equipped will be dragged by the human player -->
+                  <ImageView fx:id="potionCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="1" GridPane.rowIndex="1">    
+                     <image>
+                        <Image url="@../../images/potion_slot.png"/>
+                     </image>
+                  </ImageView>
+                  <!-- empty cell -->
+                  <ImageView fx:id="emptyCell1"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="1">    
                      <image>
                         <Image url="@../../images/image_just_black_tiny.png"/>
                      </image>
                   </ImageView>
-                  <!-- shieldCell is the cell where a shield intended to be equipped will be dragged by the human player -->
-                  <ImageView id="shieldCell"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="2" GridPane.rowIndex="0">    
+                  <!-- empty cell -->
+                  <ImageView fx:id="emptyCell2"  xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" GridPane.columnIndex="3" GridPane.rowIndex="1">    
                      <image>
-                        <Image url="@../../images/shield_unequipped.png"/>
+                        <Image url="@../../images/image_just_black_tiny.png"/>
                      </image>
                   </ImageView>
                </children>
@@ -99,7 +135,77 @@
             </GridPane>
 
             <!-- clicking this button returns the human player to the main menu -->
-            <Button text="Exit to Main Menu" onAction="#switchToMainMenu"/>
+            <Button onAction="#switchToMainMenu" text="Exit to Main Menu" />
+            <GridPane fx:id="characterStats" prefHeight="103.0" prefWidth="113.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="51.0" minWidth="10.0" prefWidth="42.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="83.0" minWidth="10.0" prefWidth="71.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fitHeight="25.0" fitWidth="25.0">
+                     <image>
+                        <Image url="@../../images/heart.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../images/gold_pile.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" GridPane.rowIndex="2">
+                     <image>
+                        <Image url="@../../images/exp.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" GridPane.rowIndex="3">
+                     <image>
+                        <Image url="@../../images/cycles.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="hp" text="100" GridPane.columnIndex="1" />
+                  <Label fx:id="gold" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="exp" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="cycles" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+            <Label text="AlliedSoldiers" />
+            <GridPane fx:id="AlliedSoldiers" prefHeight="28.0" prefWidth="113.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="4.0" prefWidth="50.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="78.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="alliedSoldierNum" prefHeight="17.0" prefWidth="101.0" text="0" GridPane.columnIndex="1" />
+                  <ImageView fitHeight="25.0" fitWidth="25.0">
+                     <image>
+                        <Image url="@../../images/deep_elf_master_archer.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </GridPane>
+            <Label text="Goals" />
+            <GridPane fx:id="Goals" prefHeight="28.0" prefWidth="113.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="4.0" prefWidth="16.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="97.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="allGoals" prefHeight="17.0" prefWidth="101.0" GridPane.columnIndex="1" />
+                  <CheckBox fx:id="goalComplete" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" />
+               </children>
+            </GridPane>
          </children>
       </VBox>
    </HBox>

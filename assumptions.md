@@ -23,6 +23,7 @@
 
 ## Rare Items
 * The One Ring has a 3% chance of dropping from defeating enemies.
+* Rare items can't be bought or sold in the shop
 
 ## Armour
 * **Body armour** reduces enemy attack by 50%
@@ -34,14 +35,16 @@
 # Enemies and Allies
 * There is no maximum imposed on the amount of allied soldiers.
 * Both *The Character*, allied soldiers and enemies all have the same speed, moving at 1 tile per instance, except for Zombies which travel at half speed, moving at 0.5 tiles per instance meaning zombies will move one tile every two instances.
-* Allied soldiers has 50 HP, allied soldiers don't have armour
+* Allied soldiers has 50 HP and don't have armour
+* Enemies converted into allied soldier via trance can't use their special abilities
+* When enemy converts to an ally (and vice versa), they keep their HP
 
 ## Enemies
 * Enemies have the following battle and support radii:
     * **Slugs** have a battle radius of 1 unit, support radius of 1 unit
     * **Zombies** have a battle radius of 2 units, support radius of 2 units
     * **Vampires** have a battle radius of 2 units, support radius of 3 units
-* A **Slug** has 30 HP of health, and its attack incurs 3 HP damage. 
+* A **Slug** has 30 HP of health, and its attack incurs 3 HP damage.
 * A **Zombie** has 30 HP of health, and its attack incurs 6 HP of damage.
     * A crticial bite from a Zombie has a 10% chance of occuring.
 * A **Vampire** has 60 HP of health, and its attack incurs 12 HP of damage.
@@ -78,15 +81,15 @@
 * When there are **too many items**, a user will receive either a card, or experience, or gold - with a 1 in 3 chance of either.
 * When there are **too many cards**, a user will receive either an item, or experience, or gold - with a 1 in 3 chance of either.
 * When an **enemy is defeated**, a user will receive either gold, an item, or a card - with a 1 in 3 chance of either. They are guaranteed to receive experience.
-* Gold Payout: 
+* Gold Payout:
     * A gold payout will be a random value between 10 and 100.
-* Item Payout: 
+* Item Payout:
     * Each possible item has an equal probability of being received (1 in 7).
-* Card Payout: 
+* Card Payout:
     * Each possible card has an equal probability of being received (1 in 7).
 * Experience Payout:
     * An experience payout will be a random value between 10 and 30.
-<!-- TODO: 
+<!-- TODO:
 
 HARD PART:
 
@@ -108,4 +111,3 @@ One way: Each item/card gets its own independent dice-roll-like event/trial wher
 * Does this mean we cannot get multiples of the same item/card? Or can we add a random variable multiplier OR repeated trials.
 
 -->
-

@@ -4,6 +4,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+enum TileType {
+    PathTile,
+    PathAdjacentTile,
+    NonPathTile;
+}
+
 /**
  * A backend entity in the world.
  */

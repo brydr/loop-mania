@@ -39,15 +39,22 @@ public abstract class LoopManiaWorldLoader {
 
         // path variable is collection of coordinates with directions of path taken...
         List<Pair<Integer, Integer>> orderedPath = loadPathTiles(json.getJSONObject("path"), width, height);
+        JSONObject goals = (JSONObject) json.get("goal-condition");
 
         LoopManiaWorld world = new LoopManiaWorld(width, height, orderedPath);
+        world.setGoals(goals);
 
         JSONArray jsonEntities = json.getJSONArray("entities");
-
+        
         // load non-path entities later so that they're shown on-top
         for (int i = 0; i < jsonEntities.length(); i++) {
             loadEntity(world, jsonEntities.getJSONObject(i), orderedPath);
         }
+        // TODO LOAD GOALS
+        /*JSONArray jsonGoals = json.getJSONArray("goal-condition");
+        for (int i = 0; i < jsonGoals.length(); i++) {
+            loadGoals(world, jsonGoals.getJSONObject(i));
+        }*/
 
         return world;
     }
@@ -65,20 +72,25 @@ public abstract class LoopManiaWorldLoader {
         int indexInPath = orderedPath.indexOf(new Pair<Integer, Integer>(x, y));
         assert indexInPath != -1;
 
-        Entity entity = null;
+        Entity entity1 = null;
+        Entity entity2 = null;
         // TODO = load more entity types from the file
         switch (type) {
         case "hero_castle":
             Character character = new Character(new PathPosition(indexInPath, orderedPath));
+            HerosCastle herosCastle = new HerosCastle(new SimpleIntegerProperty(x),new SimpleIntegerProperty(y));
+            world.addBuilding(herosCastle);
+            onLoad(character, herosCastle);
             world.setCharacter(character);
-            onLoad(character);
-            entity = character;
+            entity1 = character;
+            entity2 = herosCastle;
             break;
         case "path_tile":
             throw new RuntimeException("path_tile's aren't valid entities, define the path externally.");
         // TODO Handle other possible entities
         }
-        world.addEntity(entity);
+        world.addEntity(entity1);
+        world.addEntity(entity2);
     }
 
     /**
@@ -144,9 +156,27 @@ public abstract class LoopManiaWorldLoader {
         return orderedPath;
     }
 
-    public abstract void onLoad(Character character);
+    public abstract void onLoad(Character character, HerosCastle heroCastle);
     public abstract void onLoad(PathTile pathTile, PathTile.Direction into, PathTile.Direction out);
 
     // TODO Create additional abstract methods for the other entities
+
+    /*public void loadGoals(LoopManiaWorld world, JSONObject goal) {
+        if (goal.getString("goal").equals("experience")) {
+            ObtainExperience expGoal = new ObtainExperience();
+            expGoal.value = goal.getInt("quantity");
+            world.goals.addSubGoal(expGoal);
+        }
+        if (goal.getString("goal").equals("gold")) {
+            AmassGold goldGoal = new AmassGold();
+            goldGoal.value = goal.getInt("quantity");
+            world.goals.addSubGoal(goldGoal);
+        }
+        if (goal.getString("goal").equals("cycles")) {
+            CompleteCycles cycleGoal = new CompleteCycles();
+            cycleGoal.value = goal.getInt("quantity");
+            world.goals.addSubGoal(cycleGoal);
+        }
+    }*/
 
 }
