@@ -498,6 +498,7 @@ public class LoopManiaWorld {
             nextCycle = true;
         }
 
+        List<Building> buildingToRemove = new ArrayList<>();
         // Do all functionality of helper buildings.
         for (Building building : buildingEntities) {
             // If the building is a helperBuilding then call its helpChar function.
@@ -528,7 +529,7 @@ public class LoopManiaWorld {
                         killedEnemies.add(e);
                     }
                     if (!(building.shouldExist().get())) {
-                        buildingEntities.remove(building);
+                        buildingToRemove.add(building);
                     }
                 }
 
@@ -536,6 +537,9 @@ public class LoopManiaWorld {
                     killEnemy(e);
                 }
             }
+        }
+        for (Building buildingRemove : buildingToRemove) {
+            buildingEntities.remove(buildingRemove);
         }
         moveBasicEnemies();
     }
