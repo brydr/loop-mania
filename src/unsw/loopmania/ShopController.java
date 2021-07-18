@@ -32,7 +32,7 @@ public class ShopController {
 		shop = new Shop(world, strategy);
 		this.world = world;
 		updateGridPanes();
-		world.getCharacter().addGold(100000000);
+		// world.getCharacter().addGold(100000000);
 	}
 
 	private void updateGridPanes() {
