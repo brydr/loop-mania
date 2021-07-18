@@ -18,39 +18,37 @@ import unsw.loopmania.TheOneRing;
 
 public class ConsumablesTest {
     @Test
-    public void addHealthFull() {
-        LoopManiaWorld world = new LoopManiaWorld(8, 14, orderedPath);
+    public void equippedHealthPotion() {
         SimpleIntegerProperty one = new SimpleIntegerProperty(1);
         HealthPotion healthPotion = new HealthPotion(one, one);
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
         Character character = new Character(pos);
-        assertTrue(character.getHp() == 100);
-        world.consumeHealthPotion();
-        assertTrue(character.getHp() == 100);
+        character.setEquippedHealthPotion(healthPotion);
+        assertTrue(character.getHp() == character.getMaxHp());
+        character.consumePotion();
+        assertTrue(character.getHp() == character.getMaxHp());
     }  
     
     @Test
-    public void addHealthPartial() {
-        LoopManiaWorld world = new LoopManiaWorld(8, 14, orderedPath);
-        SimpleIntegerProperty one = new SimpleIntegerProperty(1);
-        HealthPotion healthPotion = new HealthPotion(one, one);
+    public void unequippedHealthPotion() {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
         Character character = new Character(pos);
-        character.setHp(50)
+        character.setHp(50);
         assertTrue(character.getHp() == 50);
-        world.consumeHealthPotion();
-        assertTrue(character.getHp() == 80);
+        character.consumePotion();
+        assertTrue(character.getHp() == 50);
     }
 
+    @Test
     public void theOneRing() {
-        LoopManiaWorld world = new LoopManiaWorld(8, 14, orderedPath);
         SimpleIntegerProperty one = new SimpleIntegerProperty(1);
         TheOneRing theOneRing= new TheOneRing(one, one);
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
         Character character = new Character(pos);
-        character.setHp(0)
+        character.setEquippedRareItem(theOneRing);
+        character.setHp(0);
         assertTrue(character.getHp() == 0);
-        world.useTheOneRing();
-        assertTrue(character.getHp() == 100);
+        character.consumeRareItem();
+        assertTrue(character.getHp() == character.getMaxHp());
     }
 }

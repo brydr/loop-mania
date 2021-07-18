@@ -164,12 +164,28 @@ public class Character extends MovingEntity {
         this.listAlliedSoldiers.remove(soldier);
     }
 
+    public int getMaxHp() {
+        return maxHp;
+    }
+
     /**
      * if health potion is equipped, remove potion and reset hp to max
      */
     public void consumePotion() {
         if (this.equippedHealthPotion != null) {
             this.equippedHealthPotion = null;
+            this.setHp(maxHp);
+        }
+    }
+
+    /**
+     * use one ring to get full hp
+     * @pre assumes current character health <= 0
+     * @post character alive again with maxhp
+     */
+    public void consumeRareItem() {
+        if (this.equippedRareItem != null) {
+            this.equippedRareItem = null;
             this.setHp(maxHp);
         }
     }
