@@ -3,12 +3,16 @@ package unsw.loopmania;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.ObservableList;
+
 public class Shop {
+	public final static int SHOP_WIDTH = 3;
+	public final static int SHOP_HEIGHT = 3;
 	private final List<BasicItem> inventory = new ArrayList<BasicItem>();
 	private final ShopStrategy shopStrategy;
 	private final LoopManiaWorld world;
 	private final RandomItemGenerator itemGenerator;
-	public final static int MAX_SHOP_INVENTORY = 9;
+	public final static int MAX_SHOP_INVENTORY = Shop.SHOP_WIDTH * Shop.SHOP_HEIGHT;
 	private final List<BasicItem> purchaseHistory = new ArrayList<BasicItem>();
 	private final Character character;
 
@@ -31,9 +35,9 @@ public class Shop {
 	/**
 	 * Shop class for purchasing and selling items, seed defaults to nanoTime
 	 *
-	 * @param world   Current world
+	 * @param world    Current world
 	 * @param strategy Difficulty setting to determine whether the player can buy an
-	 *                item
+	 *                 item
 	 */
 	public Shop(LoopManiaWorld world, ShopStrategy strategy) {
 		this(world, strategy, System.nanoTime());

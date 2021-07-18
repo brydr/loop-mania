@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -8,8 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="unsw.loopmania.ShopController">
    <children>
       <GridPane fx:id="shopPane" layoutX="455.0" layoutY="14.0" prefHeight="300.0" prefWidth="300.0">
         <columnConstraints>
@@ -28,19 +29,32 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Label layoutX="605.0" layoutY="341.0" text="Shop's inventory" />
-      <Label fx:id="priceLabel" alignment="CENTER" layoutX="274.0" layoutY="357.0" text="PRICE GOES HERE">
+      <Label layoutX="338.0" layoutY="192.0" rotate="-90.0" text="Shop's inventory" />
+      <Label fx:id="priceLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="118.0" layoutY="357.0" text="Click items to buy, close window when done">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
       <Line endX="16.0" endY="173.0" layoutX="368.0" layoutY="171.0" startX="16.0" startY="-156.0" />
+      <Label layoutX="327.0" layoutY="192.0" rotate="90.0" text="Your inventory" />
+      <ImageView fitHeight="64.0" fitWidth="143.0" layoutX="14.0" layoutY="325.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/human_new.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="64.0" fitWidth="143.0" layoutX="691.0" layoutY="325.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/shop.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

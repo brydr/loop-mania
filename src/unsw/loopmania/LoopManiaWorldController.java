@@ -20,9 +20,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -181,6 +184,13 @@ public class LoopManiaWorldController {
      */
     private MenuSwitcher mainMenuSwitcher;
 
+
+    // /**
+    //  * Object handling switching to the shop
+    //  */
+    // private MenuSwitcher shopSwitcher;
+
+
     /**
      * @param world world object loaded from file
      * @param initialEntities the initial JavaFX nodes (ImageViews) which should be loaded into the GUI
@@ -293,10 +303,10 @@ public class LoopManiaWorldController {
                 onLoad(pathLoot);
             }
 
-            if (isAtCastle) {
-                // TODO open shop after loop 1, 3, 5......
-                openShop();
-            }
+            // if (isAtCastle) {
+            //     // TODO open shop after loop 1, 3, 5......
+            //     openShop();
+            // }
 
 
             printThreadingNotes("HANDLED TIMER");
@@ -305,11 +315,12 @@ public class LoopManiaWorldController {
         timeline.play();
     }
 
-
-    private void openShop() {
-        pause();
-
-    }
+    // @FXML
+    // private void openShop() {
+    //     pause();
+    //     System.out.println("OPENING SHOP");
+    //     shopSwitcher.switchMenu();
+    // }
 
 
     /**
@@ -418,17 +429,17 @@ public class LoopManiaWorldController {
     //     onLoad(helmet);
     // }
 
-    // /**
-    //  * load a HealthPotion from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadHealthPotion(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add HealthPotion to list of unequipped items in backend
-    //     world.addUnequippedItem(healthPotion);
-    //     onLoad(healthPotion);
-    // }
+    /**
+     * load a HealthPotion from the world, and pair it with an image in the GUI
+     */
+    private void loadHealthPotion(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add HealthPotion to list of unequipped items in backend
+        world.addUnequippedItem(healthPotion);
+        onLoad(healthPotion);
+    }
 
     /**
      * load TheOneRing from the world, and pair it with an image in the GUI
@@ -509,6 +520,29 @@ public class LoopManiaWorldController {
         });
     }
 
+    @FXML
+    private void openShop() throws IOException {
+        pause();
+        // FIXME get difficulty from main menu
+        showShop(world, new StandardMode());
+    }
+
+    private void showShop(LoopManiaWorld world, ShopStrategy strategy) throws IOException {
+        pause();
+
+        FXMLLoader shopLoader = new FXMLLoader(getClass().getResource("ShopView.fxml"));
+        Parent shopRoot = shopLoader.load();
+        Scene shopScene = new Scene(shopRoot);
+        shopRoot.requestFocus();
+
+        Stage shopStage = new Stage();
+        shopStage.setScene(shopScene);
+        shopStage.setResizable(false);
+        shopStage.setTitle("Shop");
+        ShopController shopController = shopLoader.getController();
+        shopController.initialiseShop(world, strategy);
+        shopStage.show();
+    }
 
     /**
      * run GUI events after an path loot is picked up.
@@ -922,6 +956,10 @@ public class LoopManiaWorldController {
         // TODO = possibly set other menu switchers
         this.mainMenuSwitcher = mainMenuSwitcher;
     }
+
+    // public void setShopSwitcher(MenuSwitcher shopSwitcher) {
+    //     this.shopSwitcher = shopSwitcher;
+    // }
 
     /**
      * this method is triggered when click button to go to main menu in FXML
