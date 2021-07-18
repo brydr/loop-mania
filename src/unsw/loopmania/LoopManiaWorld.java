@@ -484,7 +484,7 @@ public class LoopManiaWorld {
      * @param y y coordinate from 0 to height-1
      */
     public void removeUnequippedInventoryItemByCoordinates(int x, int y){
-        Entity item = getUnequippedInventoryItemEntityByCoordinates(x, y);
+        Item item = getUnequippedItemTypeByCoordinates(x, y);
         removeUnequippedInventoryItem(item);
     }
 
@@ -547,22 +547,6 @@ public class LoopManiaWorld {
         unequippedInventoryItems.remove(item);
     }
 
-    /**
-     * return an unequipped inventory item by x and y coordinates
-     * assumes that no 2 unequipped inventory items share x and y coordinates
-     * @param x x index from 0 to width-1
-     * @param y y index from 0 to height-1
-     * @return unequipped inventory item at the input position
-     */
-    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
-        for (Entity e: unequippedInventoryItems){
-            if ((e.getX() == x) && (e.getY() == y)){
-                return e;
-            }
-        }
-        return null;
-    }
-
     public Entity getEquippedInventoryItemEntityByCoordinates(int x, int y){
         for (Entity e: equippedInventoryItems){
             if ((e.getX() == x) && (e.getY() == y)){
@@ -596,7 +580,7 @@ public class LoopManiaWorld {
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y=0; y<unequippedInventoryHeight; y++){
             for (int x=0; x<unequippedInventoryWidth; x++){
-                if (getUnequippedInventoryItemEntityByCoordinates(x, y) == null){
+                if (getUnequippedItemTypeByCoordinates(x, y) == null){
                     return new Pair<Integer, Integer>(x, y);
                 }
             }

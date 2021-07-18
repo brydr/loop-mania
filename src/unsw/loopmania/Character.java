@@ -227,7 +227,6 @@ public class Character extends MovingEntity {
      * Move character and allied soldiers down path
      */
     public void moveDown() {
-        System.out.println("test");
         moveDownPath();
         Boolean isDownPath = true;
         notifyObserversPosition(isDownPath);
