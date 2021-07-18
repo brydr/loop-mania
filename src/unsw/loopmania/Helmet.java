@@ -5,9 +5,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Helmet extends ProtectiveGear {
 	// TODO reduce wearer's attack power
 	private final static double DAMAGE_MULTIPLIER = .7;
+	private final static int BUY_PRICE = 120;
+	private final static int SELL_PRICE = 60;
 
 	public Helmet(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-		super(x, y);
+		super(x, y, Helmet.BUY_PRICE, Helmet.SELL_PRICE);
 	}
 
 	@Override

@@ -6,4 +6,6 @@ public abstract class Item extends StaticEntity {
 	public Item(SimpleIntegerProperty x, SimpleIntegerProperty y) {
 		super(x, y);
 	}
+
+	public abstract String getImage();
 }

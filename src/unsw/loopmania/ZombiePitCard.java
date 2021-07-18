@@ -1,6 +1,9 @@
 package unsw.loopmania;
 
+import java.io.File;
+
 import javafx.beans.property.SimpleIntegerProperty;
+
 public class ZombiePitCard extends Card {
     public ZombiePitCard(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y);
@@ -11,9 +14,15 @@ public class ZombiePitCard extends Card {
         ZombiePitBuilding newBuilding = new ZombiePitBuilding(buildingNodeX, buildingNodeY);
         return newBuilding;
     }
-    
+
     public String getImage() {
         String zombiePitCardImage = "src/images/zombie_pit_card.png";
         return zombiePitCardImage;
+    }
+
+
+    @Override
+    boolean canSpawnOnTile(TileType tileType) {
+        return tileType == TileType.PathAdjacentTile;
     }
 }

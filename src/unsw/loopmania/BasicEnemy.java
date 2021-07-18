@@ -82,4 +82,5 @@ public abstract class BasicEnemy extends MovingEntity {
 
     public abstract AlliedSoldier convertToFriendly(Character character);
     public abstract void attack(Character character);
+    public abstract String getImage();
 }

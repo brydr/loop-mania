@@ -1,5 +1,5 @@
 # Minutes
-Date: Tuesday, 11/07/21\
+Date: Tuesday, 13/07/21\
 Time: 14:00-16:22\
 Attendees: Jack, Dongzhu, Jaeff, Michael, Ben\
 Author: Jack

@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
+import org.javatuples.Pair;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -28,6 +30,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+
 import java.util.EnumMap;
 import java.util.Random;
 
@@ -274,22 +277,117 @@ public class LoopManiaWorldController {
     }
 
     /**
-     * load a vampire card from the world, and pair it with an image in the GUI
+     * load a random card from the world, and pair it with an image in the GUI
      */
-    private void loadVampireCard() {
-        // TODO = load more types of card
-        VampireCastleCard vampireCastleCard = world.loadVampireCard();
-        onLoad(vampireCastleCard);
+    private void loadRandomCard() {
+        Card card = world.loadRandomCard();
+        onLoad(card);
     }
 
     /**
      * load a sword from the world, and pair it with an image in the GUI
      */
     private void loadSword(){
-        // TODO = load more types of weapon
         // start by getting first available coordinates
-        Sword sword = world.addUnequippedSword();
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add sword to list of unequipped items in backend
+        world.addUnequippedItem(sword);
         onLoad(sword);
+    }
+
+    /**
+     * load a staff from the world, and pair it with an image in the GUI
+     */
+    private void loadStaff(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Staff staff = new Staff(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add staff to list of unequipped items in backend
+        world.addUnequippedItem(staff);
+        onLoad(staff);
+    }
+
+    /**
+     * load a stake from the world, and pair it with an image in the GUI
+     */
+    private void loadStake(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Stake stake = new Stake(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add stake to list of unequipped items in backend
+        world.addUnequippedItem(stake);
+        onLoad(stake);
+    }
+
+    /**
+     * load a shield from the world, and pair it with an image in the GUI
+     */
+    private void loadShield(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Shield shield = new Shield(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add shield to list of unequipped items in backend
+        world.addUnequippedItem(shield);
+        onLoad(shield);
+    }
+
+    /**
+     * load a Armour from the world, and pair it with an image in the GUI
+     */
+    private void loadArmour(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Armour armour = new Armour(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add Armour to list of unequipped items in backend
+        world.addUnequippedItem(armour);
+        onLoad(armour);
+    }
+
+    /**
+     * load a Helmet from the world, and pair it with an image in the GUI
+     */
+    private void loadHelmet(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        Helmet helmet = new Helmet(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add Helmet to list of unequipped items in backend
+        world.addUnequippedItem(helmet);
+        onLoad(helmet);
+    }
+
+    /**
+     * load a HealthPotion from the world, and pair it with an image in the GUI
+     */
+    private void loadHealthPotion(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add HealthPotion to list of unequipped items in backend
+        world.addUnequippedItem(healthPotion);
+        onLoad(healthPotion);
+    }
+
+    /**
+     * load TheOneRing from the world, and pair it with an image in the GUI
+     */
+    private void loadTheOneRing(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        // add TheOneRing to list of unequipped items in backend
+        world.addUnequippedItem(theOneRing);
+        onLoad(theOneRing);
+    }
+
+    /**
+     * load random BasicItem from the world, and pair it with an image in the GUI
+     */
+    private void loadRandomBasicItem(){
+        // start by getting first available coordinates
+        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+        BasicItem item = world.addUnequippedRandomBasicItem(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        onLoad(item);
     }
 
     /**
@@ -309,9 +407,9 @@ public class LoopManiaWorldController {
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
-            world.loadRandomCard();
+            loadRandomCard();
         } else {
-            world.loadRandomItem();
+            loadRandomBasicItem();
         }
 
         if (oneRingChance < 3) {
@@ -331,30 +429,46 @@ public class LoopManiaWorldController {
      * load a vampire castle card into the GUI.
      * Particularly, we must connect to the drag detection event handler,
      * and load the image into the cards GridPane.
-     * @param vampireCastleCard
+     * @param card
      */
-    private void onLoad(VampireCastleCard vampireCastleCard) {
-        ImageView view = new ImageView(vampireCastleCardImage);
+    private void onLoad(Card card) {
+        ImageView view = new ImageView(new Image((new File(card.getImage())).toURI().toString()));
 
         // FROM https://stackoverflow.com/questions/41088095/javafx-drag-and-drop-to-gridpane
         // note target setOnDragOver and setOnDragEntered defined in initialize method
         addDragEventHandlers(view, DRAGGABLE_TYPE.CARD, cards, squares);
 
-        addEntity(vampireCastleCard, view);
+        addEntity(card, view);
         cards.getChildren().add(view);
     }
 
     /**
-     * load a sword into the GUI.
+     * load an item into the GUI
      * Particularly, we must connect to the drag detection event handler,
      * and load the image into the unequippedInventory GridPane.
-     * @param sword
+     * @param item
      */
-    private void onLoad(Sword sword) {
-        ImageView view = new ImageView(swordImage);
+    private void onLoad(Item item) {
+        ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
+
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
-        addEntity(sword, view);
+        addEntity(item, view);
         unequippedInventory.getChildren().add(view);
+    }
+
+    /**
+     * TODO do we need this method as we don't spawn items into equipped grid just from unequipped into equipped
+     * load an item into the GUI
+     * Particularly, we must connect to the drag detection event handler,
+     * and load the image into the equipped GridPane.
+     * @param item
+     */
+    private void onLoadEquipped(Item item) {
+        ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
+
+        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);//TODO may need to remove drageEventHandler here as we don't drag equipped item anywhere?
+        addEntity(item, view);
+        equippedItems.getChildren().add(view);
     }
 
     /**
@@ -362,7 +476,7 @@ public class LoopManiaWorldController {
      * @param enemy
      */
     private void onLoad(BasicEnemy enemy) {
-        ImageView view = new ImageView(basicEnemyImage);
+        ImageView view = new ImageView(new Image((new File(enemy.getImage())).toURI().toString()));
         addEntity(enemy, view);
         squares.getChildren().add(view);
     }
@@ -371,8 +485,8 @@ public class LoopManiaWorldController {
      * load a building into the GUI
      * @param building
      */
-    private void onLoad(VampireCastleBuilding building){
-        ImageView view = new ImageView(basicBuildingImage);
+    private void onLoad(Building building){
+        ImageView view = new ImageView(new Image((new File(building.getImage())).toURI().toString()));
         addEntity(building, view);
         squares.getChildren().add(view);
     }
@@ -417,10 +531,13 @@ public class LoopManiaWorldController {
                         int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
                         switch (draggableType){
                             case CARD:
-                                removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                 // TODO = spawn a building here of different types
-                                VampireCastleBuilding newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
-                                onLoad(newBuilding);
+                                Building newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
+
+                                if (newBuilding != null) {
+                                    removeDraggableDragEventHandlers(draggableType, targetGridPane);
+                                    onLoad(newBuilding);
+                                }
                                 break;
                             case ITEM:
                                 removeDraggableDragEventHandlers(draggableType, targetGridPane);
@@ -500,7 +617,7 @@ public class LoopManiaWorldController {
      * @param buildingNodeY the y coordinate of the drop location for the card, where the building will spawn, from 0 to height-1
      * @return building entity returned from the world
      */
-    private VampireCastleBuilding convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
+    private Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
         return world.convertCardToBuildingByCoordinates(cardNodeX, cardNodeY, buildingNodeX, buildingNodeY);
     }
 

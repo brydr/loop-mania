@@ -4,10 +4,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 
 import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import unsw.loopmania.util.CustomCollectors;
 
 /**
  * A backend world.
@@ -20,6 +22,7 @@ public class LoopManiaWorld {
 
     public static final int unequippedInventoryWidth = 4;
     public static final int unequippedInventoryHeight = 4;
+    public static final int numBasicItems = 7;
 
     /**
      * width of the world in GridPane cells
@@ -47,7 +50,7 @@ public class LoopManiaWorld {
     private List<Card> cardEntities;
 
     // TODO = expand the range of items
-    private List<Entity> unequippedInventoryItems;
+    private List<Item> unequippedInventoryItems;
 
     // TODO = expand the range of buildings
     private List<Building> buildingEntities;
@@ -158,7 +161,7 @@ public class LoopManiaWorld {
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
         List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
         boolean alreadyABattle = false;
-        
+
         BasicEnemy battledEnemy = null;
         for (BasicEnemy e: enemies){
             // Pythagoras: a^2+b^2 < radius^2 to see if within radius
@@ -233,7 +236,7 @@ public class LoopManiaWorld {
             // If an enemy did not die it means it was put in trance.
             } else {
                 // Adds the new allied soldier into the characters array of allied soldiers.
-                AlliedSoldier transformedSoldier = e.convertToFriendly(character); 
+                AlliedSoldier transformedSoldier = e.convertToFriendly(character);
                 transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
                 enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
                 i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
@@ -270,6 +273,8 @@ public class LoopManiaWorld {
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            // TODO may have to edit payout based on what is being deleted
+            payout();
             removeCard(0);
         }
 
@@ -294,6 +299,7 @@ public class LoopManiaWorld {
         return item;
     }
 
+
     /**
      * remove card at a particular index of cards (position in gridpane of unplayed cards)
      * @param index the index of the card, from 0 to length-1
@@ -310,10 +316,63 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Item addUnequippedItem(Item item){        
-        // now we insert the new sword, as we know we have at least made a slot available...
+    public Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
+        if (firstAvailableSlot == null){
+            // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
+            removeItemByPositionInUnequippedInventoryItems(0);
+            // give some cash/experience rewards for the discarding of the oldest sword
+            payout();
+            firstAvailableSlot = getFirstAvailableSlotForItem();
+        }
+        return firstAvailableSlot;
+    }
+
+    /**
+     * spawn an item in the world and return the item entity
+     * @return an item to be spawned in the controller as a JavaFX node
+     * @pre unequippedInventoryItems isn't full (getFirstSlotRemoveIfFull should be run before creating item for this method)
+     */
+    public void addUnequippedItem(Item item){
         unequippedInventoryItems.add(item);
-        return item;
+    }
+
+    /**
+     * spawn a random BasicItem (no rare items)
+     * All items have equal chance of spawn
+     * used when enemies defeated or card destroyed
+     * @return BasicItem to be spawned in the controller as a JavaFX node
+     */
+    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+        Random randomGenerator = new Random();
+        BasicItem newItem;
+        int numBasicItems = 7;
+        switch (randomGenerator.nextInt(numBasicItems)) {
+            case 0:
+                newItem = new HealthPotion(x, y);
+                break;
+            case 1:
+                newItem = new Staff(x, y);
+                break;
+            case 2:
+                newItem = new Stake(x, y);
+                break;
+            case 3:
+                newItem = new Sword(x, y);
+                break;
+            case 4:
+                newItem = new Armour(x, y);
+                break;
+            case 5:
+                newItem = new Shield(x, y);
+                break;
+            case 6:
+                newItem = new Helmet(x, y);
+                break;
+            default: throw new RuntimeException("Can't generate random item");
+        }
+        unequippedInventoryItems.add(newItem);
+        return newItem;
     }
 
 
@@ -355,7 +414,7 @@ public class LoopManiaWorld {
      * remove an item from the unequipped inventory
      * @param item item to be removed
      */
-    private void removeUnequippedInventoryItem(Entity item){
+    public void removeUnequippedInventoryItem(Entity item){
         item.destroy();
         unequippedInventoryItems.remove(item);
     }
@@ -367,7 +426,7 @@ public class LoopManiaWorld {
      * @param y y index from 0 to height-1
      * @return unequipped inventory item at the input position
      */
-    private Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
+    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
         for (Entity e: unequippedInventoryItems){
             if ((e.getX() == x) && (e.getY() == y)){
                 return e;
@@ -380,7 +439,7 @@ public class LoopManiaWorld {
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
      */
-    private void removeItemByPositionInUnequippedInventoryItems(int index){
+    public void removeItemByPositionInUnequippedInventoryItems(int index){
         Entity item = unequippedInventoryItems.get(index);
         item.destroy();
         unequippedInventoryItems.remove(index);
@@ -390,7 +449,7 @@ public class LoopManiaWorld {
      * get the first pair of x,y coordinates which don't have any items in it in the unequipped inventory
      * @return x,y coordinate pair
      */
-    private Pair<Integer, Integer> getFirstAvailableSlotForItem(){
+    public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y=0; y<unequippedInventoryHeight; y++){
@@ -407,7 +466,7 @@ public class LoopManiaWorld {
      * shift card coordinates down starting from x coordinate
      * @param x x coordinate which can range from 0 to width-1
      */
-    private void shiftCardsDownFromXCoordinate(int x){
+    public void shiftCardsDownFromXCoordinate(int x){
         for (Card c: cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
@@ -418,7 +477,7 @@ public class LoopManiaWorld {
     /**
      * move all enemies
      */
-    private void moveBasicEnemies() {
+    public void moveBasicEnemies() {
         // TODO = expand to more types of enemy
         for (BasicEnemy e: enemies){
             e.move();
@@ -446,7 +505,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
+    public Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
@@ -472,15 +531,45 @@ public class LoopManiaWorld {
         return null;
     }
 
+    private TileType getTileType(final int x, final int y) {
+        // TODO = See if this needs to become a checked/recoverable error
+        assert (x < width) && (y < height);
+
+        final var subjectTile = Pair.with(x, y);
+
+        // See if path matches
+        boolean isPathTile = orderedPath.parallelStream()
+            .anyMatch(tile -> tile.equals(subjectTile));
+        if (isPathTile)
+            return TileType.PathTile;
+
+        // Precondition is that tile != subjectTile
+        Predicate<Pair<Integer,Integer>> isAdjacentTo
+        = tile -> {
+            int tileX = tile.getValue0().intValue();
+            int tileY = tile.getValue1().intValue();
+            return (x - 1 <= tileX) && (tileX <= x + 1)
+                && (y - 1 <= tileY) && (tileY <= y + 1);
+        };
+        boolean isAdjacentTile = orderedPath.parallelStream()
+            .anyMatch(isAdjacentTo);
+        if (isAdjacentTile)
+            return TileType.PathAdjacentTile;
+        else
+            return TileType.NonPathTile;
+    }
+
+
     /**
      * remove a card by its x, y coordinates
      * @param cardNodeX x index from 0 to width-1 of card to be removed
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
      * @param buildingNodeY y index from 0 to height-1 of building to be added
+     * @return {@code Building} the building if successfully created, OR {@code null} if otherwise
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
-        // start by getting card
+        // Start by getting card
         Card card = null;
         for (Card c: cardEntities){
             if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
@@ -488,16 +577,20 @@ public class LoopManiaWorld {
                 break;
             }
         }
-        /* FP Alternative
-        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
-        var cardMatches = cardEntities.stream()
-            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY));
-        assert cardMatches.count() == 1;
-        Card myCard = cardMatches.findAny().get();
-        */
 
-        // now spawn building
-        // VampireCastleBuilding newBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(buildingNodeX), new SimpleIntegerProperty(buildingNodeY));
+        // TODO = Replace above implementation with below
+        // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
+        Card cardMatches = cardEntities.stream()
+            .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
+            .collect(CustomCollectors.toSingleton());
+
+        // Check that tile can be spawned here
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )) {
+            // TODO = Change interface to use an `Exception` or `Optional<T>` instead
+            return null;
+        };
+
+        // Now spawn building
         Building newBuilding = card.createBuilding(new SimpleIntegerProperty(buildingNodeX),
                                                    new SimpleIntegerProperty(buildingNodeY));
         buildingEntities.add(newBuilding);
@@ -536,5 +629,25 @@ public class LoopManiaWorld {
             })
             .findAny()
             .orElseThrow();
+
+    public List<Item> getInventory() {
+        return this.unequippedInventoryItems;
+    }
+
+    public void payout() {
+        if (new Random().nextInt(100) >= 85) {
+            character.addGold(new Random().nextInt(90)+10);
+        }
+        if (new Random().nextInt(100) >= 50) {
+            character.addExperience(new Random().nextInt(20)+10);
+        }
+    }
+
+    /**
+     * Adds a new card to the world. Currently used for tests.
+     * @param newCard
+     */
+    public void addCard(Card newCard) {
+        cardEntities.add(newCard);
     }
 }

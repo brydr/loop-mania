@@ -2,14 +2,13 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * represents the main character in the backend of the game world
  */
 public class Character extends MovingEntity {
     //TODO update unarmed xy coord arguments
-    private WeaponStrategy equippedWeapon = new Unarmed(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+    private WeaponStrategy equippedWeapon = new Unarmed();
     private Armour equippedArmour;
     private Shield equippedShield;
     private Helmet equippedHelmet;
@@ -17,7 +16,7 @@ public class Character extends MovingEntity {
     private List<AlliedSoldier> listAlliedSoldiers;
     private int experience = 0;
     private int cycles = 0;
-    public Gold gold = new Gold();
+    private Gold gold = new Gold();
 
     public Character(PathPosition position) {
         super(position);
@@ -79,7 +78,7 @@ public class Character extends MovingEntity {
 
     public int addExperience(int exp) {
         return experience = experience + exp;
-         
+
     }
 
     public int getGold() {
@@ -93,7 +92,7 @@ public class Character extends MovingEntity {
     public void subtractGold(int gold) {
         this.gold.subtractGold(gold);
     }
-    
+
     public void removeEquippedArmour() {
         this.equippedArmour = null;
     }
@@ -136,11 +135,11 @@ public class Character extends MovingEntity {
             }
             return;
         }
-        if (this.equippedArmour != null) 
+        if (this.equippedArmour != null)
             damage = equippedArmour.calculateDamage(damage);
-        if (this.equippedHelmet != null) 
+        if (this.equippedHelmet != null)
             damage = equippedHelmet.calculateDamage(damage);
-        if (this.equippedShield != null) 
+        if (this.equippedShield != null)
             damage = equippedShield.calculateDamage(damage);
 
         int newHp = this.getHp() - damage;
@@ -156,7 +155,7 @@ public class Character extends MovingEntity {
     public void attack(BasicEnemy enemy) {
         int outputDamage = this.equippedWeapon.getDamage(enemy);
         // reduce player damage by 15% if helmet equipped
-        if (this.equippedHelmet != null) 
+        if (this.equippedHelmet != null)
             outputDamage = equippedHelmet.calculateDamage(outputDamage);
         enemy.takeDamage(outputDamage);
 

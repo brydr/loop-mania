@@ -5,23 +5,25 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class Stake extends Weapon implements AttackAbility {
 	private final static int ATTACK_POWER = 4;
 	private final static int VAMPIRE_DAMAGE = 16;
+	private final static int BUY_PRICE = 100;
+	private final static int SELL_PRICE = 50;
 
 	public Stake(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-		super(x, y, ATTACK_POWER);
+		super(x, y, Stake.ATTACK_POWER, Stake.BUY_PRICE, Stake.SELL_PRICE);
 	}
 
 	@Override
 	public int getDamage(BasicEnemy enemy) {
 		if (enemy.getClass().equals(Vampire.class)) {
 			// Do extra damage to vampires
-			return VAMPIRE_DAMAGE;
+			return Stake.VAMPIRE_DAMAGE;
 		}
-		return ATTACK_POWER;
+		return Stake.ATTACK_POWER;
 	}
 
 	public String getImage() {
-        String stakeImage = "src/images/stake.png";
-        return stakeImage;
-    }
+		String stakeImage = "src/images/stake.png";
+		return stakeImage;
+	}
 
 }

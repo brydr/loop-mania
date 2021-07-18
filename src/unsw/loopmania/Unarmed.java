@@ -13,6 +13,5 @@ public class Unarmed extends Weapon implements WeaponStrategy {
 	public Unarmed(SimpleIntegerProperty x, SimpleIntegerProperty y) {
 		super(x, y, ATTACK_POWER);
 	}
-
 	
 }

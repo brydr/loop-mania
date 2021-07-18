@@ -23,6 +23,7 @@
 
 ## Rare Items
 * The One Ring has a 3% chance of dropping from defeating enemies.
+* Rare items can't be bought or sold in the shop
 
 ## Armour
 * **Body armour** reduces enemy attack by 50%
