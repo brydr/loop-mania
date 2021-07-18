@@ -284,6 +284,23 @@ public class LoopManiaWorld {
 
             while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
+
+                int outputDamage = character.getEquippedWeapon().getDamage(e);
+                // reduce player damage by 15% if helmet equipped
+                if (character.getEquippedHelmet() != null)
+                    outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
+
+                // If the character is next to a campfire, it will attack twice.
+                if (character.getAttackTwice()) {
+                    e.takeDamage(outputDamage);
+                }
+                // Add logic so the tower attacks too if in range.
+                for (Building building : buildingEntities) {
+                    if (building instanceof TowerBuilding) {
+                        BuildingAttackers buildingAttacker = (BuildingAttackers) building;
+                        buildingAttacker.attackEnemy(e);
+                    }
+                }
                 e.attack(character);    // Attacks allies first.
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {
@@ -445,44 +462,6 @@ public class LoopManiaWorld {
         unequippedInventoryItems.add(item);
     }
 
-    /**
-     * spawn a random BasicItem (no rare items)
-     * All items have equal chance of spawn
-     * used when enemies defeated or card destroyed
-     * @return BasicItem to be spawned in the controller as a JavaFX node
-     */
-    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-        Random randomGenerator = new Random();
-        BasicItem newItem;
-        int numBasicItems = 7;
-        switch (randomGenerator.nextInt(numBasicItems)) {
-            case 0:
-                newItem = new HealthPotion(x, y);
-                break;
-            case 1:
-                newItem = new Staff(x, y);
-                break;
-            case 2:
-                newItem = new Stake(x, y);
-                break;
-            case 3:
-                newItem = new Sword(x, y);
-                break;
-            case 4:
-                newItem = new Armour(x, y);
-                break;
-            case 5:
-                newItem = new Shield(x, y);
-                break;
-            case 6:
-                newItem = new Helmet(x, y);
-                break;
-            default: throw new RuntimeException("Can't generate random item");
-        }
-        unequippedInventoryItems.add(newItem);
-        return newItem;
-    }
-
 
     /**
      * remove an item by x,y coordinates
@@ -511,37 +490,50 @@ public class LoopManiaWorld {
             goalComplete.setValue(true);
         }
         character.moveDownPath();
+        character.setAlliedSoldierNum();
 
         if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
             character.addCycles();
             nextCycle = true;
         }
-        moveBasicEnemies();
-        possiblySpawnAlliedSoldiers();
-        applyTrapAttacks();
-    }
 
-    /**
-     * If The Character is at a barracks, spawn an AlliedSoldier.
-     * @param item
-     */
-    public void possiblySpawnAlliedSoldiers() {
-        // NOTE = Currently there is a double check on the building matching the Character's position.
-        // We can decide which of these checks can be removed.
-        buildingEntities.parallelStream()
-            .filter(building -> building instanceof BarracksBuilding
-                && character.getX() == building.getX() 
-                && character.getY() == building.getY())
-            .map(building -> (BarracksBuilding) building)
-            .forEach(barracks -> barracks.spawnAlliedSoldiers(character));
-    }
-
-    public void applyTrapAttacks() {
+        // Do all functionality of helper buildings.
         for (Building building : buildingEntities) {
-            if (building instanceof TrapBuilding) {
-                ((TrapBuilding)building).damageAnyEnemies(enemies);
+            // If the building is a helperBuilding then call its helpChar function.
+            if (building instanceof BuildingHelpers) {
+                BuildingHelpers buildingHelper = (BuildingHelpers) building;
+                buildingHelper.helpChar(character);
+            // If the building is a spawner then call its spawn function.
+            } else if (building instanceof EnemySpawner) {
+                EnemySpawner enemySpawner = (EnemySpawner) building;
+                if (enemySpawner.spawn(nextCycle)) {
+                    var orderedPath = getOrderedPath();
+                    Pair<Integer, Integer> spawnLoc = getNearestPathTile(building.getX(), building.getY());
+                    int buildingPosIndex = orderedPath.indexOf(spawnLoc);
+
+                    PathPosition pos = new PathPosition(buildingPosIndex, orderedPath);
+
+                    BasicEnemy enemy = enemySpawner.spawnEnemy(pos);
+                    
+                    enemies.add(enemy);
+                }
+            } else if (building instanceof TrapBuilding) {
+                BuildingAttackers buildingAttacker = (BuildingAttackers) building;
+                // Loop through all enemies and make the trap deal damage to them.
+                List<BasicEnemy> killedEnemies = new ArrayList<>();
+                for (BasicEnemy e: enemies) {
+                    buildingAttacker.attackEnemy(e);
+                    if (e.getHp() <= 0) {
+                        killedEnemies.add(e);
+                    }
+                }
+
+                for (BasicEnemy e: killedEnemies) {
+                    killEnemy(e);
+                }
             }
         }
+        moveBasicEnemies();
     }
 
     /**
@@ -632,39 +624,6 @@ public class LoopManiaWorld {
         }
     }
 
-    // Only public for testing purposes
-    // TODO = Revert to private visibility when cycle-complete triggers is implemented
-    public void spawnEnemies() {
-        for (Building building : buildingEntities) {
-            if (building instanceof EnemySpawner) {
-                EnemySpawner enemySpawner = (EnemySpawner) building;
-                enemySpawner.spawn(this);
-            }
-        }
-
-            /**
-     * Actually performs a spawn of a vampire, trigged by spawn(). 
-     * @param world A reference to the {@code LoopManiaWorld} instance.
-     */
-    private void doSpawn(LoopManiaWorld world) {
-        var orderedPath = world.getOrderedPath();
-        Pair<Integer, Integer> spawnLoc = world.getNearestPathTile(getX(), getY());
-        int buildingPosIndex = orderedPath.indexOf(spawnLoc);
-
-        Vampire newVampire = new Vampire(
-            new PathPosition(buildingPosIndex, orderedPath)
-        );
-        
-        world.addEnemies(newVampire);
-    }
-        /* // FP Alternative
-        buildingEntities.stream()
-            .filter(building -> building instanceof EnemySpawner)
-            .map(building -> (EnemySpawner) building)
-            .forEach(enemySpawner -> enemySpawner.spawn(this));
-        */
-    }
-
     /**
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
@@ -749,14 +708,6 @@ public class LoopManiaWorld {
             .collect(CustomCollectors.toSingleton());
 
         // Check that tile can be spawned here
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println(card);
-        System.out.println(firstPath.getX().getValue());
-        System.out.println(firstPath.getY().getValue());
-        System.out.println(buildingNodeX);
-        System.out.println(buildingNodeY);
-        System.out.println(buildingNodeX != firstPath.getX().getValue());
-        System.out.println(buildingNodeY != firstPath.getY().getValue());
         if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) || ((buildingNodeX == firstPath.getX().getValue()) && (buildingNodeY == firstPath.getY().getValue()))) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;

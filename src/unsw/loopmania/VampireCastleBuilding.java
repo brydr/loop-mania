@@ -1,6 +1,5 @@
 package unsw.loopmania;
 
-import org.javatuples.Pair;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -33,5 +32,10 @@ public class VampireCastleBuilding extends Building implements EnemySpawner {
             return true;
         }
         return false;
+    }
+
+    public BasicEnemy spawnEnemy(PathPosition pos) {
+        Vampire vampire = new Vampire(pos);
+        return vampire;
     }
 }

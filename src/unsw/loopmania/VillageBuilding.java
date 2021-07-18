@@ -15,8 +15,10 @@ public class VillageBuilding extends Building implements BuildingHelpers {
     }
 
     public void helpChar(Character character) {
-        int currentHp = character.getHp();
-        currentHp += 20;
-        character.setHp(currentHp);
+        if (Math.pow((character.getX()-this.getX()), 2) +  Math.pow((character.getY()-this.getY()), 2) == 0) {
+            int currentHp = character.getHp();
+            currentHp += 20;
+            character.setHp(currentHp);
+        }
     }
 }

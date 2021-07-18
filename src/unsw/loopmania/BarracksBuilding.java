@@ -1,5 +1,7 @@
 package unsw.loopmania;
 
+import java.util.List;
+
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class BarracksBuilding extends Building implements BuildingHelpers {
@@ -22,8 +24,10 @@ public class BarracksBuilding extends Building implements BuildingHelpers {
      */
     public void helpChar(Character character) {
         // New soldier has reference to PathPosition of `character`
-        AlliedSoldier newSoldier = new AlliedSoldier(character.getPosition());
-        character.addAlliedSoldier(newSoldier);
+        if (Math.pow((character.getX()-this.getX()), 2) +  Math.pow((character.getY()-this.getY()), 2) == 0) {
+            AlliedSoldier newSoldier = new AlliedSoldier(character.getPosition());
+            character.addAlliedSoldier(newSoldier);
+        }
     }
     
 }

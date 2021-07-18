@@ -29,7 +29,7 @@ public class Character extends MovingEntity {
         experience.setValue(0);
         cycles.setValue(0);
         alliedSoldierNum.setValue(0);
-        this.setHp(100);
+        this.setHp(1000);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
@@ -216,7 +216,6 @@ public class Character extends MovingEntity {
      * Move character and allied soldiers down path
      */
     public void moveDown() {
-        System.out.println("test");
         moveDownPath();
         Boolean isDownPath = true;
         notifyObserversPosition(isDownPath);
@@ -259,8 +258,11 @@ public class Character extends MovingEntity {
         IntegerProperty charCycle = this.cycles;
         return charCycle;
     }
-    public IntegerProperty alliedSoldierProperty() {
+
+    public void setAlliedSoldierNum() {
         alliedSoldierNum.setValue(listAlliedSoldiers.size());
+    }
+    public IntegerProperty alliedSoldierProperty() {
         IntegerProperty charalliedSoldierNum = this.alliedSoldierNum;
         return charalliedSoldierNum;
     }

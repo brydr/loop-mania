@@ -22,4 +22,9 @@ public class ZombiePitBuilding extends Building implements EnemySpawner {
         } 
         return false;
     }
+
+    public BasicEnemy spawnEnemy(PathPosition pos) {
+        Zombie zombie = new Zombie(pos);
+        return zombie;
+    }
 }

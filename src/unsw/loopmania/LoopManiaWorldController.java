@@ -276,7 +276,8 @@ public class LoopManiaWorldController {
                 }
                 runBattleResults(defeatedEnemies);
             }
-            List<BasicEnemy> newEnemies = world.possiblySpawnEnemies();
+            world.possiblySpawnEnemies();
+            List<BasicEnemy> newEnemies = world.getEnemies();
             for (BasicEnemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
@@ -429,9 +430,7 @@ public class LoopManiaWorldController {
      * load random BasicItem from the world, and pair it with an image in the GUI
      */
     private void loadRandomBasicItem(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        BasicItem item = world.addUnequippedRandomBasicItem(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        Item item = world.loadRandomItem();
         onLoad(item);
     }
 
