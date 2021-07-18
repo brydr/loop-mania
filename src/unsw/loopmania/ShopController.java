@@ -135,7 +135,7 @@ public class ShopController {
 					System.out.println("Selling " + item.toString());
 					shop.sell((BasicItem) item);
 				} else {
-					System.out.println("Buying "  + item.toString());
+					System.out.println("Buying " + item.toString());
 					shop.buy((BasicItem) item);
 				}
 				updateShopGridPanes();
@@ -157,7 +157,7 @@ public class ShopController {
 			if (newValue) {
 				if (item instanceof BasicItem) {
 					priceLabel.setText(String.format("Click to %s for %d gold", selling ? "sell" : "buy",
-							((BasicItem) item).getBuyPrice()));
+							selling ? ((BasicItem) item).getSellPrice() : ((BasicItem) item).getBuyPrice()));
 				} else {
 					priceLabel.setText(String.format("This item can't be %s", selling ? "sold" : "bought"));
 				}
