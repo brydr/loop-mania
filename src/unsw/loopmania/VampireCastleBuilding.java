@@ -1,6 +1,5 @@
 package unsw.loopmania;
 
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 /**
@@ -15,27 +14,30 @@ public class VampireCastleBuilding extends Building implements EnemySpawner {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
-        //String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
         return vampireCastleBuildingImage;
     }
 
+    @Override
     public boolean spawn(boolean isCycle) {
         // Increment spawn counter
-        if (isCycle) {
+        if (isCycle)
             spawnCounter++;
-        }
+        
         if (spawnCounter == 5) {
             // Reset the counter
             spawnCounter = 0;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
+    @Override
     public BasicEnemy spawnEnemy(PathPosition pos) {
         Vampire vampire = new Vampire(pos);
-        return vampire;
+        return (BasicEnemy) vampire;
     }
 }

@@ -38,6 +38,8 @@ public class Vampire extends BasicEnemy implements Undead {
             this.setSpeed(1);
         }
     }
+
+    @Override
     public void attack(Character character) {
 
         int criticalBiteChance;

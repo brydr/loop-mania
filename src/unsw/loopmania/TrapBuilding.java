@@ -20,8 +20,9 @@ public class TrapBuilding extends Building implements BuildingAttackers {
     /**
      * Deal damage to any enemies on the Trap, potentially killing them.
     */
+    @Override
     public void attackEnemy(BasicEnemy enemy) {
-        if (Math.pow((enemy.getX()-this.getX()), 2) +  Math.pow((enemy.getY()-this.getY()), 2) == 0) {
+        if (enemy.getX() == getX() && enemy.getY() == getY()) {
             this.destroy();
             enemy.takeDamage(TRAP_DAMAGE);
         } 

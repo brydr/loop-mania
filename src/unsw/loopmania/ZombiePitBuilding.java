@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import org.javatuples.Pair;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class ZombiePitBuilding extends Building implements EnemySpawner {
@@ -16,13 +14,16 @@ public class ZombiePitBuilding extends Building implements EnemySpawner {
         return zombiePitImage;
     }
 
+    @Override
     public boolean spawn(boolean isCycle) {
         if (isCycle) {
             return true;
-        } 
-        return false;
+        } else {
+            return false;
+        }
     }
 
+    @Override
     public BasicEnemy spawnEnemy(PathPosition pos) {
         Zombie zombie = new Zombie(pos);
         return zombie;

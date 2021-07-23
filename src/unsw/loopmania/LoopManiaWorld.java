@@ -243,6 +243,7 @@ public class LoopManiaWorld {
      * @return list of enemies which have been killed
      */
     public List<BasicEnemy> runBattles() {
+        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code  
         // TODO = modify this - currently the character automatically wins all battles without any damage!
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
         List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
@@ -479,9 +480,11 @@ public class LoopManiaWorld {
      */
     public void runTickMoves(){
         nextCycle = false;
+
+        // Initialise firstPath
         if (firstPath == null) {
-            firstPath = character.getPosition();
-            firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
+            final PathPosition charPos = character.getPosition();
+            firstPath = new PathPosition(charPos.getCurrentPositionInPath(), charPos.getOrderedPath());
         }
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
@@ -528,7 +531,7 @@ public class LoopManiaWorld {
                     if (e.getHp() <= 0) {
                         killedEnemies.add(e);
                     }
-                    if (!(building.shouldExist().get())) {
+                    if (!building.shouldExist().get()) {
                         buildingToRemove.add(building);
                     }
                 }
@@ -559,6 +562,7 @@ public class LoopManiaWorld {
                 return e;
             }
         }
+        // else - no Entity found
         return null;
     }
 
@@ -617,8 +621,8 @@ public class LoopManiaWorld {
     public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
-        for (int y=0; y<unequippedInventoryHeight; y++){
-            for (int x=0; x<unequippedInventoryWidth; x++){
+        for (int y = 0; y < unequippedInventoryHeight; y++){
+            for (int x = 0; x < unequippedInventoryWidth; x++){
                 if (getUnequippedItemTypeByCoordinates(x, y) == null){
                     return new Pair<Integer, Integer>(x, y);
                 }
@@ -632,7 +636,7 @@ public class LoopManiaWorld {
      * @param x x coordinate which can range from 0 to width-1
      */
     public void shiftCardsDownFromXCoordinate(int x){
-        for (Card c: cardEntities){
+        for (Card c : cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
             }
@@ -644,7 +648,7 @@ public class LoopManiaWorld {
      */
     public void moveBasicEnemies() {
         // TODO = expand to more types of enemy
-        for (BasicEnemy e: enemies){
+        for (BasicEnemy e : enemies){
             e.move();
         }
     }
@@ -675,10 +679,17 @@ public class LoopManiaWorld {
             Pair<Integer, Integer> spawnPosition = orderedPathSpawnCandidates.get(rand.nextInt(orderedPathSpawnCandidates.size()));
 
             return spawnPosition;
+        } else {
+            return null;
         }
-        return null;
     }
 
+    /**
+     * Gets the TileType (either a PathTile, PathAdjacentTile or NonPathTile) of the tile with co-ordinates (x, y).
+     * @param x x-coordinate of our subject tile
+     * @param y y-coordinate of our subject tile
+     * @return The correct {@code TileType}
+     */
     private TileType getTileType(final int x, final int y) {
         // TODO = See if this needs to become a checked/recoverable error
         assert (x < width) && (y < height);
@@ -709,7 +720,7 @@ public class LoopManiaWorld {
 
 
     /**
-     * remove a card by its x, y coordinates
+     * Remove a card by its x, y coordinates
      * @param cardNodeX x index from 0 to width-1 of card to be removed
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
@@ -717,23 +728,15 @@ public class LoopManiaWorld {
      * @return {@code Building} the building if successfully created, OR {@code null} if otherwise
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
-        // Start by getting card
-        Card card = null;
-        for (Card c: cardEntities){
-            if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
-                card = c;
-                break;
-            }
-        }
-
-        // TODO = Replace above implementation with below
         // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
-        Card cardMatches = cardEntities.stream()
+        Card card = cardEntities.stream()
             .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
             .collect(CustomCollectors.toSingleton());
 
-        // Check that tile can be spawned here
-        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) || ((buildingNodeX == firstPath.getX().getValue()) && (buildingNodeY == firstPath.getY().getValue()))) {
+        // Building CANNOT be spawned here IF (tile is incorrect type) OR (tile is the firstPath)
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) 
+            || (   buildingNodeX == firstPath.getX().getValue() 
+                && buildingNodeY == firstPath.getY().getValue() )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
         };
@@ -760,7 +763,7 @@ public class LoopManiaWorld {
         // Start by getting card
         Item item = null;
         for (Item i: unequippedInventoryItems){
-            if ((i.getX() == itemNodeX) && (i.getY() == itemNodeY)){
+            if (i.getX() == itemNodeX && i.getY() == itemNodeY){
                 item = i;
                 break;
             }
@@ -777,7 +780,7 @@ public class LoopManiaWorld {
     }
 
     /**
-     * For a *path adjacent* tile, return the nearest path tile.
+     * For a *path adjacent* tile, return PathTile that is adjacent.
      * @param x x-coordinate of our path-adjacent tile
      * @param y y-coordinate of our path-adjacent tile
      * @throws NoSuchElementException if no adjacent Path tile.

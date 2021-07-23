@@ -8,13 +8,17 @@ public class TowerBuilding extends Building implements BuildingAttackers {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String towerBuildingImage = "src/images/tower.png";
         return towerBuildingImage;
     }
-    
+
+    @Override
     public void attackEnemy(BasicEnemy enemy) {
-        if (Math.pow((enemy.getX()-this.getX()), 2) +  Math.pow((enemy.getY()-this.getY()), 2) <= Math.pow(4, 2)) {
+        final double sqrDistFromEnemy = Math.pow(enemy.getX() - getX(), 2) + 
+                                        Math.pow(enemy.getY() - getY(), 2);
+        if (sqrDistFromEnemy <= 4 * 4) {
             enemy.takeDamage(5);
         } 
     }

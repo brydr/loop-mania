@@ -14,11 +14,13 @@ public class VillageBuilding extends Building implements BuildingHelpers {
         return VillageBuildingImage;
     }
 
+    @Override
     public void helpChar(Character character) {
-        if (Math.pow((character.getX()-this.getX()), 2) +  Math.pow((character.getY()-this.getY()), 2) == 0) {
+        if (character.getX() == getX() && character.getY() == getY()) {
             int currentHp = character.getHp();
             currentHp += 20;
             character.setHp(currentHp);
         }
     }
 }
+z

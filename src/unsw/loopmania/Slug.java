@@ -29,6 +29,7 @@ public class Slug extends BasicEnemy {
         } 
     }
 
+    @Override
     public void attack(Character character) {
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);

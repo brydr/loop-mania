@@ -14,8 +14,11 @@ public class CampfireBuilding extends Building implements BuildingHelpers {
         return campfireBuildingImage;
     }
 
+    @Override
     public void helpChar(Character character) {
-        if (Math.pow((character.getX()-this.getX()), 2) +  Math.pow((character.getY()-this.getY()), 2) <= Math.pow(3, 2)) {
+        final double sqrDistFromCharacter = Math.pow(character.getX() - this.getX(), 2) +
+                                            Math.pow(character.getY() - this.getY(), 2);
+        if (sqrDistFromCharacter <= 3 * 3) {
             character.setAttackTwice(true);
         } else {
             character.setAttackTwice(false);
