@@ -69,7 +69,7 @@ public class LoopManiaWorld {
 
     private JSONObject worldGoals;
 
-    private BooleanProperty goalComplete;
+    public BooleanProperty goalComplete;
 
     private String goalsToComplete;
 
