@@ -58,7 +58,7 @@ public class ShopController {
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
 				image.hoverProperty().addListener(new HoverListener(itemAtNode, false));
-				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickListener(itemAtNode, false));
+				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickHandler(itemAtNode, false));
 				image.setCursor(Cursor.HAND);
 				image.setScaleX(2);
 				image.setScaleY(2);
@@ -85,7 +85,7 @@ public class ShopController {
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
 				image.hoverProperty().addListener(new HoverListener(itemAtNode, true));
-				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickListener(itemAtNode, true));
+				image.addEventHandler(MouseEvent.MOUSE_CLICKED, new ClickHandler(itemAtNode, true));
 				image.setCursor(Cursor.HAND);
 				image.setScaleX(1.5);
 				image.setScaleY(1.5);
@@ -95,7 +95,7 @@ public class ShopController {
 	}
 
 	private int getIndexFrom2dCoordinates(int i, int j, int width) {
-		return i * Shop.SHOP_WIDTH + j;
+		return i * width + j;
 	}
 
 	/**
@@ -117,19 +117,18 @@ public class ShopController {
 		priceLabel.setText(LABEL_DEFAULT_TEXT);
 	}
 
-	private class ClickListener implements EventHandler<MouseEvent> {
+	private class ClickHandler implements EventHandler<MouseEvent> {
 		private final Item item;
 		private final boolean selling;
 
-		public ClickListener(Item item, boolean selling) {
+		public ClickHandler(Item item, boolean selling) {
 			this.item = item;
 			this.selling = selling;
 		}
 
 		@Override
 		public void handle(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			System.out.println("Clicked on" + item.toString());
+			System.out.println("Clicked on " + item.toString());
 			if (item instanceof BasicItem) {
 				if (selling) {
 					System.out.println("Selling " + item.toString());
