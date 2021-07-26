@@ -71,6 +71,8 @@ public class LoopManiaWorld {
 
     private List<RandomPathLoot> worldPathLoot;
 
+    // Market for doggie coin
+    private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
     /**
      * create the world (constructor)
      *
