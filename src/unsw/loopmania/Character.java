@@ -20,7 +20,7 @@ public class Character extends MovingEntity {
     private IntegerProperty alliedSoldierNum;
     private Gold gold;
     private HealthPotion equippedHealthPotion;
-    private final static int maxHp = 200;
+    private final static int MAX_HP = 200;
     private boolean attackTwice;
 
     public Character(PathPosition position) {
@@ -31,7 +31,7 @@ public class Character extends MovingEntity {
         experience.setValue(0);
         cycles.setValue(0);
         alliedSoldierNum.setValue(0);
-        this.setHp(maxHp);
+        this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
@@ -40,11 +40,8 @@ public class Character extends MovingEntity {
 
     @Override
     public void setHp(int hp) {
-        if (hp > maxHp) {
-            this.hp.setValue(maxHp);
-        } else {
-            this.hp.setValue(hp);
-        }
+        final int newHp = Integer.min(MAX_HP, hp);
+        super.setHp(newHp);
     }
 
     public boolean getAttackTwice() {
@@ -133,6 +130,7 @@ public class Character extends MovingEntity {
     }
 
     public void subtractGold(int gold) {
+        
         this.gold.subtractGold(gold);
     }
 
@@ -165,23 +163,28 @@ public class Character extends MovingEntity {
     }
 
     public int getMaxHp() {
-        return maxHp;
+        return MAX_HP;
     }
 
     /**
-     * if health potion is equipped, remove potion and reset hp to max
+     * If health potion is equipped, remove potion and reset HP to maximum
+     * @return {@code true} If potion equipped & consumed successfully,
+     * {@code false} otherwise.
      */
-    public void consumePotion() {
-        if (this.equippedHealthPotion != null) {
-            this.equippedHealthPotion = null;
-            this.setHp(maxHp);
+    public boolean consumePotion() {
+        if (equippedHealthPotion != null) {
+            this.setHp(MAX_HP);
+            equippedHealthPotion = null;
+            return true;
+        } else {
+            return false;
         }
     }
 
     /**
-     * use one ring to get full hp
-     * @pre assumes current character health <= 0
-     * @post character alive again with maxhp
+     * Use "The One Ring" to get full HP
+     * @precondition Character HP currently {@code <= 0}
+     * @postcondition Character alive again with HP of {@code MAX_HP}
      */
     public void consumeRareItem() {
         if (this.equippedRareItem != null) {
@@ -191,9 +194,9 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * attack allied soldier first otherwise
-     * reduce hp of character based on armour equipped
-     * @param damage, raw damage coming from enemy
+     * Apply attack to any allied soldiers first, otherwise reduce HP of 
+     * The Character by an amount depending on armour equipped
+     * @param damage Raw/base damage dealt by enemy
      */
     public void takeDamage(int damage) {
         if (listAlliedSoldiers.size() > 0) {
@@ -215,22 +218,24 @@ public class Character extends MovingEntity {
         this.setHp(newHp);
     }
 
-    /**
-     * @param enemy, enemy to be attacked
+    /** Attack a given enemy.
+     * @param enemy The enemy to be attacked
      * Observer pattern to make all allied soldiers attack the enemy
      * Calls damage from equippedWeapon
      * outputs damage to given enemy
      */
     public void attack(BasicEnemy enemy) {
-        int outputDamage = this.equippedWeapon.getDamage(enemy);
-        // reduce player damage by 15% if helmet equipped
-        if (this.equippedHelmet != null)
-            outputDamage = equippedHelmet.calculateDamage(outputDamage);
+        // Get base damage according to equipped weapon
+        final int baseDamage = equippedWeapon.getDamage(enemy);
+        // Attack power is diminished by helmet
+        final int outputDamage = (equippedHelmet != null) ? 
+            equippedHelmet.calculateDamage(baseDamage) : 
+            baseDamage;
         enemy.takeDamage(outputDamage);
 
-        // check enemy isn't in trance before allies attack
-        if (!enemy.getInTrance()){
-            // all allies attack enemy
+        // Check that enemy isn't in trance before allies attack
+        if (!enemy.getInTrance()) {
+            // All allies attack enemy
             for (AlliedSoldier ally : listAlliedSoldiers) {
                 ally.attack(enemy);
             }
@@ -238,13 +243,16 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * Observer pattern
-     * update AlliedSoldier positions
+     * Observer pattern.
+     * Update AlliedSoldier positions
+     * @param isDownPath Whether movement is down the path (vs. up the path)
      */
-    public void notifyObserversPosition(Boolean isDownPath) {
+    public void notifyObserversPosition(boolean isDownPath) {
         for (AlliedSoldier ally : listAlliedSoldiers) {
-            if (isDownPath) ally.moveDownPath();
-            else ally.moveUpPath();
+            if (isDownPath)
+                ally.moveDownPath();
+            else
+                ally.moveUpPath();
         }
     }
 
@@ -253,8 +261,7 @@ public class Character extends MovingEntity {
      */
     public void moveUp() {
         moveUpPath();
-        Boolean isDownPath = false;
-        notifyObserversPosition(isDownPath);
+        notifyObserversPosition(false);
     }
 
     /**
@@ -262,8 +269,7 @@ public class Character extends MovingEntity {
      */
     public void moveDown() {
         moveDownPath();
-        Boolean isDownPath = true;
-        notifyObserversPosition(isDownPath);
+        notifyObserversPosition(true);
     }
 
     /**
