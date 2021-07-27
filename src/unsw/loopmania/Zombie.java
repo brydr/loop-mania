@@ -6,15 +6,15 @@ import java.util.Random;
 public class Zombie extends BasicEnemy implements Undead {
     private int criticalBiteChance;
 
+    public static final int STARTING_HP = 30;
     public Zombie(PathPosition position) {
         super(position);
         this.setAttack(6);
-        this.setHp(30);
+        this.setHp(STARTING_HP);
         this.setSpeed(2);
         this.setBattleRadius(2);
         this.setSupportRadius(2);
         this.setExperienceGain(40);
-        this.criticalBiteChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
     }
 
     // Used for testing.
@@ -40,6 +40,7 @@ public class Zombie extends BasicEnemy implements Undead {
 
     @Override
     public void attack(Character character) {
+        criticalBiteChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
         int attackPower = this.getAttack();
         List<AlliedSoldier> alliedSoldiers = character.getListAlliedSoldiers();
         // If the character has allied soldiers it should attack them instead.
@@ -54,6 +55,35 @@ public class Zombie extends BasicEnemy implements Undead {
             }
         } else {
             character.takeDamage(attackPower);
+        }
+    }
+
+    // Used for testing.
+    public void criticalBiteAttack(Character character) {
+        int attackPower = this.getAttack();
+        List<AlliedSoldier> alliedSoldiers = character.getListAlliedSoldiers();
+        // If the character has allied soldiers it should attack them instead.
+        if (alliedSoldiers.size() > 0) {
+            AlliedSoldier firstSoldier = alliedSoldiers.get(0);
+            firstSoldier.takeDamage(attackPower);
+            if (firstSoldier.getHp() <= 0) {
+                character.removeAlliedSoldier(firstSoldier);
+            } else if (criticalBiteChance == 0) {
+                Zombie newZombie = new Zombie(firstSoldier.getPosition());
+                setConvertedToEnemy(character.convertToEnemy(firstSoldier, newZombie));
+            }
+        } else {
+            character.takeDamage(attackPower);
+        }
+    }
+
+    
+    @Override
+    public void setHp(int hp) {
+        if (hp > STARTING_HP) {
+            this.hp.setValue(STARTING_HP);
+        } else {
+            this.hp.setValue(hp);
         }
     }
 

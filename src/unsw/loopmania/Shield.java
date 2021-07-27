@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Shield extends ProtectiveGear {
 	// Critical bite negation is handled in the vampire class
-	private final double allNegationChance = .3d;
+	private double allNegationChance = .3d;
 	private final static int BUY_PRICE = 200;
 	private final static int SELL_PRICE = 100;
 

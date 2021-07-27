@@ -1,17 +1,18 @@
 package unsw.loopmania;
 
+import java.util.List;
 import java.util.Random;
 import java.time.Duration;
-public class Slug extends BasicEnemy {
-    public static final int STARTING_HP = 30;
-    public Slug(PathPosition position) {
+public class ElanMuske extends BossEnemy {
+    
+    public ElanMuske(PathPosition position) {
         super(position);
-        this.setAttack(3);
-        this.setHp(STARTING_HP);
+        this.setAttack(50);
+        this.setHp(1000);
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);
-        this.setExperienceGain(10);
+        this.setExperienceGain(1000);
     }
 
     @Override
@@ -24,18 +25,20 @@ public class Slug extends BasicEnemy {
         this.setSpeed(speed - 1);
 
         if (this.getSpeed() == 0) {
-            super.move();
+            int directionChoice = (new Random()).nextInt(2);
+            if (directionChoice == 0){
+                for (int i = 0; i < 5; i++) {
+                    moveUpPath();
+                }
+            }
+            else if (directionChoice == 1){
+                for (int i = 0; i < 5; i++) {
+                    moveDownPath();
+                }
+            }
+
             this.setSpeed(1);
         } 
-    }
-
-    @Override
-    public void setHp(int hp) {
-        if (hp > STARTING_HP) {
-            this.hp.setValue(STARTING_HP);
-        } else {
-            this.hp.setValue(hp);
-        }
     }
 
     @Override
@@ -45,8 +48,17 @@ public class Slug extends BasicEnemy {
     }
 
     @Override
+    public void healEnemies(List<BasicEnemy> enemies) {
+        for (BasicEnemy enemy : enemies) {
+            int enemyHp = enemy.getHp();
+            enemyHp += 20;
+            enemy.setHp(enemyHp);
+        }
+    }
+
+    @Override
     public String getImage() {
-        String slugImage = "src/images/slug.png";
+        String slugImage = "src/images/ElanMuske.png";
         return slugImage;
     }
 }

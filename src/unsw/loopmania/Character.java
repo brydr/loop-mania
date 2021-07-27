@@ -22,6 +22,7 @@ public class Character extends MovingEntity {
     private HealthPotion equippedHealthPotion;
     private final static int maxHp = 200;
     private boolean attackTwice;
+    private int stunned;
 
     public Character(PathPosition position) {
         super(position);
@@ -36,6 +37,7 @@ public class Character extends MovingEntity {
         gold = new Gold();
         equippedWeapon = new Unarmed();
         this.attackTwice = false;
+        this.stunned = 0;
     }
 
     @Override
@@ -47,6 +49,13 @@ public class Character extends MovingEntity {
         }
     }
 
+    public int getStunned() {
+        return stunned;
+    }
+
+    public void setStunned(int stunned) {
+        this.stunned = stunned;
+    }
     public boolean getAttackTwice() {
         return attackTwice;
     }
@@ -221,7 +230,13 @@ public class Character extends MovingEntity {
      * Calls damage from equippedWeapon
      * outputs damage to given enemy
      */
-    public void attack(BasicEnemy enemy) {
+    public void attack(Enemy enemy) {
+        // If the character is currently stunned -1 to the stun duration and return.
+        if (stunned > 0) {
+            stunned -= 1;
+            return;
+        }
+
         int outputDamage = this.equippedWeapon.getDamage(enemy);
         // reduce player damage by 15% if helmet equipped
         if (this.equippedHelmet != null)

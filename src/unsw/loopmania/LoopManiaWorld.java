@@ -48,17 +48,13 @@ public class LoopManiaWorld {
 
     private List<BasicEnemy> enemies;
 
+    private List<BossEnemy> bosses;
+
     private List<Card> cardEntities;
 
     private List<Item> unequippedInventoryItems;
 
     private List<Building> buildingEntities;
-
-    private List<EnemySpawner> buildingSpawners;
-
-    private List<BuildingHelpers> buildingHelpers;
-
-    private List<BuildingAttackers> buildingAttackers;
 
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them

@@ -40,6 +40,15 @@ public class Vampire extends BasicEnemy implements Undead {
     }
 
     @Override
+    public void setHp(int hp) {
+        if (hp > STARTING_HP) {
+            this.hp.setValue(STARTING_HP);
+        } else {
+            this.hp.setValue(hp);
+        }
+    }
+
+    @Override
     public void attack(Character character) {
 
         int criticalBiteChance;
