@@ -3,15 +3,16 @@ package unsw.loopmania;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.function.Predicate;
 
 import org.javatuples.Pair;
 import org.json.JSONObject;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.util.CustomCollectors;
 
 /**
@@ -103,6 +104,10 @@ public class LoopManiaWorld {
 
     public int getHeight() {
         return height;
+    }
+
+    public DoggieCoinMarket getDoggieCoinMarket() {
+        return doggieCoinMarket;
     }
 
     // getEnemies and addEnemies is used for testing.
@@ -515,7 +520,7 @@ public class LoopManiaWorld {
         moveBasicEnemies();
         possiblySpawnAlliedSoldiers();
         applyTrapAttacks();
-
+        doggieCoinMarket.tickPrice();
         return nextCycle;
     }
 

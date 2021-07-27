@@ -1,6 +1,7 @@
 package unsw.loopmania;
 
 import java.io.File;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -16,12 +19,18 @@ import javafx.scene.layout.GridPane;
 public class ShopController {
 	private Shop shop;
 	private LoopManiaWorld world;
+	private DoggieCoinMarket market;
+
 	@FXML
 	private GridPane shopPane;
 	@FXML
 	private GridPane characterPane;
 	@FXML
 	private Label priceLabel;
+	@FXML
+	private Label dgeLabel;
+	@FXML
+	private LineChart<Number, Number> dgeChart;
 
 	private final static String LABEL_DEFAULT_TEXT = "Click items to buy, close window when done";
 
@@ -29,10 +38,26 @@ public class ShopController {
 	}
 
 	public void initialiseShop(LoopManiaWorld world, ShopStrategy strategy) {
-		shop = new Shop(world, strategy);
 		this.world = world;
+		this.market = world.getDoggieCoinMarket();
+		shop = new Shop(world, strategy);
 		updateGridPanes();
 		world.getCharacter().addGold(100000000);
+		drawChart();
+	}
+
+	private void drawChart() {
+		XYChart.Series<Number, Number> dgeSeries = new XYChart.Series<Number, Number>();
+		List<Integer> priceHistory = market.getPriceHistory();
+
+		int i = 0;
+		for (int price : priceHistory) {
+			dgeSeries.getData().add(new XYChart.Data<Number, Number>(i, price));
+			++i;
+		}
+
+		dgeSeries.setName("$DOGGIE price");
+		dgeChart.getData().add(dgeSeries);
 	}
 
 	private void updateGridPanes() {
