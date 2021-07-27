@@ -3,6 +3,8 @@ package unsw.loopmania;
 import java.util.List;
 import java.util.Random;
 public class ElanMuske extends BossEnemy {
+
+    private boolean runAway;
     
     public ElanMuske(PathPosition position) {
         super(position);
@@ -12,8 +14,24 @@ public class ElanMuske extends BossEnemy {
         this.setBattleRadius(1);
         this.setSupportRadius(1);
         this.setExperienceGain(1000);
+        int runAwayChance = (new Random()).nextInt(10);
+        // runs away at a 70% chance.
+        if (runAwayChance < 7) {
+            runAway = true;   
+        } else {
+            runAway = false;
+        }
     }
 
+    @Override
+    public boolean getRunAway() {
+        return runAway;
+    }
+    
+    @Override
+    public void setRunAway(boolean runAway) {
+        this.runAway = runAway;
+    }
     @Override
     public void move() {
         // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
@@ -26,12 +44,12 @@ public class ElanMuske extends BossEnemy {
         if (this.getSpeed() == 0) {
             int directionChoice = (new Random()).nextInt(2);
             if (directionChoice == 0){
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 2; i++) {
                     moveUpPath();
                 }
             }
             else if (directionChoice == 1){
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 2; i++) {
                     moveDownPath();
                 }
             }

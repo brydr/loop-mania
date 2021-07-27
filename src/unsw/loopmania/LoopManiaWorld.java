@@ -81,6 +81,9 @@ public class LoopManiaWorld {
 
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
+    // A doggie coin.
+    private DoggieCoin doggieCoin = null;
+
     /**
      * create the world (constructor)
      *
@@ -119,7 +122,6 @@ public class LoopManiaWorld {
     public DoggieCoinMarket getDoggieCoinMarket() {
         return doggieCoinMarket;
     }
-
 
     // getEnemies and addEnemies is used for testing.
     public List<Enemy> getEnemies() {
@@ -300,6 +302,14 @@ public class LoopManiaWorld {
             int charHealth = character.getHp();
 
             while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
+                // If the enemy can run away then break out of the while loop.
+                if (e.getRunAway()) {
+                    int runAwayChance = (new Random()).nextInt(10);
+                    if (runAwayChance < 3) {
+                        e.setRunAway(false);
+                    } 
+                    break;
+                }
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
 
                 int outputDamage = character.getEquippedWeapon().getDamage(e);
@@ -359,15 +369,20 @@ public class LoopManiaWorld {
             if (enemyHealth <= 0) {
                 defeatedEnemies.add(e);
                 enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
-            // If an enemy did not die it means it was put in trance.
+            // If an enemy did not die it means it was put in trance or Elan ran away.
             } else {
                 // Adds the new allied soldier into the characters array of allied soldiers.
                 AlliedSoldier transformedSoldier = e.convertToFriendly(character);
                 if (transformedSoldier != null) {
                     transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
+                    enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
+                    i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
+                // If it is null, it means it was Elan who ran away and so break out of the while loop since the character never killed it.
+                } else {
+                    if (enemiesInRange.size() == 1) {
+                        break;
+                    }
                 }
-                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
-                i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
             }
 
             i++;
@@ -392,6 +407,12 @@ public class LoopManiaWorld {
             if (e instanceof BossEnemy) {
                 // Set boss = false meaning that there is no boss in the world.
                 boss = false;
+                if (e instanceof ElanMuske) {
+                    doggieCoinMarket.setElanAlive(false);
+                } else if (e instanceof Doggie) {
+                    Pair<Integer, Integer> firstAvailableSlot = getFirstSlotRemoveIfFull();
+                    doggieCoin = new DoggieCoin(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()), doggieCoinMarket);
+                }
             }
             killEnemy(e);
         }
@@ -503,7 +524,7 @@ public class LoopManiaWorld {
         removeUnequippedInventoryItem(item);
     }
 
-    /**
+/**
      * run moves which occur with every tick without needing to spawn anything immediately
      */
     public void runTickMoves(){

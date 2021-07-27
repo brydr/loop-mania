@@ -13,14 +13,22 @@ public abstract class Enemy extends MovingEntity {
     private int supportRadius;
     private int experienceGain;
     private boolean inTrance;
+    private boolean runAway;
     private BasicEnemy convertedToEnemy;
 
     public Enemy(PathPosition position) {
         super(position);
         convertedToEnemy = null;
         inTrance = false;
+        runAway = false;
     }
 
+    public boolean getRunAway() {
+        return runAway;
+    }
+    public void setRunAway(boolean runAway) {
+        this.runAway = runAway;
+    }
     public int getAttack() {
         return attackPower;
     }
