@@ -80,7 +80,7 @@ public class ElanMuskeTest {
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
 
-        List<Enemy> enemies = new ArrayList<BasicEnemy>();
+        List<Enemy> enemies = new ArrayList<Enemy>();
         ElanMuske elan = new ElanMuske(pos);
         Zombie zombie = new Zombie(pos);
         enemies.add(zombie);

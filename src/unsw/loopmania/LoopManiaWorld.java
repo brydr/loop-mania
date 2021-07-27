@@ -79,6 +79,8 @@ public class LoopManiaWorld {
 
     private List<RandomPathLoot> worldPathLoot;
 
+    // Market for doggie coin
+    private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
     /**
      * create the world (constructor)
      *
@@ -113,6 +115,11 @@ public class LoopManiaWorld {
     public int getHeight() {
         return height;
     }
+
+    public DoggieCoinMarket getDoggieCoinMarket() {
+        return doggieCoinMarket;
+    }
+
 
     // getEnemies and addEnemies is used for testing.
     public List<Enemy> getEnemies() {
@@ -190,12 +197,13 @@ public class LoopManiaWorld {
                 spawningEnemies.add(doggie);
                 bossAlreadySpawned = true;
                 boss = true;
-            } else if (character.getCycles() == 40) {
+            } else if (character.getCycles() == 40 && character.getExperience() >= 10000) {
                 ElanMuske elan = new ElanMuske(new PathPosition(indexInPath, orderedPath));
                 enemies.add(elan);
                 spawningEnemies.add(elan);
                 bossAlreadySpawned = true;
                 boss = true;
+                doggieCoinMarket.setElanAlive(true);
             }
         }
         return spawningEnemies;
@@ -567,6 +575,7 @@ public class LoopManiaWorld {
             buildingEntities.remove(buildingRemove);
         }
         moveBasicEnemies();
+        doggieCoinMarket.tickPrice();
     }
 
     /**
