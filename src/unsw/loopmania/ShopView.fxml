@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
@@ -80,6 +79,6 @@
       </Label>
       <Line endX="350.0" layoutX="382.0" layoutY="404.0" startX="-350.0" />
       <Label layoutX="598.0" layoutY="417.0" text="DoggieCoin price today:" />
-      <Label fx:id="dgePrice" layoutX="733.0" layoutY="435.0" text="10" textAlignment="RIGHT" />
+      <Label fx:id="dgePrice" layoutX="597.0" layoutY="435.0" text="10" textAlignment="RIGHT" />
    </children>
 </Pane>

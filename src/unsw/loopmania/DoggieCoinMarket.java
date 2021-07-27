@@ -12,6 +12,8 @@ public class DoggieCoinMarket {
 	private boolean elanAlivePreviousTick = false;
 
 	private int currentPrice = INITIAL_PRICE;
+	private int lastTickPrice = currentPrice;
+
 	private final Random randomGenerator;
 	private final List<Integer> priceHistory = new LinkedList<Integer>();
 
@@ -32,11 +34,16 @@ public class DoggieCoinMarket {
 		return currentPrice;
 	}
 
+	public int getLastTickPrice() {
+		return lastTickPrice;
+	}
+
 	public List<Integer> getPriceHistory() {
 		return List.copyOf(priceHistory);
 	}
 
 	public void tickPrice() {
+		lastTickPrice = currentPrice;
 		// Elan spawning or dying events
 		if (!elanAlivePreviousTick && elanAlive) {
 			// Elan spawned

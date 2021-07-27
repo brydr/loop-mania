@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public class ShopController {
 	private Shop shop;
@@ -28,7 +29,7 @@ public class ShopController {
 	@FXML
 	private Label priceLabel;
 	@FXML
-	private Label dgeLabel;
+	private Label dgePrice;
 	@FXML
 	private LineChart<Number, Number> dgeChart;
 
@@ -58,6 +59,27 @@ public class ShopController {
 
 		dgeSeries.setName("$DOGGIE price");
 		dgeChart.getData().add(dgeSeries);
+
+		String priceText = "";
+		priceText += String.format("%d gold ", market.getPrice());
+
+		// Calculates the prints the percentage
+		if (market.getLastTickPrice() < market.getPrice()) {
+			priceText += String.format("(📈 +%.2f%%)",
+					((double) market.getPrice() - market.getLastTickPrice()) / market.getLastTickPrice());
+			dgePrice.setTextFill(Color.GREEN);
+
+		} else if (market.getLastTickPrice() > market.getPrice()) {
+			priceText += String.format("(📉 -%.2f%%)",
+					((double) market.getLastTickPrice() - market.getPrice()) / market.getLastTickPrice());
+			dgePrice.setTextFill(Color.RED);
+
+		} else {
+			priceText += "(=)";
+			dgePrice.setTextFill(Color.ORANGE);
+		}
+
+		dgePrice.setText(priceText);
 	}
 
 	private void updateGridPanes() {
