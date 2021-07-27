@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Character;
 import unsw.loopmania.ElanMuske;
+import unsw.loopmania.Enemy;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Zombie;
 
@@ -79,7 +80,7 @@ public class ElanMuskeTest {
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
 
-        List<BasicEnemy> enemies = new ArrayList<BasicEnemy>();
+        List<Enemy> enemies = new ArrayList<BasicEnemy>();
         ElanMuske elan = new ElanMuske(pos);
         Zombie zombie = new Zombie(pos);
         enemies.add(zombie);

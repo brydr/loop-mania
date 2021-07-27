@@ -1,7 +1,6 @@
 package unsw.loopmania;
 
 import java.util.Random;
-import java.time.Duration;
 public class Doggie extends BossEnemy {
     int stunChance;
     public Doggie(PathPosition position) {

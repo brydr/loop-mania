@@ -2,7 +2,6 @@ package unsw.loopmania;
 
 import java.util.List;
 import java.util.Random;
-import java.time.Duration;
 public class ElanMuske extends BossEnemy {
     
     public ElanMuske(PathPosition position) {
@@ -48,8 +47,8 @@ public class ElanMuske extends BossEnemy {
     }
 
     @Override
-    public void healEnemies(List<BasicEnemy> enemies) {
-        for (BasicEnemy enemy : enemies) {
+    public void healEnemies(List<Enemy> enemies) {
+        for (Enemy enemy : enemies) {
             int enemyHp = enemy.getHp();
             enemyHp += 20;
             enemy.setHp(enemyHp);

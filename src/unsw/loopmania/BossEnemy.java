@@ -1,8 +1,6 @@
 package unsw.loopmania;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.Random;
 
 /**
  * a boss form of enemy in the world
@@ -15,7 +13,7 @@ public abstract class BossEnemy extends Enemy {
     }
 
     // A hook that ElanMuske implements.
-    public void healEnemies(List<BasicEnemy> enemies) {
+    public void healEnemies(List<Enemy> enemies) {
     }
 
     public abstract String getImage();

@@ -1,6 +1,5 @@
 package unsw.loopmania;
 
-import java.time.Duration;
 import java.util.Random;
 
 /**
@@ -13,13 +12,13 @@ public abstract class Enemy extends MovingEntity {
     private int battleRadius;
     private int supportRadius;
     private int experienceGain;
-    private Boolean inTrance;
+    private boolean inTrance;
     private BasicEnemy convertedToEnemy;
 
     public Enemy(PathPosition position) {
         super(position);
-        inTrance = false;
         convertedToEnemy = null;
+        inTrance = false;
     }
 
     public int getAttack() {
@@ -78,11 +77,10 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public Boolean getInTrance() {
-        return inTrance;
+        return false;
     }
 
     public void setInTrance(Boolean inTrance) {
-        this.inTrance = inTrance;
     }
 
     public void takeDamage(int damage) {
@@ -91,13 +89,7 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public AlliedSoldier convertToFriendly(Character character) {
-        Random rand = new Random();
-        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
-        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
-        character.addAlliedSoldier(transformedSoldier);
-        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
-        return transformedSoldier;
+        return null;
     }
     public abstract void attack(Character character);
     public abstract String getImage();

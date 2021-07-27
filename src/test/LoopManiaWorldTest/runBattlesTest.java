@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.LoopManiaWorld;
-import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.Character;
+import unsw.loopmania.Enemy;
 import unsw.loopmania.Slug;
 import unsw.loopmania.Zombie;
 import unsw.loopmania.Staff;
@@ -34,7 +34,7 @@ public class runBattlesTest {
         while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
         }
-        List<BasicEnemy> deadEnemies = newWorld.runBattles();
+        List<Enemy> deadEnemies = newWorld.runBattles();
 
         assertTrue(deadEnemies.get(0) instanceof Slug);  
         assertTrue(c.getHp() == 155);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
@@ -54,7 +54,7 @@ public class runBattlesTest {
             newWorld.possiblySpawnEnemies();            // Spawn 2 enemies
         }
 
-        List<BasicEnemy> deadEnemies = newWorld.runBattles();
+        List<Enemy> deadEnemies = newWorld.runBattles();
 
         assertTrue(deadEnemies.get(0) instanceof Slug);  
         assertTrue(deadEnemies.get(1) instanceof Slug); 
@@ -74,7 +74,7 @@ public class runBattlesTest {
         while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
         }
-        List<BasicEnemy> deadEnemies = newWorld.runBattles();
+        List<Enemy> deadEnemies = newWorld.runBattles();
 
         assertTrue(deadEnemies.size() == 0);   
 
@@ -95,7 +95,7 @@ public class runBattlesTest {
             newWorld.possiblySpawnEnemies();
         }
 
-        List<BasicEnemy> deadEnemies = newWorld.runBattles();
+        List<Enemy> deadEnemies = newWorld.runBattles();
 
         assertTrue(deadEnemies.get(0) instanceof Slug); 
 

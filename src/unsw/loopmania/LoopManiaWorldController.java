@@ -281,16 +281,17 @@ public class LoopManiaWorldController {
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             world.runTickMoves();
-            List<BasicEnemy> defeatedEnemies = world.runBattles();
+            List<Enemy> defeatedEnemies = world.runBattles();
             if (defeatedEnemies.size() > 0) {
-                for (BasicEnemy e: defeatedEnemies){
+                for (Enemy e: defeatedEnemies){
                     reactToEnemyDefeat(e);
                 }
                 runBattleResults(defeatedEnemies);
             }
             world.possiblySpawnEnemies();
-            List<BasicEnemy> newEnemies = world.getEnemies();
-            for (BasicEnemy newEnemy: newEnemies){
+            world.possiblySpawnBossEnemies();
+            List<Enemy> newEnemies = world.getEnemies();
+            for (Enemy newEnemy: newEnemies){
                 onLoad(newEnemy);
             }
 
@@ -475,7 +476,7 @@ public class LoopManiaWorldController {
      * run GUI events after an enemy is defeated, such as spawning items/experience/gold
      * @param enemy defeated enemy for which we should react to the death of
      */
-    private void reactToEnemyDefeat(BasicEnemy enemy){
+    private void reactToEnemyDefeat(Enemy enemy){
         // react to character defeating an enemy
         // in starter code, spawning extra card/weapon...
         // TODO = provide different benefits to defeating the enemy based on the type of enemy
@@ -504,7 +505,7 @@ public class LoopManiaWorldController {
         }
     }
 
-    public void runBattleResults(List<BasicEnemy> defeatedEnemies) {
+    public void runBattleResults(List<Enemy> defeatedEnemies) {
         BattleResultsController results = new BattleResultsController(defeatedEnemies, world.getCharacter().getHp());
         pause();
         Stage test = results.BattleResults();
@@ -615,7 +616,7 @@ public class LoopManiaWorldController {
      * load an enemy into the GUI
      * @param enemy
      */
-    private void onLoad(BasicEnemy enemy) {
+    private void onLoad(Enemy enemy) {
         ImageView view = new ImageView(new Image((new File(enemy.getImage())).toURI().toString()));
         addEntity(enemy, view);
         squares.getChildren().add(view);

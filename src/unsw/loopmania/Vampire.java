@@ -1,7 +1,6 @@
 package unsw.loopmania;
 
 import java.util.Random;
-import java.time.Duration;
 public class Vampire extends BasicEnemy implements Undead {
 
     // criticalChance is only used for testing, primarily for the shield.

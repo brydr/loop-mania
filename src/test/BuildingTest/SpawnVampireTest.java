@@ -15,8 +15,8 @@ import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Vampire;
 import unsw.loopmania.VampireCastleBuilding;
-import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Character;
+import unsw.loopmania.Enemy;
 import unsw.loopmania.GoalEvaluator;
 
 public class SpawnVampireTest {
@@ -47,7 +47,7 @@ public class SpawnVampireTest {
         for (int i = 0; i < 4; i++)
         world.runTickMoves();
         
-        List<BasicEnemy> enemies = world.getEnemies();
+        List<Enemy> enemies = world.getEnemies();
         assertEquals(enemies.size(), 1);
         assertTrue(enemies.get(0) instanceof Vampire);
     }

@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import java.util.Random;
-import java.time.Duration;
 public class Slug extends BasicEnemy {
     public static final int STARTING_HP = 30;
     public Slug(PathPosition position) {
