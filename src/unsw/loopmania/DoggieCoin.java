@@ -12,17 +12,16 @@ public class DoggieCoin extends BasicItem {
 
 	@Override
 	public String getImage() {
-		// TODO Auto-generated method stub
-		return null;
+		return "src/images/doggiecoin.png";
 	}
 
 	@Override
 	public int getSellPrice() {
-		return (int) Math.round(market.getPrice());
+		return market.getPrice();
 	}
 
 	@Override
 	public int getBuyPrice() {
-		return (int) Math.round(market.getPrice());
+		return market.getPrice();
 	}
 }
