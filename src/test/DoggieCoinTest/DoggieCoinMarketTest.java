@@ -35,7 +35,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 
@@ -66,7 +66,7 @@ public class DoggieCoinMarketTest {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
 			history.add(expectedPrice);
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -87,7 +87,7 @@ public class DoggieCoinMarketTest {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
 			history.add(expectedPrice);
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -117,7 +117,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -137,7 +137,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -156,7 +156,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -176,7 +176,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
@@ -195,7 +195,7 @@ public class DoggieCoinMarketTest {
 			} else {
 				expectedPrice = Math.max(0, expectedPrice - difference);
 			}
-			System.out.println(String.format("Expected price is %d", expectedPrice));
+			// System.out.println(String.format("Expected price is %d", expectedPrice));
 			assertEquals(expectedPrice, market.getPrice());
 			assertTrue(market.getPrice() >= 0);
 		}
