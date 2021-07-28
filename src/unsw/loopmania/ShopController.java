@@ -184,7 +184,7 @@ public class ShopController {
 					System.out.println("Buying " + item.toString());
 					shop.buy((BasicItem) item);
 				}
-				updateShopGridPanes();
+				updateGridPanes();
 			}
 		}
 	}

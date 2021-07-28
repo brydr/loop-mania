@@ -9,7 +9,6 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
-import org.javatuples.Pair;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -194,6 +193,8 @@ public class LoopManiaWorldController {
     // Object handling playing audio
     private AudioPlayer audioPlayer = new AudioPlayer();
 
+    // Dummy constructor for the tests, otherwise it complains it doesn't have a UI, don't use anywhere else
+    public LoopManiaWorldController() {}
 
     /**
      * @param world world object loaded from file
