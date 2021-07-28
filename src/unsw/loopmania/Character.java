@@ -196,41 +196,43 @@ public class Character extends MovingEntity {
     /**
      * Apply attack to any allied soldiers first, otherwise reduce HP of 
      * The Character by an amount depending on armour equipped
-     * @param damage Raw/base damage dealt by enemy
+     * @param baseDamage Raw/base damage dealt by enemy
      */
-    public void takeDamage(int damage) {
+    public void takeDamage(final int baseDamage) {
         if (listAlliedSoldiers.size() > 0) {
+            // Use the first AlliedSoldier as cannon fodder
             AlliedSoldier ally = listAlliedSoldiers.get(0);
-            ally.takeDamage(damage);
-            if (ally.getHp() <= 0) {
+            ally.takeDamage(baseDamage);
+            if (ally.getHp() <= 0)
                 removeAlliedSoldier(ally);
-            }
-            return;
-        }
-        if (this.equippedArmour != null)
-            damage = equippedArmour.calculateDamage(damage);
-        if (this.equippedHelmet != null)
-            damage = equippedHelmet.calculateDamage(damage);
-        if (this.equippedShield != null)
-            damage = equippedShield.calculateDamage(damage);
+            
+        } else { /* no allied soldiers */
+            int damage = baseDamage;
+            // Transform the damage if "The Character" has protective gear
+            if (this.equippedArmour != null)
+                damage = equippedArmour.calculateDamage(damage);
+            if (this.equippedHelmet != null)
+                damage = equippedHelmet.calculateDamage(damage);
+            if (this.equippedShield != null)
+                damage = equippedShield.calculateDamage(damage);
 
-        int newHp = this.getHp() - damage;
-        this.setHp(newHp);
+            final int newHp = this.getHp() - damage;
+            // TODO Check if The Character has been killed
+            this.setHp(newHp);
+        }
     }
 
-    /** Attack a given enemy.
+    /** Attack a given enemy. Observer pattern applied to make all allied soldiers attack the enemy.  
+     * Calls damage from equippedWeapon, outputs damage to given enemy.
      * @param enemy The enemy to be attacked
-     * Observer pattern to make all allied soldiers attack the enemy
-     * Calls damage from equippedWeapon
-     * outputs damage to given enemy
      */
     public void attack(BasicEnemy enemy) {
         // Get base damage according to equipped weapon
         final int baseDamage = equippedWeapon.getDamage(enemy);
         // Attack power is diminished by helmet
-        final int outputDamage = (equippedHelmet != null) ? 
-            equippedHelmet.calculateDamage(baseDamage) : 
-            baseDamage;
+        final int outputDamage = (equippedHelmet != null)
+            ? equippedHelmet.calculateDamage(baseDamage)
+            : baseDamage;
         enemy.takeDamage(outputDamage);
 
         // Check that enemy isn't in trance before allies attack

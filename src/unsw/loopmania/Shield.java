@@ -3,7 +3,7 @@ package unsw.loopmania;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class Shield extends ProtectiveGear {
-	// Critical bite negation is handled in the vampire class
+	// Note: Critical bite negation is handled in the Vampire class
 	private final double allNegationChance;
 	private final static double DEFAULT_ALL_NEG_CHANCE = 0.3d;
 	private final static int BUY_PRICE = 200;
@@ -14,9 +14,10 @@ public class Shield extends ProtectiveGear {
 		allNegationChance = DEFAULT_ALL_NEG_CHANCE;
 	}
 
-	public Shield(SimpleIntegerProperty x, SimpleIntegerProperty y, double negation_chance) {
+	
+	public Shield(SimpleIntegerProperty x, SimpleIntegerProperty y, double negationChance) {
 		super(x, y, BUY_PRICE, SELL_PRICE);
-		allNegationChance = negation_chance;
+		allNegationChance = negationChance;
 	}
 
 	@Override
@@ -24,13 +25,16 @@ public class Shield extends ProtectiveGear {
 		return this.negateAllDamage() ? 0 : attackPower;
 	}
 
+	/**
+	 * Randomly determines if all damage to character is negated.
+	 * @return {@code true} with chance equal to {@code this.allNegationChance}
+	 */
 	private boolean negateAllDamage() {
 		return Math.random() < allNegationChance;
 	}
 
 	@Override
 	public String getImage() {
-        String shieldImage = "src/images/shield.png";
-        return shieldImage;
+        return "src/images/shield.png";
     }
 }

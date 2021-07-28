@@ -693,7 +693,7 @@ public class LoopManiaWorldController {
 
                         final int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
                         final int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
-                        switch (draggableType){
+                        switch (draggableType) {
                             case CARD:
                                 // TODO = spawn a building here of different types
                                 Building newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
