@@ -25,7 +25,7 @@ import java.io.File;
 public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
 
     private List<ImageView> entities;
-
+    public static final String pathTile = "pathTile";
     //Images
     private Image characterImage;
     private Image pathTilesImage;
@@ -90,6 +90,7 @@ public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
         }
         Rectangle2D imagePart = new Rectangle2D(x, y, 32, 32);
         view.setViewport(imagePart);
+        view.setId(LoopManiaWorldControllerLoader.pathTile);
         addEntity(pathTile, view);
     }
 
