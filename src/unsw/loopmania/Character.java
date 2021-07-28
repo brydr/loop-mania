@@ -189,7 +189,7 @@ public class Character extends MovingEntity {
     public void consumeRareItem() {
         if (this.equippedRareItem != null) {
             this.equippedRareItem = null;
-            this.setHp(maxHp);
+            this.setHp(MAX_HP);
         }
     }
 
