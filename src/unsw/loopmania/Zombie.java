@@ -1,7 +1,10 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class Zombie extends BasicEnemy implements Undead {
     private int criticalBiteChance;
@@ -58,6 +61,16 @@ public class Zombie extends BasicEnemy implements Undead {
         }
     }
 
+    @Override
+    public List<Item> dropLoot() {
+        List<Item> loot = new ArrayList<Item>();
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (oneRingChance < 3) {
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            loot.add(theOneRing);
+        }
+        return loot;
+    }
     // Used for testing.
     public void criticalBiteAttack(Character character) {
         int attackPower = this.getAttack();

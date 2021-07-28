@@ -1,5 +1,6 @@
 package unsw.loopmania;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -100,5 +101,7 @@ public abstract class Enemy extends MovingEntity {
         return null;
     }
     public abstract void attack(Character character);
+
+    public abstract List<Item> dropLoot();
     public abstract String getImage();
 }

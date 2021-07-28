@@ -1,6 +1,10 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import javafx.beans.property.SimpleIntegerProperty;
 public class Vampire extends BasicEnemy implements Undead {
 
     // criticalChance is only used for testing, primarily for the shield.
@@ -90,6 +94,17 @@ public class Vampire extends BasicEnemy implements Undead {
 
         int attackPower = this.getAttack();
         this.setAttack(attackPower + criticalBiteDamage);
+    }
+
+    @Override
+    public List<Item> dropLoot() {
+        List<Item> loot = new ArrayList<Item>();
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (oneRingChance < 3) {
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            loot.add(theOneRing);
+        }
+        return loot;
     }
 
     @Override

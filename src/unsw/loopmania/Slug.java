@@ -1,5 +1,11 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Slug extends BasicEnemy {
     public static final int STARTING_HP = 30;
     public Slug(PathPosition position) {
@@ -40,6 +46,17 @@ public class Slug extends BasicEnemy {
     public void attack(Character character) {
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);
+    }
+
+    @Override
+    public List<Item> dropLoot() {
+        List<Item> loot = new ArrayList<Item>();
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (oneRingChance < 3) {
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            loot.add(theOneRing);
+        }
+        return loot;
     }
 
     @Override

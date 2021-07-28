@@ -81,8 +81,6 @@ public class LoopManiaWorld {
 
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
-    // A doggie coin.
-    private DoggieCoin doggieCoin = null;
 
     /**
      * create the world (constructor)
@@ -409,10 +407,7 @@ public class LoopManiaWorld {
                 boss = false;
                 if (e instanceof ElanMuske) {
                     doggieCoinMarket.setElanAlive(false);
-                } else if (e instanceof Doggie) {
-                    Pair<Integer, Integer> firstAvailableSlot = getFirstSlotRemoveIfFull();
-                    doggieCoin = new DoggieCoin(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()), doggieCoinMarket);
-                }
+                } 
             }
             killEnemy(e);
         }
@@ -428,19 +423,9 @@ public class LoopManiaWorld {
         if (cardEntities.size() >= getWidth()){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
             // TODO may have to edit payout based on what is being deleted
-            payout();
+            payoutItem();
             removeCard(0);
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
 
-            // Give the character gold, exp or a random weapon.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
-            } else {
-                loadRandomItem();
-            }
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -454,18 +439,10 @@ public class LoopManiaWorld {
         // if adding more cards than have, remove the first card...
         if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
             // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            payoutCard();
             removeItemByPositionInUnequippedInventoryItems(0);
 
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-            // Give the character gold, exp or a random card.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
-            } else {
-                loadRandomCard();
-            }
+            
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -498,7 +475,7 @@ public class LoopManiaWorld {
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
             // give some cash/experience rewards for the discarding of the oldest sword
-            payout();
+            payoutCard();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
         return firstAvailableSlot;
@@ -885,12 +862,29 @@ public class LoopManiaWorld {
         return this.unequippedInventoryItems;
     }
 
-    public void payout() {
-        if (new Random().nextInt(100) >= 85) {
-            character.addGold(new Random().nextInt(90)+10);
+    public void payoutItem() {
+        int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+        // Give the character gold, exp or a random weapon.
+        if (randomLoot == 0) {
+            character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+        } else if (randomLoot == 1) {
+            int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+            character.addExperience(randomExp);
+        } else {
+            loadRandomItem();
         }
-        if (new Random().nextInt(100) >= 50) {
-            character.addExperience(new Random().nextInt(20)+10);
+    }
+
+    public void payoutCard() {
+        int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+        // Give the character gold, exp or a random weapon.
+        if (randomLoot == 0) {
+            character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+        } else if (randomLoot == 1) {
+            int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+            character.addExperience(randomExp);
+        } else {
+            loadRandomCard();
         }
     }
 

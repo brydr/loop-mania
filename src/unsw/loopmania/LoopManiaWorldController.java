@@ -469,6 +469,7 @@ public class LoopManiaWorldController {
         Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
         item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
         item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
+        world.addUnequippedItem(item);
         onLoad(item);
     }
 
@@ -493,15 +494,17 @@ public class LoopManiaWorldController {
             loadRandomBasicItem();
         }
 
-        if (oneRingChance < 3) {
-            Pair<Integer, Integer> firstAvailableSlot = world.getFirstAvailableSlotForItem();
-            if (firstAvailableSlot == null){
-                // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
-                // TODO = give some cash/experience rewards for the discarding of the oldest sword
-                world.removeItemByPositionInUnequippedInventoryItems(0);
-                firstAvailableSlot = world.getFirstAvailableSlotForItem();
-            }
-            loadTheOneRing();
+        List<Item> droppedLoot = enemy.dropLoot();
+
+        for (Item drops : droppedLoot) {
+            world.getFirstSlotRemoveIfFull();
+            loadItem(drops);
+        }
+
+        if (enemy instanceof Doggie) {
+            Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
+            DoggieCoin doggieCoin = new DoggieCoin(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()), world.getDoggieCoinMarket());
+            loadItem(doggieCoin);
         }
     }
 
