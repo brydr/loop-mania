@@ -23,6 +23,7 @@ public class Character extends MovingEntity {
     private final static int MAX_HP = 200;
     private boolean attackTwice;
     private int stunned;
+    private int bossesKilled;
 
     public Character(PathPosition position) {
         super(position);
@@ -53,6 +54,15 @@ public class Character extends MovingEntity {
     public void setStunned(int stunned) {
         this.stunned = stunned;
     }
+
+    public int getBossesKilled() {
+        return bossesKilled;
+    }
+
+    public void addBossKilled() {
+        this.bossesKilled++;
+    }
+
     public boolean getAttackTwice() {
         return attackTwice;
     }
