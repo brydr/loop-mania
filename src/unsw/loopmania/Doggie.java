@@ -5,17 +5,16 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.beans.property.SimpleIntegerProperty;
-
-public class Slug extends BasicEnemy {
-    public static final int STARTING_HP = 30;
-    public Slug(PathPosition position) {
+public class Doggie extends BossEnemy {
+    int stunChance;
+    public Doggie(PathPosition position) {
         super(position);
-        this.setAttack(3);
-        this.setHp(STARTING_HP);
+        this.setAttack(20);
+        this.setHp(400);
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);
-        this.setExperienceGain(10);
+        this.setExperienceGain(400);
     }
 
     @Override
@@ -34,18 +33,14 @@ public class Slug extends BasicEnemy {
     }
 
     @Override
-    public void setHp(int hp) {
-        if (hp > STARTING_HP) {
-            this.hp.setValue(STARTING_HP);
-        } else {
-            this.hp.setValue(hp);
-        }
-    }
-
-    @Override
     public void attack(Character character) {
+        int stunChance = (new Random()).nextInt(10);    // A random number between 0 and 9.
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);
+        // Stun the character at a 10% chance.
+        if (stunChance == 0) {
+            character.setStunned(3);
+        }
     }
 
     @Override
@@ -59,9 +54,16 @@ public class Slug extends BasicEnemy {
         return loot;
     }
 
+    // Used for testing.
+    public void stunAttack(Character character) {
+        int attackPower = this.getAttack();
+        character.takeDamage(attackPower);
+        character.setStunned(3);
+    }
+
     @Override
     public String getImage() {
-        String slugImage = "src/images/slug.png";
+        String slugImage = "src/images/doggie.png";
         return slugImage;
     }
 }

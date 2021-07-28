@@ -51,12 +51,12 @@ public class Shop {
 	}
 
 	/**
-	 * Gets a list of the shop's inventory. Caller shouldn't try to mutate the list
+	 * Gets the shop's inventory
 	 *
-	 * @return Shop's inventory
+	 * @return An immutable list containing the shop's inventory
 	 */
 	public List<BasicItem> getInventory() {
-		return this.inventory;
+		return List.copyOf(this.inventory);
 	}
 
 	/**

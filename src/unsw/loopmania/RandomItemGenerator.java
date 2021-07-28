@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 public class RandomItemGenerator {
     static final int N_ITEM_VARIANTS = 7;
 
-    private Random randomGenerator;
+    private final Random randomGenerator;
 
     /**
      * Construct a new RandomCardGenerator object

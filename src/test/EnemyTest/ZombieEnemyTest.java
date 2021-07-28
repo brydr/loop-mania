@@ -74,7 +74,7 @@ public class ZombieEnemyTest {
         AlliedSoldier alliedSoldier = new AlliedSoldier(pos);
         c.addAlliedSoldier(alliedSoldier);
 
-        zombie.attack(c);
+        zombie.criticalBiteAttack(c);
 
         assertTrue(c.getListAlliedSoldiers().size() == 0);  // The allied soldier should be removed since it has transformed.
     }

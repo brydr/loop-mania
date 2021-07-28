@@ -17,11 +17,11 @@ public class AlliedSoldier extends MovingEntity {
     }
 
     // constructor for when enemy is put in trance
-    public AlliedSoldier(PathPosition pos, Duration tranceTime, BasicEnemy oldEnemy) {
+    public AlliedSoldier(PathPosition pos, Duration tranceTime, Enemy oldEnemy) {
         super(pos);
         this.setHp(oldEnemy.getHp());
         this.tranceTime = tranceTime;
-        this.oldEnemy = oldEnemy;
+        this.oldEnemy = (BasicEnemy) oldEnemy;
     }
 
     public BasicEnemy getOldEnemy() {
@@ -58,7 +58,7 @@ public class AlliedSoldier extends MovingEntity {
      * @param enemy, enemy to be attacked
      * outputs damage to given enemy
      */
-    public void attack(BasicEnemy enemy) {
+    public void attack(Enemy enemy) {
         enemy.takeDamage(ATTACK_DAMAGE);
     }
 
