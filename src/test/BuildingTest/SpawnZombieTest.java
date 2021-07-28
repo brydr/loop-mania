@@ -11,11 +11,11 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.Zombie;
 import unsw.loopmania.Character;
+import unsw.loopmania.Enemy;
 import unsw.loopmania.GoalEvaluator;
 import unsw.loopmania.ZombiePitBuilding;
 
@@ -47,7 +47,7 @@ public class SpawnZombieTest {
         world.runTickMoves();
         assertEquals(world.getEnemies().size(), 2);
                 
-        List<BasicEnemy> enemies = world.getEnemies();
+        List<Enemy> enemies = world.getEnemies();
         assertTrue(enemies.get(0) instanceof Zombie);
         assertTrue(enemies.get(1) instanceof Zombie);
     }

@@ -11,7 +11,7 @@ public abstract class Weapon extends EquippableItem implements WeaponStrategy {
 		this.attackPower = attackPower;
 	}
 
-	public int getDamage(BasicEnemy enemy) {
+	public int getDamage(Enemy enemy) {
 		return attackPower;
 	}
 
