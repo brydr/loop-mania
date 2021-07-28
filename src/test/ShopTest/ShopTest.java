@@ -236,7 +236,7 @@ public class ShopTest {
 		List<BasicItem> inventory = shop.getInventory();
 
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
-			assertTrue(itemGenerator.nextItem(0, 0).getClass().equals(inventory.get(i).getClass()));
+			assertTrue(itemGenerator.nextBasicItem(0, 0).getClass().equals(inventory.get(i).getClass()));
 		}
 	}
 }

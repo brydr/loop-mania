@@ -27,6 +27,8 @@ public class LoopManiaWorld {
     public static final int unequippedInventoryHeight = 4;
     public static final int numBasicItems = 7;
 
+    // This is bad but it's necessary for added items to appear in the front end
+    private LoopManiaWorldController controller;
     /**
      * width of the world in GridPane cells
      */
@@ -51,6 +53,8 @@ public class LoopManiaWorld {
 
     private List<Card> cardEntities;
 
+    // The unequipped inventory of the character
+    // This shouldn't be added to directly, call addUnequippedItem() instead
     private List<Item> unequippedInventoryItems;
 
     private List<Building> buildingEntities;
@@ -103,6 +107,10 @@ public class LoopManiaWorld {
         nextCycle = false;
         worldPathLoot = new ArrayList<>();
         goalComplete = new SimpleBooleanProperty(false);
+    }
+
+    public void setController(LoopManiaWorldController controller) {
+        this.controller = controller;
     }
 
     public int getWidth() {
@@ -385,21 +393,24 @@ public class LoopManiaWorld {
     public Card loadRandomCard(){
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            // Cards full case
             // TODO may have to edit payout based on what is being deleted
-            payout();
-            removeCard(0);
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-
-            // Give the character gold, exp or a random weapon.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
+            // removeCard(0);
+            if (new Random().nextDouble() < 1. / 3) {
+                loadRandomBasicItem();
             } else {
-                loadRandomItem();
+                payout();
             }
+            // Give the character gold, exp or a random weapon.
+            // if (randomLoot == 0) {
+            //     character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+            // } else if (randomLoot == 1) {
+            //     int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+            //     character.addExperience(randomExp);
+            // } else {
+            //     loadRandomItem();
+            // }
+            removeCard(0);
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -409,29 +420,26 @@ public class LoopManiaWorld {
         return randCard;
     }
 
-    public Item loadRandomItem(){
-        // if adding more cards than have, remove the first card...
-        if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
-            removeItemByPositionInUnequippedInventoryItems(0);
+    public void loadRandomBasicItem() {
+        // if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
+        //     removeItemByPositionInUnequippedInventoryItems(0);
 
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-            // Give the character gold, exp or a random card.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
-            } else {
-                loadRandomCard();
-            }
-        }
+        //     int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
+        //     // Give the character gold, exp or a random card.
+        //     if (randomLoot == 0) {
+        //         character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
+        //     } else if (randomLoot == 1) {
+        //         int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
+        //         character.addExperience(randomExp);
+        //     } else {
+        //         // FIXME Possible infinite loop here lol, and full items shouldn't give card according to spec
+        //         loadRandomCard();
+        //     }
+        // }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Item item = new RandomItemGenerator().nextItem(unequippedInventoryItems.size(), 0);
-
-        unequippedInventoryItems.add(item);
-        return item;
+        // 0, 0 is fine as addUnequippedItem() sets them correctly later
+        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
     }
 
 
@@ -464,12 +472,20 @@ public class LoopManiaWorld {
     }
 
     /**
-     * spawn an item in the world and return the item entity
+     * Adds an item to the character's unequipped inventory in both the frontend and backend.
+     * Handles removing an item and adding gold and XP when the inventory is full.
+     * Overrides the item's X and Y to the next free inventory slot.
+     * This function calls onLoad() in the controller.
+     *
+     * @param item The item to be added
      * @return an item to be spawned in the controller as a JavaFX node
-     * @pre unequippedInventoryItems isn't full (getFirstSlotRemoveIfFull should be run before creating item for this method)
      */
-    public void addUnequippedItem(Item item){
+    public void addUnequippedItem(Item item) {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstSlotRemoveIfFull();
+        item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
+        item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
         unequippedInventoryItems.add(item);
+        controller.onLoad(item);
     }
 
 
@@ -583,36 +599,37 @@ public class LoopManiaWorld {
         equippedInventoryItems.remove(item);
     }
 
-    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-        Random randomGenerator = new Random();
-        BasicItem newItem;
-        int numBasicItems = 7;
-        switch (randomGenerator.nextInt(numBasicItems)) {
-            case 0:
-                newItem = new HealthPotion(x, y);
-                break;
-            case 1:
-                newItem = new Staff(x, y);
-                break;
-            case 2:
-                newItem = new Stake(x, y);
-                break;
-            case 3:
-                newItem = new Sword(x, y);
-                break;
-            case 4:
-                newItem = new Armour(x, y);
-                break;
-            case 5:
-                newItem = new Shield(x, y);
-                break;
-            case 6:
-                newItem = new Helmet(x, y);
-                break;
-            default: throw new RuntimeException("Can't generate random item");
-        }
-        unequippedInventoryItems.add(newItem);
-        return newItem;
+    public void addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
+        // REVIEW why do we have this case statement here when we have a random item generator class
+        // Random randomGenerator = new Random();
+        // BasicItem newItem;
+        // int numBasicItems = 7;
+        // switch (randomGenerator.nextInt(numBasicItems)) {
+        //     case 0:
+        //         newItem = new HealthPotion(x, y);
+        //         break;
+        //     case 1:
+        //         newItem = new Staff(x, y);
+        //         break;
+        //     case 2:
+        //         newItem = new Stake(x, y);
+        //         break;
+        //     case 3:
+        //         newItem = new Sword(x, y);
+        //         break;
+        //     case 4:
+        //         newItem = new Armour(x, y);
+        //         break;
+        //     case 5:
+        //         newItem = new Shield(x, y);
+        //         break;
+        //     case 6:
+        //         newItem = new Helmet(x, y);
+        //         break;
+        //     default: throw new RuntimeException("Can't generate random item");
+        // }
+        BasicItem item = new RandomItemGenerator().nextBasicItem(0, 0);
+        addUnequippedItem(item);
     }
 
 
@@ -630,7 +647,7 @@ public class LoopManiaWorld {
      * get the first pair of x,y coordinates which don't have any items in it in the unequipped inventory
      * @return x,y coordinate pair
      */
-    public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
+    private Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y = 0; y < unequippedInventoryHeight; y++){
@@ -817,10 +834,10 @@ public class LoopManiaWorld {
 
     public void payout() {
         if (new Random().nextInt(100) >= 85) {
-            character.addGold(new Random().nextInt(90)+10);
+            character.addGold(new Random().nextInt(91)+10);
         }
         if (new Random().nextInt(100) >= 50) {
-            character.addExperience(new Random().nextInt(20)+10);
+            character.addExperience(new Random().nextInt(21)+10);
         }
     }
 

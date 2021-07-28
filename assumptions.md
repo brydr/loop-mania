@@ -79,7 +79,7 @@
 # Payouts: Defeated Enemies, Excess Items/Cards
 * Items include the sword, stake, staff, armour, shield, helmet and health potion.
 * When there are too many items **AND** cards, and an item/card is destroyed, the user will receive either experience or gold with a 50/50 chance.
-* When there are **too many items**, a user will receive either a card, or experience, or gold - with a 1 in 3 chance of either.
+* When there are **too many items**, a user will receive either experience, or gold - with a 1 in 2 chance of either.
 * When there are **too many cards**, a user will receive either an item, or experience, or gold - with a 1 in 3 chance of either.
 * When an **enemy is defeated**, a user will receive either gold, an item, or a card - with a 1 in 3 chance of either. They are guaranteed to receive experience.
 * Gold Payout:
