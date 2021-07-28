@@ -184,6 +184,7 @@ public class LoopManiaWorldController {
      */
     private MenuSwitcher mainMenuSwitcher;
 
+    private static final String grassAndDirt = "src/images/32x32GrassAndDirtPath.png";
 
     // /**
     //  * Object handling switching to the shop
@@ -217,9 +218,7 @@ public class LoopManiaWorldController {
 
     @FXML
     public void initialize() {
-        // TODO = load more images/entities during initialization
-
-        Image pathTilesImage = new Image((new File("src/images/32x32GrassAndDirtPath.png")).toURI().toString());
+        Image pathTilesImage = new Image((new File(grassAndDirt)).toURI().toString());
         Image inventorySlotImage = new Image((new File("src/images/empty_slot.png")).toURI().toString());
         Rectangle2D imagePart = new Rectangle2D(0, 0, 32, 32);
 
@@ -227,6 +226,7 @@ public class LoopManiaWorldController {
         for (int x = 0; x < world.getWidth(); x++) {
             for (int y = 0; y < world.getHeight(); y++) {
                 ImageView groundView = new ImageView(pathTilesImage);
+                groundView.setId(grassAndDirt);
                 groundView.setViewport(imagePart);
                 squares.add(groundView, x, y);
             }
@@ -583,7 +583,7 @@ public class LoopManiaWorldController {
      */
     private void onLoad(Card card) {
         ImageView view = new ImageView(new Image((new File(card.getImage())).toURI().toString()));
-
+        view.setId(card.getImage());
         // FROM https://stackoverflow.com/questions/41088095/javafx-drag-and-drop-to-gridpane
         // note target setOnDragOver and setOnDragEntered defined in initialize method
         addDragEventHandlers(view, DRAGGABLE_TYPE.CARD, cards, squares);
@@ -600,7 +600,7 @@ public class LoopManiaWorldController {
      */
     private void onLoad(Item item) {
         ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
-
+        view.setId(item.getImage());
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
         addEntity(item, view);
         unequippedInventory.getChildren().add(view);
@@ -637,6 +637,7 @@ public class LoopManiaWorldController {
      */
     private void onLoad(Building building){
         ImageView view = new ImageView(new Image((new File(building.getImage())).toURI().toString()));
+        view.setId(building.getImage());
         addEntity(building, view);
         squares.getChildren().add(view);
     }
@@ -903,8 +904,10 @@ public class LoopManiaWorldController {
                             if (currentlyDraggedType == draggableType){
                             //The drag-and-drop gesture entered the target
                             //show the user that it is an actual gesture target
-                                if(event.getGestureSource() != n && event.getDragboard().hasImage()){
-                                    n.setOpacity(0.7);
+                                if(event.getGestureSource() != n && event.getDragboard().hasImage() && checkSameCell(currentlyDraggedImage.getId(), n.getId())){
+                                    System.out.println("\n\nopacity\n\n");
+                                    System.out.println(event.getDragboard().getImage());
+                                    n.setOpacity(0.4);
                                 }
                             }
 
@@ -928,6 +931,33 @@ public class LoopManiaWorldController {
             }
 
         });
+    }
+
+    // checks if dragged item can be placed in target node
+    public boolean checkSameCell(String draggedId, String targetId) {
+        // check null for when slot is already filled with another image, no need to set opacity
+        if (targetId == null) return false;
+        if (draggedId.equals("src/images/shield.png") && targetId.equals("shieldCell")) return true;
+        else if (draggedId.equals("src/images/helmet.png") && targetId.equals("helmetCell")) return true;
+        else if (draggedId.equals("src/images/the_one_ring.png") && targetId.equals("rareItemCell")) return true;
+        else if (draggedId.equals("src/images/brilliant_blue_new.png") && targetId.equals("potionCell")) return true;
+        else if (draggedId.equals("src/images/armour.png") && targetId.equals("armourCell")) return true;
+        else if (draggedId.equals("src/images/basic_sword.png") && targetId.equals("swordCell")) return true;
+        else if (draggedId.equals("src/images/stake.png") && targetId.equals("swordCell")) return true;
+        else if (draggedId.equals("src/images/staff.png") && targetId.equals("swordCell")) return true;
+        else if ((draggedId.equals("src/images/trap_card.png")
+                || (draggedId.equals("src/images/village_card.png"))
+                || (draggedId.equals("src/images/barracks_card.png")))
+                && targetId.equals(LoopManiaWorldControllerLoader.pathTile))
+            return true;
+        else if ((draggedId.equals("src/images/campfire_card.png")
+                || (draggedId.equals("src/images/tower_card.png"))
+                || (draggedId.equals("src/images/vampire_castle_card.png"))
+                || (draggedId.equals("src/images/zombie_pit_card.png")))
+                && targetId.equals(grassAndDirt))
+            return true;
+        // otherwise
+        return false;
     }
 
     /**
@@ -956,22 +986,20 @@ public class LoopManiaWorldController {
      */
     @FXML
     public void handleKeyPress(KeyEvent event) {
-        // TODO = handle additional key presses, e.g. for consuming a health potion
         switch (event.getCode()) {
-            case SPACE:
-                if (isPaused){
-                    startTimer();
-                }
-                else{
-                    pause();
-                }
-                break;
-            case Q:
-                useHealthPotion(equippedItems);
-                //TODO implement consumehealthpotion in backend as well as removing item in frontend
-                break;
-            default:
-                break;
+        case SPACE:
+            if (isPaused){
+                startTimer();
+            }
+            else{
+                pause();
+            }
+            break;
+        case Q:
+            useHealthPotion(equippedItems);
+            break;
+        default:
+            break;
         }
 
     }
@@ -1113,10 +1141,12 @@ public class LoopManiaWorldController {
 
         // Add empty potion back to gridPane
         // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
-        final Image emptyPotionSlot = new Image(
+        final ImageView emptyPotionSlot = new ImageView(
+            new Image(
             new File("src/images/potion_slot.png").toURI().toString()
-        );
-        gridPane.add(new ImageView(emptyPotionSlot), 1, 1);
+        ));
+        emptyPotionSlot.setId("potionCell");
+        gridPane.add(emptyPotionSlot, 1, 1);
         Node newNode = getNodeFromGridPane(gridPane, 1, 1);
         newNode.setId("potionCell");
     }
