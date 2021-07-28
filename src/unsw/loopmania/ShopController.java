@@ -43,8 +43,8 @@ public class ShopController {
 		this.market = world.getDoggieCoinMarket();
 		shop = new Shop(world, strategy);
 		updateGridPanes();
-		world.getCharacter().addGold(100000000);
 		drawChart();
+		world.getCharacter().addGold(100000000); // FIXME remove for final product
 	}
 
 	private void drawChart() {

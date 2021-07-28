@@ -37,7 +37,7 @@ public class runBattlesTest {
         List<BasicEnemy> deadEnemies = newWorld.runBattles();
 
         assertTrue(deadEnemies.get(0) instanceof Slug);  
-        assertTrue(c.getHp() == 55);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
+        assertTrue(c.getHp() == 155);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
     // Test if the supporting enemies die.
@@ -58,7 +58,7 @@ public class runBattlesTest {
 
         assertTrue(deadEnemies.get(0) instanceof Slug);  
         assertTrue(deadEnemies.get(1) instanceof Slug); 
-        assertTrue(c.getHp() == 10);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
+        assertTrue(c.getHp() == 110);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
     // There should be no fight between the slug and character since it is out of the slugs battle radius.
@@ -78,7 +78,7 @@ public class runBattlesTest {
 
         assertTrue(deadEnemies.size() == 0);   
 
-        assertTrue(c.getHp() == 100);   
+        assertTrue(c.getHp() == 200);   
     }
 
     @Test
@@ -99,7 +99,7 @@ public class runBattlesTest {
 
         assertTrue(deadEnemies.get(0) instanceof Slug); 
 
-        assertTrue(c.getHp() == 100);   
+        assertTrue(c.getHp() == 200);   
         // Since it is assumed soldiers are equipped with a sword they will deal 8 damage. The character without weapons will deal 2 damage.
         // Therefore, in total they will deal 10 damage to the slug each attack and therefore there will only be 3 attacks in total.
         // The slug deals 3 damage so the allied soldier must have taken 9 damage and allied soldiers have 50 hp.
@@ -128,13 +128,25 @@ public class runBattlesTest {
 
         newWorld.runBattles();
 
-        while (newWorld.getEnemies().size() == 0) { // The third slug should kill the character.
+        while (newWorld.getEnemies().size() == 0) { 
             newWorld.possiblySpawnEnemies();
         }   
 
         newWorld.runBattles();
 
-        assertTrue(c.getHp() == -2);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
+        while (newWorld.getEnemies().size() == 0) { 
+            newWorld.possiblySpawnEnemies();
+        }   
+
+        newWorld.runBattles();
+
+        while (newWorld.getEnemies().size() == 0) {     // 5th slug should kill the character.
+            newWorld.possiblySpawnEnemies();
+        }   
+
+        newWorld.runBattles();
+
+        assertTrue(c.getHp() == -1);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
     @Test
@@ -156,7 +168,7 @@ public class runBattlesTest {
         newWorld.runBattles();         
         // If the enemy got tranced on the first attack then it should have only been able to deal 3 damage since it is a slug.
         // The enemy will then die since If the fight ends whilst the enemy is in a trance, the enemy dies.
-        assertTrue(c.getHp() == 97);  
+        assertTrue(c.getHp() == 197);  
     }
 
     @Test
@@ -182,12 +194,12 @@ public class runBattlesTest {
         // Now there is a zombie with 30 - 16 health and the newly created zombie with 50 - 6 health, 14 and 44 hp respectively.
         // For the rest of the fight the character should be alone since it has no allied soldiers now.
         // Since the first zombie has 14 hp it will take the character 2 rounds to kill it taking a total damage of 6 * 2 = 12.
-        // The characters hp is now 100 - 12 = 88.
+        // The characters hp is now 200 - 12 = 188.
         // The second zombie has 44 hp so it will take 6 rounds to kill it taking a total damage of 6 * 6 = 36.
-        // Therefore the character in the end should have 52 hp at the end.
+        // Therefore the character in the end should have 152 hp at the end.
         newWorld.runBattles(); 
 
-        assertTrue(c.getHp() == 52);   
+        assertTrue(c.getHp() == 152);   
     }
 
 

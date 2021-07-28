@@ -54,7 +54,7 @@ public class SlugEnemyTest {
 
         slug.attack(c);
 
-        assertEquals(c.getHp(), 97);
+        assertEquals(c.getHp(), 197);
 
         slug.takeDamage(5);
 

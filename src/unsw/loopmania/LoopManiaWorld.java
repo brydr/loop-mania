@@ -55,6 +55,12 @@ public class LoopManiaWorld {
 
     private List<Building> buildingEntities;
 
+    private List<EnemySpawner> buildingSpawners;
+
+    private List<BuildingHelpers> buildingHelpers;
+
+    private List<BuildingAttackers> buildingAttackers;
+
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
      */
@@ -245,6 +251,7 @@ public class LoopManiaWorld {
      * @return list of enemies which have been killed
      */
     public List<BasicEnemy> runBattles() {
+        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code
         // TODO = modify this - currently the character automatically wins all battles without any damage!
         List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
         List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
@@ -286,6 +293,23 @@ public class LoopManiaWorld {
 
             while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
+
+                int outputDamage = character.getEquippedWeapon().getDamage(e);
+                // reduce player damage by 15% if helmet equipped
+                if (character.getEquippedHelmet() != null)
+                    outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
+
+                // If the character is next to a campfire, it will attack twice.
+                if (character.getAttackTwice()) {
+                    e.takeDamage(outputDamage);
+                }
+                // Add logic so the tower attacks too if in range.
+                for (Building building : buildingEntities) {
+                    if (building instanceof TowerBuilding) {
+                        BuildingAttackers buildingAttacker = (BuildingAttackers) building;
+                        buildingAttacker.attackEnemy(e);
+                    }
+                }
                 e.attack(character);    // Attacks allies first.
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {
@@ -340,6 +364,7 @@ public class LoopManiaWorld {
         // If the fight ends whilst the enemy is in a trance, the enemy dies.
         for (AlliedSoldier transedEnemy : transformedEnemies) {
             transedEnemy.reactivateOldEnemy();
+            character.removeAlliedSoldier(transedEnemy);    // Remove the ally from the character ally list.
             BasicEnemy oldEnemy = transedEnemy.getOldEnemy();
             defeatedEnemies.add(oldEnemy);
         }
@@ -447,12 +472,117 @@ public class LoopManiaWorld {
         unequippedInventoryItems.add(item);
     }
 
+
     /**
-     * spawn a random BasicItem (no rare items)
-     * All items have equal chance of spawn
-     * used when enemies defeated or card destroyed
-     * @return BasicItem to be spawned in the controller as a JavaFX node
+     * remove an item by x,y coordinates
+     * @param x x coordinate from 0 to width-1
+     * @param y y coordinate from 0 to height-1
      */
+    public void removeUnequippedInventoryItemByCoordinates(int x, int y){
+        Item item = getUnequippedItemTypeByCoordinates(x, y);
+        removeUnequippedInventoryItem(item);
+    }
+
+    /**
+     * run moves which occur with every tick without needing to spawn anything immediately
+     * @return Whether the character is back at the castle
+     */
+    public boolean runTickMoves(){
+        nextCycle = false;
+
+        // Initialise firstPath
+        if (firstPath == null) {
+            final PathPosition charPos = character.getPosition();
+            firstPath = new PathPosition(charPos.getCurrentPositionInPath(), charPos.getOrderedPath());
+        }
+
+        GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
+
+        if (GoalEvaluator.evaluate(finalGoal) == true) {
+            // Character achieved all goals
+            goalComplete.setValue(true);
+        }
+        character.moveDownPath();
+        character.setAlliedSoldierNum();
+
+        if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
+            character.addCycles();
+            nextCycle = true;
+        }
+
+        List<Building> buildingToRemove = new ArrayList<>();
+        // Do all functionality of helper buildings.
+        for (Building building : buildingEntities) {
+            // If the building is a helperBuilding then call its helpChar function.
+            if (building instanceof BuildingHelpers) {
+                BuildingHelpers buildingHelper = (BuildingHelpers) building;
+                buildingHelper.helpChar(character);
+            // If the building is a spawner then call its spawn function.
+            } else if (building instanceof EnemySpawner) {
+                EnemySpawner enemySpawner = (EnemySpawner) building;
+                if (enemySpawner.spawn(nextCycle)) {
+                    var orderedPath = getOrderedPath();
+                    Pair<Integer, Integer> spawnLoc = getNearestPathTile(building.getX(), building.getY());
+                    int buildingPosIndex = orderedPath.indexOf(spawnLoc);
+
+                    PathPosition pos = new PathPosition(buildingPosIndex, orderedPath);
+
+                    BasicEnemy enemy = enemySpawner.spawnEnemy(pos);
+
+                    enemies.add(enemy);
+                }
+            } else if (building instanceof TrapBuilding) {
+                BuildingAttackers buildingAttacker = (BuildingAttackers) building;
+                // Loop through all enemies and make the trap deal damage to them.
+                List<BasicEnemy> killedEnemies = new ArrayList<>();
+                for (BasicEnemy e: enemies) {
+                    buildingAttacker.attackEnemy(e);
+                    if (e.getHp() <= 0) {
+                        killedEnemies.add(e);
+                    }
+                    if (!building.shouldExist().get()) {
+                        buildingToRemove.add(building);
+                    }
+                }
+
+                for (BasicEnemy e: killedEnemies) {
+                    killEnemy(e);
+                }
+            }
+        }
+        for (Building buildingRemove : buildingToRemove) {
+            buildingEntities.remove(buildingRemove);
+        }
+        moveBasicEnemies();
+        doggieCoinMarket.tickPrice();
+
+        return nextCycle;
+    }
+
+    /**
+     * remove an item from the unequipped inventory
+     * @param item item to be removed
+     */
+    public void removeUnequippedInventoryItem(Entity item){
+        item.destroy();
+        unequippedInventoryItems.remove(item);
+    }
+
+    public Entity getEquippedInventoryItemEntityByCoordinates(int x, int y){
+        for (Entity e: equippedInventoryItems){
+            if ((e.getX() == x) && (e.getY() == y)){
+                return e;
+            }
+        }
+        // else - no Entity found
+        return null;
+    }
+
+    private void removeEquippedInventoryItem(Entity item){
+        item.destroy();
+        equippedInventoryItems.remove(item);
+    }
+
     public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         Random randomGenerator = new Random();
         BasicItem newItem;
@@ -487,107 +617,6 @@ public class LoopManiaWorld {
 
 
     /**
-     * remove an item by x,y coordinates
-     * @param x x coordinate from 0 to width-1
-     * @param y y coordinate from 0 to height-1
-     */
-    public void removeUnequippedInventoryItemByCoordinates(int x, int y){
-        Entity item = getUnequippedInventoryItemEntityByCoordinates(x, y);
-        removeUnequippedInventoryItem(item);
-    }
-
-    /**
-     * run moves which occur with every tick without needing to spawn anything immediately
-     */
-    public boolean runTickMoves(){
-        nextCycle = false;
-        if (firstPath == null) {
-            firstPath = character.getPosition();
-            firstPath = new PathPosition(firstPath.getCurrentPositionInPath(), firstPath.getOrderedPath());
-        }
-
-        GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
-
-        if (GoalEvaluator.evaluate(finalGoal) == true) {
-            // Character achieved all goals
-            goalComplete.setValue(true);
-        }
-        character.moveDownPath();
-
-        if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
-            character.addCycles();
-            nextCycle = true;
-        }
-        moveBasicEnemies();
-        possiblySpawnAlliedSoldiers();
-        applyTrapAttacks();
-        doggieCoinMarket.tickPrice();
-        return nextCycle;
-    }
-
-    /**
-     * If The Character is at a barracks, spawn an AlliedSoldier.
-     * @param item
-     */
-    public void possiblySpawnAlliedSoldiers() {
-        // NOTE = Currently there is a double check on the building matching the Character's position.
-        // We can decide which of these checks can be removed.
-        buildingEntities.parallelStream()
-            .filter(building -> building instanceof BarracksBuilding
-                && character.getX() == building.getX()
-                && character.getY() == building.getY())
-            .map(building -> (BarracksBuilding) building)
-            .forEach(barracks -> barracks.spawnAlliedSoldiers(character));
-    }
-
-    public void applyTrapAttacks() {
-        for (Building building : buildingEntities) {
-            if (building instanceof TrapBuilding) {
-                ((TrapBuilding)building).damageAnyEnemies(enemies);
-            }
-        }
-    }
-
-    /**
-     * remove an item from the unequipped inventory
-     * @param item item to be removed
-     */
-    public void removeUnequippedInventoryItem(Entity item){
-        item.destroy();
-        unequippedInventoryItems.remove(item);
-    }
-
-    /**
-     * return an unequipped inventory item by x and y coordinates
-     * assumes that no 2 unequipped inventory items share x and y coordinates
-     * @param x x index from 0 to width-1
-     * @param y y index from 0 to height-1
-     * @return unequipped inventory item at the input position
-     */
-    public Entity getUnequippedInventoryItemEntityByCoordinates(int x, int y){
-        for (Entity e: unequippedInventoryItems){
-            if ((e.getX() == x) && (e.getY() == y)){
-                return e;
-            }
-        }
-        return null;
-    }
-
-    public Entity getEquippedInventoryItemEntityByCoordinates(int x, int y){
-        for (Entity e: equippedInventoryItems){
-            if ((e.getX() == x) && (e.getY() == y)){
-                return e;
-            }
-        }
-        return null;
-    }
-
-    private void removeEquippedInventoryItem(Entity item){
-        item.destroy();
-        equippedInventoryItems.remove(item);
-    }
-
-    /**
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
      */
@@ -604,9 +633,9 @@ public class LoopManiaWorld {
     public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
-        for (int y=0; y<unequippedInventoryHeight; y++){
-            for (int x=0; x<unequippedInventoryWidth; x++){
-                if (getUnequippedInventoryItemEntityByCoordinates(x, y) == null){
+        for (int y = 0; y < unequippedInventoryHeight; y++){
+            for (int x = 0; x < unequippedInventoryWidth; x++){
+                if (getUnequippedItemTypeByCoordinates(x, y) == null){
                     return new Pair<Integer, Integer>(x, y);
                 }
             }
@@ -619,7 +648,7 @@ public class LoopManiaWorld {
      * @param x x coordinate which can range from 0 to width-1
      */
     public void shiftCardsDownFromXCoordinate(int x){
-        for (Card c: cardEntities){
+        for (Card c : cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
             }
@@ -631,26 +660,9 @@ public class LoopManiaWorld {
      */
     public void moveBasicEnemies() {
         // TODO = expand to more types of enemy
-        for (BasicEnemy e: enemies){
+        for (BasicEnemy e : enemies){
             e.move();
         }
-    }
-
-    // Only public for testing purposes
-    // TODO = Revert to private visibility when cycle-complete triggers is implemented
-    public void spawnEnemies() {
-        for (Building building : buildingEntities) {
-            if (building instanceof EnemySpawner) {
-                EnemySpawner enemySpawner = (EnemySpawner) building;
-                enemySpawner.spawn(this);
-            }
-        }
-        /* // FP Alternative
-        buildingEntities.stream()
-            .filter(building -> building instanceof EnemySpawner)
-            .map(building -> (EnemySpawner) building)
-            .forEach(enemySpawner -> enemySpawner.spawn(this));
-        */
     }
 
     /**
@@ -679,10 +691,17 @@ public class LoopManiaWorld {
             Pair<Integer, Integer> spawnPosition = orderedPathSpawnCandidates.get(rand.nextInt(orderedPathSpawnCandidates.size()));
 
             return spawnPosition;
+        } else {
+            return null;
         }
-        return null;
     }
 
+    /**
+     * Gets the TileType (either a PathTile, PathAdjacentTile or NonPathTile) of the tile with co-ordinates (x, y).
+     * @param x x-coordinate of our subject tile
+     * @param y y-coordinate of our subject tile
+     * @return The correct {@code TileType}
+     */
     private TileType getTileType(final int x, final int y) {
         // TODO = See if this needs to become a checked/recoverable error
         assert (x < width) && (y < height);
@@ -713,7 +732,7 @@ public class LoopManiaWorld {
 
 
     /**
-     * remove a card by its x, y coordinates
+     * Remove a card by its x, y coordinates
      * @param cardNodeX x index from 0 to width-1 of card to be removed
      * @param cardNodeY y index from 0 to height-1 of card to be removed
      * @param buildingNodeX x index from 0 to width-1 of building to be added
@@ -721,23 +740,15 @@ public class LoopManiaWorld {
      * @return {@code Building} the building if successfully created, OR {@code null} if otherwise
      */
     public Building convertCardToBuildingByCoordinates(int cardNodeX, int cardNodeY, int buildingNodeX, int buildingNodeY) {
-        // Start by getting card
-        Card card = null;
-        for (Card c: cardEntities){
-            if ((c.getX() == cardNodeX) && (c.getY() == cardNodeY)){
-                card = c;
-                break;
-            }
-        }
-
-        // TODO = Replace above implementation with below
         // Other ideas: https://stackoverflow.com/questions/22694884/filter-java-stream-to-1-and-only-1-element
-        Card cardMatches = cardEntities.stream()
+        Card card = cardEntities.stream()
             .filter(c -> (c.getX() == cardNodeX) && (c.getY() == cardNodeY))
             .collect(CustomCollectors.toSingleton());
 
-        // Check that tile can be spawned here
-        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) || ((buildingNodeX == firstPath.getX().getValue()) && (buildingNodeY == firstPath.getY().getValue()))) {
+        // Building CANNOT be spawned here IF (tile is incorrect type) OR (tile is the firstPath)
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )
+            || (   buildingNodeX == firstPath.getX().getValue()
+                && buildingNodeY == firstPath.getY().getValue() )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
         };
@@ -764,7 +775,7 @@ public class LoopManiaWorld {
         // Start by getting card
         Item item = null;
         for (Item i: unequippedInventoryItems){
-            if ((i.getX() == itemNodeX) && (i.getY() == itemNodeY)){
+            if (i.getX() == itemNodeX && i.getY() == itemNodeY){
                 item = i;
                 break;
             }
@@ -781,7 +792,7 @@ public class LoopManiaWorld {
     }
 
     /**
-     * For a *path adjacent* tile, return the nearest path tile.
+     * For a *path adjacent* tile, return PathTile that is adjacent.
      * @param x x-coordinate of our path-adjacent tile
      * @param y y-coordinate of our path-adjacent tile
      * @throws NoSuchElementException if no adjacent Path tile.

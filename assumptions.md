@@ -2,7 +2,7 @@
 * The player has 100 HP of health.
 * All random variables have uniform probability distributions - e.g. the additional damage inflicted by a vampire attack.
 
-* Enemies will fight before *The Character* and allied soldiers. Allied soldiers strike, if any strike, then *The Character*, then any surviving enemies retaliate. The battle ends when either *The Character* or all enemies are killed.
+* *The Character*, then the allied soldiers, then the tower and then the enemies will attack. Allied soldiers strike, if any strike, then *The Character*, then any surviving enemies retaliate. The battle ends when either *The Character* or all enemies are killed.
 * The player must press <kbd>Q</kbd> for *The Character* to consume a health potion.
 * For each instance of the game where *The Character* moves from one tile to the next, there will be at most 1 battle with any enemy and any number of supporting enemies.
 
@@ -17,7 +17,7 @@
     * A player with a **sword** does 8 HP of damage.
 
 ## Health Potions
-* A health potion restores **30 HP** of health to *The Character*.
+* A health potion restores the health of *The Character* to 200.
 * A health potion has a 10% chance of dropping from defeating enemies.
 * Each path tile in the game has a 1% chance of a health potion spawning on them every time *The Character* completes a full cycle.
 
@@ -67,7 +67,7 @@
 * A **trap** deals 30 HP of damage.
 * A **tower** has a shooting radius of 4 units and deals 5 HP of damage.
 * A **campfire** battle radius is 3 units.
-* *The Character* regains 10 HP of health when passing through a **village**.
+* *The Character* regains 20 HP of health when passing through a **village**.
 * A **Zombie Pit** has a spawn radius of 1 unit and zombies will spawn on any path tiles within that radius.
 * A **Vampire Castle** has a spawn radius of 1 unit and vampires will spawn on any path tiles within that radius.
 

@@ -13,7 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class BattleResultsController {
-    private String enemyList;
+    private String enemyList = "";
     private int totalExp;
     private Integer characterHp;
     private int numEnemies[] = {0, 0, 0};
@@ -84,21 +84,27 @@ public class BattleResultsController {
 
     public String listToString() {
         if (numEnemies[0] > 0) {
-            enemyList = numEnemies[0] + " Slug";
+            enemyList = enemyList + numEnemies[0] + " Slug";
             if (numEnemies[0] > 1) {
                 enemyList = enemyList + "s\n";
+            } else {
+                enemyList = enemyList + "\n";
             }
         }
         if (numEnemies[1] > 0) {
-            enemyList = numEnemies[0] + " Vampire";
+            enemyList = enemyList + numEnemies[1] + " Vampire";
             if (numEnemies[1] > 1) {
                 enemyList = enemyList + "s\n";
+            } else {
+                enemyList = enemyList + "\n";
             }
         }
         if (numEnemies[2] > 0) {
-            enemyList = numEnemies[0] + " Zombie";
+            enemyList = enemyList + numEnemies[2] + " Zombie";
             if (numEnemies[2] > 1) {
                 enemyList = enemyList + "s\n";
+            } else {
+                enemyList = enemyList + "\n";
             }
         }
         return enemyList;

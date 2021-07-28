@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import org.javatuples.Pair;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 /**
@@ -16,37 +14,30 @@ public class VampireCastleBuilding extends Building implements EnemySpawner {
         super(x, y);
     }
 
+    @Override
     public String getImage() {
         String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
-        //String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
         return vampireCastleBuildingImage;
-    }
-    
-    /**
-     * Actually performs a spawn of a vampire, trigged by spawn(). 
-     * @param world A reference to the {@code LoopManiaWorld} instance.
-     */
-    private void doSpawn(LoopManiaWorld world) {
-        var orderedPath = world.getOrderedPath();
-        Pair<Integer, Integer> spawnLoc = world.getNearestPathTile(getX(), getY());
-        int buildingPosIndex = orderedPath.indexOf(spawnLoc);
-
-        Vampire newVampire = new Vampire(
-            new PathPosition(buildingPosIndex, orderedPath)
-        );
-        
-        world.addEnemies(newVampire);
     }
 
     @Override
-    public void spawn(LoopManiaWorld world) {
+    public boolean spawn(boolean isCycle) {
         // Increment spawn counter
-        spawnCounter++;
+        if (isCycle)
+            spawnCounter++;
+        
         if (spawnCounter == 5) {
-            // Spawn a Vampire
-            doSpawn(world);
             // Reset the counter
             spawnCounter = 0;
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    @Override
+    public BasicEnemy spawnEnemy(PathPosition pos) {
+        Vampire vampire = new Vampire(pos);
+        return (BasicEnemy) vampire;
     }
 }

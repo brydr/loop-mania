@@ -1,12 +1,11 @@
 package unsw.loopmania;
 
 import java.util.List;
-import java.time.Duration;
-
 import java.util.Random;
-public class Zombie extends BasicEnemy implements Undead {
 
+public class Zombie extends BasicEnemy implements Undead {
     private int criticalBiteChance;
+
     public Zombie(PathPosition position) {
         super(position);
         this.setAttack(6);
@@ -27,10 +26,10 @@ public class Zombie extends BasicEnemy implements Undead {
     @Override
     public void move() {
         // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
-        // This is implemented this way in case the user may add items that may stun the enemy causing it not to move. In that case the speed to can be set to the amount of rounds the
-        // enemy is stunned for.
+        // This is implemented this way in case the user may add items that may stun the enemy causing it not to move. 
+        // In that case the speed to can be set to the amount of rounds the enemy is stunned for.
         // This is also useful for implementing the speed for zombies since they are slow and require two ticks to move.
-        int speed = this.getSpeed();
+        final int speed = this.getSpeed();
         this.setSpeed(speed - 1);
 
         if (this.getSpeed() == 0) {
@@ -39,18 +38,8 @@ public class Zombie extends BasicEnemy implements Undead {
         } 
     }
 
-    public AlliedSoldier convertToFriendly(Character character) {
-        Random rand = new Random();
-        int tranceTime = rand.nextInt(18) + 3;  // Random number between 3 and 20 inclusive.
-        Duration tranceTimeDuration = Duration.ofSeconds(tranceTime);
-        AlliedSoldier transformedSoldier = new AlliedSoldier(this.getPosition(), tranceTimeDuration, this);
-        character.addAlliedSoldier(transformedSoldier);
-        this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
-        return transformedSoldier;
-    }
-
+    @Override
     public void attack(Character character) {
-
         int attackPower = this.getAttack();
         List<AlliedSoldier> alliedSoldiers = character.getListAlliedSoldiers();
         // If the character has allied soldiers it should attack them instead.
@@ -67,9 +56,10 @@ public class Zombie extends BasicEnemy implements Undead {
             character.takeDamage(attackPower);
         }
     }
-    
-    public void criticalBite() {   
 
+    @Override
+    public void criticalBite() {
+        // TODO
     }
 
     @Override

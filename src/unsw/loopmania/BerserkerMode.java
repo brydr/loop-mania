@@ -16,9 +16,8 @@ public class BerserkerMode implements ShopStrategy {
 		int protectiveGears = 0;
 
 		for (BasicItem item : purchaseHistory) {
-			if (item instanceof ProtectiveGear) {
+			if (item instanceof ProtectiveGear)
 				protectiveGears++;
-			}
 		}
 
 		return protectiveGears;

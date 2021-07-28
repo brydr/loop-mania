@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import org.javatuples.Pair;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class ZombiePitBuilding extends Building implements EnemySpawner {
@@ -17,13 +15,17 @@ public class ZombiePitBuilding extends Building implements EnemySpawner {
     }
 
     @Override
-    public void spawn(LoopManiaWorld world) {
-        var orderedPath = world.getOrderedPath();
-        Pair<Integer, Integer> spawnLoc = world.getNearestPathTile(getX(), getY());
-        int spawnLocIndex = orderedPath.indexOf(spawnLoc);
-        Zombie newZombie = new Zombie(
-            new PathPosition(spawnLocIndex, orderedPath)
-        );
-        world.addEnemies(newZombie);
+    public boolean spawn(boolean isCycle) {
+        if (isCycle) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public BasicEnemy spawnEnemy(PathPosition pos) {
+        Zombie zombie = new Zombie(pos);
+        return zombie;
     }
 }

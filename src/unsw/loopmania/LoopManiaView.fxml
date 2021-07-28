@@ -207,8 +207,8 @@
                   <CheckBox fx:id="goalComplete" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" />
                </children>
             </GridPane>
+            <Button fx:id="shopButton" mnemonicParsing="false" onAction="#openShop" text="Force open shop" />
          </children>
       </VBox>
    </HBox>
-   <Button fx:id="shopButton" layoutX="5.0" layoutY="279.0" mnemonicParsing="false" onAction="#openShop" text="Force open shop" />
 </AnchorPane>

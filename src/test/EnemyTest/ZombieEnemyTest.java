@@ -57,7 +57,7 @@ public class ZombieEnemyTest {
 
         zombie.attack(c);
 
-        assertEquals(c.getHp(), 94);
+        assertEquals(c.getHp(), 194);
 
         zombie.takeDamage(5);
 
