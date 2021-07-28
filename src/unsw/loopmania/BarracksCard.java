@@ -23,6 +23,4 @@ public class BarracksCard extends Card {
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathTile;
     }
-  
-    
 }

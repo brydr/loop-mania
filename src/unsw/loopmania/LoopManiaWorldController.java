@@ -191,6 +191,9 @@ public class LoopManiaWorldController {
     //  */
     // private MenuSwitcher shopSwitcher;
 
+    // Object handling playing audio
+    private AudioPlayer audioPlayer = new AudioPlayer();
+
 
     /**
      * @param world world object loaded from file
@@ -286,21 +289,22 @@ public class LoopManiaWorldController {
                 for (BasicEnemy e: defeatedEnemies){
                     reactToEnemyDefeat(e);
                 }
+                audioPlayer.playWinBattleSound();
                 runBattleResults(defeatedEnemies);
             }
             world.possiblySpawnEnemies();
             List<BasicEnemy> newEnemies = world.getEnemies();
-            for (BasicEnemy newEnemy: newEnemies){
+            for (BasicEnemy newEnemy : newEnemies){
                 onLoad(newEnemy);
             }
 
             List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
-            for (RandomPathLoot pathLoot: pickedUpLoot){
+            for (RandomPathLoot pathLoot : pickedUpLoot){
                 reactToLootPicked(pathLoot);
             }
 
             List<RandomPathLoot> newPathLoot = world.possiblyDropPathLoot();
-            for (RandomPathLoot pathLoot: newPathLoot){
+            for (RandomPathLoot pathLoot : newPathLoot){
                 onLoad(pathLoot);
             }
 
@@ -323,15 +327,14 @@ public class LoopManiaWorldController {
      * pause the execution of the game loop
      * the human player can still drag and drop items during the game pause
      */
-    public void pause(){
+    public void pause() {
         isPaused = true;
         System.out.println("pausing");
         timeline.stop();
     }
 
-    public void terminate(){
+    public void terminate() {
         pause();
-
     }
 
     /**
@@ -556,12 +559,19 @@ public class LoopManiaWorldController {
         Character character = world.getCharacter();
         int pickUpVal = randPathLoot.onPickUp();
 
-        // If they picked up gold.
         if (pickUpVal == 0) {
-            character.addGold(new Random().nextInt(91) + 10);   // Give the character a gold payout between 10 and 100 inclusive.
-        // If they picked up a potion.
+            // If they picked up gold.
+            // Give the character a gold payout between 10 and 100 inclusive.
+            final int goldPayout = 10 + new Random().nextInt(91);
+            character.addGold(goldPayout);
+            audioPlayer.playPickupGoldSound();
         } else if (pickUpVal == 1) {
+             // If they picked up a potion.
             loadHealthPotion();
+            audioPlayer.playPickupPotionSound();
+        } else {
+            // Something is broken
+            assert false;
         }
     }
 
@@ -654,40 +664,44 @@ public class LoopManiaWorldController {
         // for example, in the specification, villages can only be dropped on path, whilst vampire castles cannot go on the path
 
         gridPaneSetOnDragDropped.put(draggableType, new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
                 // TODO = for being more selective about where something can be dropped, consider applying additional if-statement logic
                 /*
                  *you might want to design the application so dropping at an invalid location drops at the most recent valid location hovered over,
                  * or simply allow the card/item to return to its slot (the latter is easier, as you won't have to store the last valid drop location!)
                  */
-                if (currentlyDraggedType == draggableType){
+                if (currentlyDraggedType == draggableType) {
                     // problem = event is drop completed is false when should be true...
                     // https://bugs.openjdk.java.net/browse/JDK-8117019
                     // putting drop completed at start not making complete on VLAB...
 
                     //Data dropped
                     //If there is an image on the dragboard, read it and use it
-                    Dragboard db = event.getDragboard();
-                    Node node = event.getPickResult().getIntersectedNode();
-                    if(node != targetGridPane && db.hasImage()){
+                    final Dragboard db = event.getDragboard();
+                    final Node node = event.getPickResult().getIntersectedNode();
+                    if (node != targetGridPane && db.hasImage()) {
 
-                        Integer cIndex = GridPane.getColumnIndex(node);
-                        Integer rIndex = GridPane.getRowIndex(node);
-                        int x = cIndex == null ? 0 : cIndex;
-                        int y = rIndex == null ? 0 : rIndex;
-                        //Places at 0,0 - will need to take coordinates once that is implemented
+                        final Integer colIndex = GridPane.getColumnIndex(node);
+                        final Integer rowIndex = GridPane.getRowIndex(node);
+                        final int x = (colIndex != null) ? colIndex : 0;
+                        final int y = (rowIndex != null) ? rowIndex : 0;
+
+                        // Places at 0,0 - will need to take coordinates once that is implemented
                         ImageView image = new ImageView(db.getImage());
 
                         boolean placeBack = false;
 
-                        int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
-                        int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
-                        switch (draggableType){
+                        final int nodeX = GridPane.getColumnIndex(currentlyDraggedImage);
+                        final int nodeY = GridPane.getRowIndex(currentlyDraggedImage);
+                        switch (draggableType) {
                             case CARD:
                                 // TODO = spawn a building here of different types
                                 Building newBuilding = convertCardToBuildingByCoordinates(nodeX, nodeY, x, y);
 
                                 if (newBuilding != null) {
+                                    // Building placed successfully
+                                    audioPlayer.playDropBuildingSound();
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                     onLoad(newBuilding);
                                 } else {
@@ -695,51 +709,52 @@ public class LoopManiaWorldController {
                                 }
                                 break;
                             case ITEM:
-                                placeBack = true;
                                 Node targetNode = getNodeFromGridPane(targetGridPane, x, y);
                                 Item item = world.getUnequippedItemTypeByCoordinates(nodeX, nodeY);
-                                if (targetNode.getId().equals("swordCell") && item instanceof Weapon){
-                                    placeBack = false;
+                                // Set this to true if none of the conditions occur
+                                placeBack = false;
+                                if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
                                     Weapon weapon = (Weapon)item;
                                     world.getCharacter().setEquippedWeapon(weapon);
-                                }
-                                else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet){
-                                    placeBack = false;
+                                } else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet) {
                                     Helmet helmet = (Helmet)item;
                                     world.getCharacter().setEquippedHelmet(helmet);
-                                }
-                                else if (targetNode.getId().equals("armourCell") && item instanceof Armour){
-                                    placeBack = false;
+                                } else if (targetNode.getId().equals("armourCell") && item instanceof Armour) {
                                     Armour armour = (Armour)item;
                                     world.getCharacter().setEquippedArmour(armour);
-                                }
-                                else if (targetNode.getId().equals("shieldCell") && item instanceof Shield){
-                                    placeBack = false;
+                                    audioPlayer.playEquipArmourSound();
+                                } else if (targetNode.getId().equals("shieldCell") && item instanceof Shield) {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
-                                }
-                                else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem){
-                                    placeBack = false;
+                                } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);
-                                }
-                                else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion){
-                                    placeBack = false;
+                                } else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion) {
                                     HealthPotion healthPotion = (HealthPotion)item;
                                     world.getCharacter().setEquippedHealthPotion(healthPotion);
+                                } else {
+                                    placeBack = true;
                                 }
                                 if (!placeBack) {
                                     removeDraggableDragEventHandlers(draggableType, targetGridPane);
                                     removeItemByCoordinates(nodeX, nodeY);
                                     targetGridPane.add(image, x, y, 1, 1);
+                                    // Play the correct sound
+                                    if (item instanceof Armour || item instanceof Helmet)
+                                        audioPlayer.playEquipArmourSound();
+                                    else if (item instanceof Sword)
+                                        audioPlayer.playEquipSwordSound();
+                                    else
+                                        audioPlayer.playEquipDefaultSound();
                                 }
                                 break;
                             default:
-                                break;
+                             // Something went very wrong
+                                assert false;
                         }
 
                         // Set the dragged item back to true if it got placed in a non valid tile.
-                        if (placeBack == true) {
+                        if (placeBack) {
                             currentlyDraggedImage.setVisible(true);
                         }
 
@@ -766,7 +781,7 @@ public class LoopManiaWorldController {
             @Override
             public void handle(DragEvent event) {
                 if (currentlyDraggedType == draggableType){
-                    if(event.getGestureSource() != anchorPaneRoot && event.getDragboard().hasImage()){
+                    if (event.getGestureSource() != anchorPaneRoot && event.getDragboard().hasImage()) {
                         event.acceptTransferModes(TransferMode.MOVE);
                     }
                 }
@@ -779,6 +794,7 @@ public class LoopManiaWorldController {
 
         // this doesn't fire when we drop over GridPane because in the event handler for dropping over GridPanes, we consume the event
         anchorPaneRootSetOnDragDropped.put(draggableType, new EventHandler<DragEvent>() {
+            @Override
             public void handle(DragEvent event) {
                 if (currentlyDraggedType == draggableType){
                     //Data dropped
@@ -834,6 +850,7 @@ public class LoopManiaWorldController {
      */
     private void addDragEventHandlers(ImageView view, DRAGGABLE_TYPE draggableType, GridPane sourceGridPane, GridPane targetGridPane){
         view.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent event) {
                 currentlyDraggedImage = view; // set image currently being dragged, so squares setOnDragEntered can detect it...
                 currentlyDraggedType = draggableType;
@@ -860,6 +877,7 @@ public class LoopManiaWorldController {
                         draggedEntity.setImage(itemImage);
                         break;
                     default:
+                        assert false;
                         break;
                 }
 
@@ -881,6 +899,7 @@ public class LoopManiaWorldController {
                     // https://stackoverflow.com/questions/41088095/javafx-drag-and-drop-to-gridpane
                     gridPaneNodeSetOnDragEntered.put(draggableType, new EventHandler<DragEvent>() {
                         // TODO = be more selective about whether highlighting changes - if it cannot be dropped in the location, the location shouldn't be highlighted!
+                        @Override
                         public void handle(DragEvent event) {
                             if (currentlyDraggedType == draggableType){
                             //The drag-and-drop gesture entered the target
@@ -897,6 +916,7 @@ public class LoopManiaWorldController {
                     });
                     gridPaneNodeSetOnDragExited.put(draggableType, new EventHandler<DragEvent>() {
                         // TODO = since being more selective about whether highlighting changes, you could program the game so if the new highlight location is invalid the highlighting doesn't change, or leave this as-is
+                        @Override
                         public void handle(DragEvent event) {
                             if (currentlyDraggedType == draggableType){
                                 n.setOpacity(1);
@@ -953,7 +973,7 @@ public class LoopManiaWorldController {
         anchorPaneRoot.removeEventHandler(DragEvent.DRAG_OVER, anchorPaneRootSetOnDragOver.get(draggableType));
         anchorPaneRoot.removeEventHandler(DragEvent.DRAG_DROPPED, anchorPaneRootSetOnDragDropped.get(draggableType));
 
-        for (Node n: targetGridPane.getChildren()){
+        for (Node n : targetGridPane.getChildren()){
             n.removeEventHandler(DragEvent.DRAG_ENTERED, gridPaneNodeSetOnDragEntered.get(draggableType));
             n.removeEventHandler(DragEvent.DRAG_EXITED, gridPaneNodeSetOnDragExited.get(draggableType));
         }
@@ -1103,13 +1123,30 @@ public class LoopManiaWorldController {
         return null;
     }
 
+    /**
+     * Consume a health potion
+     * @param gridPane The equipped items pane.
+     * @precondition Potion slot is at (col, row) = (1, 1)
+     */
     private void useHealthPotion(GridPane gridPane) {
-        world.getCharacter().consumePotion();
-        Node node = getNodeFromGridPane(gridPane, 1, 1);
+        final boolean wasConsumed = world.getCharacter().consumePotion();
+        // If potion was consumed, play sound
+        if (wasConsumed)
+            audioPlayer.playUsePotionSound();
+
+        // Remove potion node from gridPane
+        final Node node = getNodeFromGridPane(gridPane, 1, 1);
+        assert node != null;
         gridPane.getChildren().remove(node);
-        ImageView view = new ImageView(new Image((new File("src/images/potion_slot.png")).toURI().toString()));
-        view.setId("potionCell");
-        gridPane.add(view, 1, 1);
+
+        // Add empty potion back to gridPane
+        // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
+        final ImageView emptyPotionSlot = new ImageView(
+            new Image(
+            new File("src/images/potion_slot.png").toURI().toString()
+        ));
+        emptyPotionSlot.setId("potionCell");
+        gridPane.add(emptyPotionSlot, 1, 1);
         Node newNode = getNodeFromGridPane(gridPane, 1, 1);
         newNode.setId("potionCell");
     }
