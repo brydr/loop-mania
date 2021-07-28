@@ -905,8 +905,6 @@ public class LoopManiaWorldController {
                             //The drag-and-drop gesture entered the target
                             //show the user that it is an actual gesture target
                                 if(event.getGestureSource() != n && event.getDragboard().hasImage() && checkSameCell(currentlyDraggedImage.getId(), n.getId())){
-                                    System.out.println("\n\nopacity\n\n");
-                                    System.out.println(event.getDragboard().getImage());
                                     n.setOpacity(0.4);
                                 }
                             }
