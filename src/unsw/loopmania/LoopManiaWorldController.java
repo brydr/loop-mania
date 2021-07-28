@@ -184,12 +184,9 @@ public class LoopManiaWorldController {
      */
     private MenuSwitcher mainMenuSwitcher;
 
-
-    // /**
-    //  * Object handling switching to the shop
-    //  */
-    // private MenuSwitcher shopSwitcher;
-
+    // Counts how many cycles for the shop opening logic
+    private int shopOpenedCount = 0;
+    private int cyclesUntilShopOpen = 1;
 
     /**
      * @param world world object loaded from file
@@ -274,7 +271,7 @@ public class LoopManiaWorldController {
     /**
      * create and run the timer
      */
-    public void startTimer(){
+    public void startTimer() {
         // TODO = handle more aspects of the behaviour required by the specification
         System.out.println("starting timer");
         isPaused = false;
@@ -303,10 +300,19 @@ public class LoopManiaWorldController {
                 onLoad(pathLoot);
             }
 
-            // if (isAtCastle) {
-            //     // TODO open shop after loop 1, 3, 5......
-            //     openShop();
-            // }
+            if (isAtCastle) {
+                --cyclesUntilShopOpen;
+                if (cyclesUntilShopOpen == 0) {
+                    try {
+                        openShop();
+                    } catch (IOException e) {
+                        System.err.println("Failed to open shop");
+                        e.printStackTrace();
+                    }
+                    ++shopOpenedCount;
+                    cyclesUntilShopOpen = shopOpenedCount + 1;
+                }
+            }
 
 
             printThreadingNotes("HANDLED TIMER");
