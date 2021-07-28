@@ -26,15 +26,14 @@ public class SpawnVampireTest {
         LoopManiaWorld world = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 
         Character c = new Character(pos);
-        
+
         world.setCharacter(c);
 
         VampireCastleBuilding vampireCastleBuilding = new VampireCastleBuilding(new SimpleIntegerProperty(0),
         new SimpleIntegerProperty(0));
         world.addBuilding(vampireCastleBuilding);
 
-        // Didnt know how to change this into a relative path.
-        String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
+        String file_name = this.getClass().getResource("/basic_world_with_player.json").getFile();
         JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
         world.setGoals(JSONGoals);
 
@@ -42,11 +41,11 @@ public class SpawnVampireTest {
         // Trigger end-of-cycle
         world.runTickMoves();
         assertEquals(world.getEnemies().size(), 0);
-        
+
         // Should only trigger spawn after 5 runs of cycle
         for (int i = 0; i < 4; i++)
         world.runTickMoves();
-        
+
         List<BasicEnemy> enemies = world.getEnemies();
         assertEquals(enemies.size(), 1);
         assertTrue(enemies.get(0) instanceof Vampire);
