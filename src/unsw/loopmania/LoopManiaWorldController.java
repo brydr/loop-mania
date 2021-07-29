@@ -12,6 +12,7 @@ import org.codefx.libfx.listener.handle.ListenerHandles;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -286,6 +287,14 @@ public class LoopManiaWorldController {
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             boolean isAtCastle = world.runTickMoves();
+            if (world.getCharacter().getHp() <= 0) {
+                pause();
+                runEndScreen(false);
+            }
+            if (world.goalComplete.getValue()) {
+                pause();
+                runEndScreen(true);
+            }
             List<Enemy> defeatedEnemies = world.runBattles();
             if (defeatedEnemies.size() > 0) {
                 for (Enemy e: defeatedEnemies){
@@ -402,11 +411,39 @@ public class LoopManiaWorldController {
     public void runBattleResults(List<Enemy> defeatedEnemies) {
         BattleResultsController results = new BattleResultsController(defeatedEnemies, world.getCharacter().getHp());
         pause();
-        Stage test = results.BattleResults();
-        test.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        Stage stage = results.BattleResults();
+        stage.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                test.close();
-                startTimer();
+                PauseTransition wait = new PauseTransition(Duration.seconds(3));
+                wait.play();
+                wait.setOnFinished((e) -> {
+                    stage.close();
+                    if (isPaused) {
+                        startTimer();
+                    }
+                });
+            }
+        });
+        stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                if (isPaused) {
+                    startTimer();
+                }
+            }
+        });
+    }
+
+    public void runEndScreen(Boolean result) {
+        EndScreenController endScreen = new EndScreenController(result);
+        Stage end = endScreen.runEndScreen();
+        end.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                try {
+                    switchToMainMenu();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -440,7 +477,9 @@ public class LoopManiaWorldController {
             @Override
             public void handle(WindowEvent event) {
                 shopStage.close();
-                startTimer();
+                if (isPaused) {
+                    startTimer();
+                }
             }
         });
     }
