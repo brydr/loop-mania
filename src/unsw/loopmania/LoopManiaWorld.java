@@ -412,6 +412,7 @@ public class LoopManiaWorld {
             if (e instanceof BossEnemy) {
                 // Set boss = false meaning that there is no boss in the world.
                 boss = false;
+                character.addBossKilled();
                 if (e instanceof ElanMuske) {
                     doggieCoinMarket.setElanAlive(false);
                 }

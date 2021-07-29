@@ -23,6 +23,7 @@ public class Character extends MovingEntity {
     private final static int MAX_HP = 200;
     private boolean attackTwice;
     private int stunned;
+    private int bossesKilled;
 
     public Character(PathPosition position) {
         super(position);
@@ -53,6 +54,15 @@ public class Character extends MovingEntity {
     public void setStunned(int stunned) {
         this.stunned = stunned;
     }
+
+    public int getBossesKilled() {
+        return bossesKilled;
+    }
+
+    public void addBossKilled() {
+        this.bossesKilled++;
+    }
+
     public boolean getAttackTwice() {
         return attackTwice;
     }
@@ -242,21 +252,22 @@ public class Character extends MovingEntity {
             return;
         }
 
-        // Get base damage according to equipped weapon
-        final int baseDamage = equippedWeapon.getDamage(enemy);
-        // Attack power is diminished by helmet
-        final int outputDamage = (equippedHelmet != null)
-            ? equippedHelmet.calculateDamage(baseDamage)
-            : baseDamage;
-        enemy.takeDamage(outputDamage);
-
-        // Check that enemy isn't in trance before allies attack
-        if (!enemy.getInTrance()) {
-            // All allies attack enemy
-            for (AlliedSoldier ally : listAlliedSoldiers) {
-                ally.attack(enemy);
-            }
-        }
+         // Get base damage according to equipped weapon
+         final int baseDamage = equippedWeapon.getDamage(enemy);
+         // Attack power is diminished by helmet
+         final int outputDamage = (equippedHelmet != null)
+             ? equippedHelmet.calculateDamage(baseDamage)
+             : baseDamage;
+         enemy.takeDamage(outputDamage);
+ 
+         // Check that enemy isn't in trance before allies attack
+         if (!enemy.getInTrance()) {
+             // All allies attack enemy
+             for (AlliedSoldier ally : listAlliedSoldiers) {
+                 ally.attack(enemy);
+             }
+         }
+ 
     }
 
     /**

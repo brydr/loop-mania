@@ -394,7 +394,6 @@ public class LoopManiaWorldController {
         int experienceGain = enemy.getExperienceGain(); // Get the experience obtained from defeating an enemy.
         character.addExperience(experienceGain);
         int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-        // int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
