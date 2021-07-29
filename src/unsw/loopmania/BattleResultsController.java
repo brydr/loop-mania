@@ -59,7 +59,6 @@ public class BattleResultsController {
         Vbox.getChildren().add(Grid);
         Scene battleScene = new Scene(Vbox);
         battleResults.setScene(battleScene);
-        battleResults.show();
         return battleResults;
     }
 

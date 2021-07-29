@@ -13,6 +13,7 @@ import org.javatuples.Pair;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -515,10 +516,20 @@ public class LoopManiaWorldController {
     public void runBattleResults(List<BasicEnemy> defeatedEnemies) {
         BattleResultsController results = new BattleResultsController(defeatedEnemies, world.getCharacter().getHp());
         pause();
-        Stage test = results.BattleResults();
-        test.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        Stage stage = results.BattleResults();
+        stage.setOnShown(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                test.close();
+                PauseTransition wait = new PauseTransition(Duration.seconds(3));
+                wait.play();
+                wait.setOnFinished((e) -> {
+                    stage.close();
+                    startTimer();
+                });
+            }
+        });
+        stage.show();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
                 startTimer();
             }
         });
@@ -529,7 +540,6 @@ public class LoopManiaWorldController {
         Stage end = endScreen.runEndScreen();
         end.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                end.close();
                 try {
                     switchToMainMenu();
                 } catch (IOException e) {
