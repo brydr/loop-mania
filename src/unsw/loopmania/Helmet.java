@@ -14,6 +14,7 @@ public class Helmet extends ProtectiveGear {
 
 	@Override
 	public int calculateDamage(int attackPower) {
+		durability -= 1;
 		return (int) Math.round(Helmet.DAMAGE_MULTIPLIER * attackPower);
 	}
 
@@ -22,4 +23,14 @@ public class Helmet extends ProtectiveGear {
         String helmetImage = "src/images/helmet.png";
         return helmetImage;
     }
+
+	@Override
+	public String getEmptySlotId() {
+		return "helmetCell";
+	}
+
+	@Override
+	public String getEmptySlotImage() {
+		return "src/images/helmet_slot.png";
+	}
 }

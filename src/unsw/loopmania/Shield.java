@@ -22,6 +22,7 @@ public class Shield extends ProtectiveGear {
 
 	@Override
 	public int calculateDamage(int attackPower) {
+		durability -= 1;
 		return this.negateAllDamage() ? 0 : attackPower;
 	}
 
@@ -37,4 +38,14 @@ public class Shield extends ProtectiveGear {
 	public String getImage() {
         return "src/images/shield.png";
     }
+
+	@Override
+	public String getEmptySlotId() {
+		return "shieldCell";
+	}
+
+	@Override
+	public String getEmptySlotImage() {
+		return "src/images/shield_unequipped.png";
+	}
 }

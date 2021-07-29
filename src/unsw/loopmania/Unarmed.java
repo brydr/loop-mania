@@ -7,4 +7,9 @@ public class Unarmed implements WeaponStrategy {
 	public int getDamage(BasicEnemy enemy) {
 		return Unarmed.ATTACK_POWER;
 	}
+
+	@Override
+	public boolean isBroken() {
+		return false;
+	}
 }

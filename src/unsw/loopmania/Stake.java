@@ -14,6 +14,7 @@ public class Stake extends Weapon implements AttackAbility {
 
 	@Override
 	public int getDamage(BasicEnemy enemy) {
+		durability -= 1;
 		if (enemy.getClass().equals(Vampire.class)) {
 			// Do extra damage to vampires
 			return Stake.VAMPIRE_DAMAGE;

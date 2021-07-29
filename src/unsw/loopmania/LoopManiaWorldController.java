@@ -10,6 +10,7 @@ import java.util.Random;
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -292,6 +293,7 @@ public class LoopManiaWorldController {
                 audioPlayer.playWinBattleSound();
                 runBattleResults(defeatedEnemies);
             }
+            removeBrokenItems();
             world.possiblySpawnEnemies();
             List<BasicEnemy> newEnemies = world.getEnemies();
             for (BasicEnemy newEnemy : newEnemies){
@@ -1129,23 +1131,40 @@ public class LoopManiaWorldController {
     private void useHealthPotion(GridPane gridPane) {
         final boolean wasConsumed = world.getCharacter().consumePotion();
         // If potion was consumed, play sound
-        if (wasConsumed)
+        if (wasConsumed) {
             audioPlayer.playUsePotionSound();
+            HealthPotion item = new HealthPotion(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            unequipItem(new Triplet<>(1, 1, item));
+        }
+    }
 
-        // Remove potion node from gridPane
-        final Node node = getNodeFromGridPane(gridPane, 1, 1);
+    /**
+     * remove damaged equipped broken items after battle
+     */
+    private void removeBrokenItems() {
+        Character character = world.getCharacter();
+        System.out.println("armour" + character.getEquippedArmour());
+        System.out.println("helmet" + character.getEquippedHelmet());
+        System.out.println("shield" + character.getEquippedShield());
+        System.out.println("weapon" + character.getEquippedWeapon());
+        List<Triplet<Integer, Integer, BasicItem>> damagedItems = character.removeDamagedItems();
+        for (Triplet<Integer, Integer, BasicItem> triplet : damagedItems) {
+            unequipItem(triplet);
+        }
+    }
+
+    private void unequipItem(Triplet<Integer, Integer, BasicItem> triplet) {
+        final Node node = getNodeFromGridPane(equippedItems, triplet.getValue0(), triplet.getValue1());
         assert node != null;
-        gridPane.getChildren().remove(node);
+        equippedItems.getChildren().remove(node);
 
-        // Add empty potion back to gridPane
-        // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
-        final ImageView emptyPotionSlot = new ImageView(
+        final ImageView emptyslot = new ImageView(
             new Image(
-            new File("src/images/potion_slot.png").toURI().toString()
+            new File(triplet.getValue2().getEmptySlotImage()).toURI().toString()
         ));
-        emptyPotionSlot.setId("potionCell");
-        gridPane.add(emptyPotionSlot, 1, 1);
-        Node newNode = getNodeFromGridPane(gridPane, 1, 1);
-        newNode.setId("potionCell");
+        emptyslot.setId(triplet.getValue2().getEmptySlotId());
+        equippedItems.add(emptyslot, triplet.getValue0(), triplet.getValue1());
+        Node newNode = getNodeFromGridPane(equippedItems, triplet.getValue0(), triplet.getValue1());
+        newNode.setId(triplet.getValue2().getEmptySlotId());
     }
 }
