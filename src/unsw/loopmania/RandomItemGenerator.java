@@ -3,7 +3,7 @@ package unsw.loopmania;
 import java.util.Random;
 import javafx.beans.property.SimpleIntegerProperty;
 public class RandomItemGenerator {
-    static final int N_ITEM_VARIANTS = 7;
+    public static final int N_ITEM_VARIANTS = 7;
 
     private final Random randomGenerator;
 
@@ -29,10 +29,10 @@ public class RandomItemGenerator {
      * @param yVal y-coordinate of our item's "position"
      * @return An instance of a (random) subclass of BasicItem
      */
-    public BasicItem nextItem(int xVal, int yVal) {
+    public BasicItem nextBasicItem(int xVal, int yVal) {
 
-        var x = new SimpleIntegerProperty(xVal);
-        var y = new SimpleIntegerProperty(yVal);
+        SimpleIntegerProperty x = new SimpleIntegerProperty(xVal);
+        SimpleIntegerProperty y = new SimpleIntegerProperty(yVal);
 
         switch (randomGenerator.nextInt(N_ITEM_VARIANTS)) {
             case 0: return new HealthPotion(x, y);

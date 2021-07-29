@@ -12,6 +12,13 @@
             "request": "launch",
             "vmArgs": "--module-path ./lib --add-modules javafx.controls,javafx.media,javafx.fxml -enableassertions",
             "mainClass": "unsw.loopmania.LoopManiaApplication"
+        },
+        {
+            "type": "java",
+            "name": "Launch for Dong since his lib folder is different",
+            "request": "launch",
+            "vmArgs": "--module-path ./lib/symlink_javafx --add-modules javafx.controls,javafx.media,javafx.fxml -enableassertions",
+            "mainClass": "unsw.loopmania.LoopManiaApplication"
         }
     ]
 }

@@ -9,7 +9,6 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
-import org.javatuples.Pair;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -38,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -184,16 +184,17 @@ public class LoopManiaWorldController {
      */
     private MenuSwitcher mainMenuSwitcher;
 
+    // Counts how many cycles for the shop opening logic
+    private int shopOpenedCount = 0;
+    private int cyclesUntilShopOpen = 1;
     private static final String grassAndDirt = "src/images/32x32GrassAndDirtPath.png";
 
-    // /**
-    //  * Object handling switching to the shop
-    //  */
-    // private MenuSwitcher shopSwitcher;
 
     // Object handling playing audio
     private AudioPlayer audioPlayer = new AudioPlayer();
 
+    // Dummy constructor for the tests, otherwise it complains it doesn't have a UI, don't use anywhere else
+    public LoopManiaWorldController() {}
 
     /**
      * @param world world object loaded from file
@@ -201,6 +202,7 @@ public class LoopManiaWorldController {
      */
     public LoopManiaWorldController(LoopManiaWorld world, List<ImageView> initialEntities) {
         this.world = world;
+        world.setController(this);
         entityImages = new ArrayList<>(initialEntities);
         vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
         swordImage = new Image((new File("src/images/basic_sword.png")).toURI().toString());
@@ -277,13 +279,13 @@ public class LoopManiaWorldController {
     /**
      * create and run the timer
      */
-    public void startTimer(){
+    public void startTimer() {
         // TODO = handle more aspects of the behaviour required by the specification
         System.out.println("starting timer");
         isPaused = false;
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
-            world.runTickMoves();
+            boolean isAtCastle = world.runTickMoves();
             List<Enemy> defeatedEnemies = world.runBattles();
             if (defeatedEnemies.size() > 0) {
                 for (Enemy e: defeatedEnemies){
@@ -309,11 +311,9 @@ public class LoopManiaWorldController {
                 onLoad(pathLoot);
             }
 
-            // if (isAtCastle) {
-            //     // TODO open shop after loop 1, 3, 5......
-            //     openShop();
-            // }
-
+            if (isAtCastle) {
+                possiblyOpenShop();
+            }
 
             printThreadingNotes("HANDLED TIMER");
         }));
@@ -321,8 +321,24 @@ public class LoopManiaWorldController {
         timeline.play();
     }
 
-
-
+    /**
+     * Possibly opens shop depending on the conditions in the spec
+     *
+     * @pre The player's at the castle
+     */
+    private void possiblyOpenShop() {
+        --cyclesUntilShopOpen;
+        if (cyclesUntilShopOpen == 0) {
+            try {
+                openShop();
+            } catch (IOException e) {
+                System.err.println("Failed to open shop");
+                e.printStackTrace();
+            }
+            ++shopOpenedCount;
+            cyclesUntilShopOpen = shopOpenedCount + 1;
+        }
+    }
 
     /**
      * pause the execution of the game loop
@@ -357,125 +373,6 @@ public class LoopManiaWorldController {
         onLoad(card);
     }
 
-    // // TODO do we need these load functions?
-    // /**
-    //  * load a sword from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadSword(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Sword sword = new Sword(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add sword to list of unequipped items in backend
-    //     world.addUnequippedItem(sword);
-    //     onLoad(sword);
-    // }
-
-    // /**
-    //  * load a staff from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadStaff(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Staff staff = new Staff(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add staff to list of unequipped items in backend
-    //     world.addUnequippedItem(staff);
-    //     onLoad(staff);
-    // }
-
-    // /**
-    //  * load a stake from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadStake(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Stake stake = new Stake(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add stake to list of unequipped items in backend
-    //     world.addUnequippedItem(stake);
-    //     onLoad(stake);
-    // }
-
-    // /**
-    //  * load a shield from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadShield(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Shield shield = new Shield(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add shield to list of unequipped items in backend
-    //     world.addUnequippedItem(shield);
-    //     onLoad(shield);
-    // }
-    // /**
-    //  * load a Armour from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadArmour(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Armour armour = new Armour(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add Armour to list of unequipped items in backend
-    //     world.addUnequippedItem(armour);
-    //     onLoad(armour);
-    // }
-
-    // /**
-    //  * load a Helmet from the world, and pair it with an image in the GUI
-    //  */
-    // private void loadHelmet(){
-    //     // start by getting first available coordinates
-    //     Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-    //     Helmet helmet = new Helmet(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-    //     // add Helmet to list of unequipped items in backend
-    //     world.addUnequippedItem(helmet);
-    //     onLoad(helmet);
-    // }
-
-    /**
-     * load a HealthPotion from the world, and pair it with an image in the GUI
-     */
-    private void loadHealthPotion(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        HealthPotion healthPotion = new HealthPotion(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add HealthPotion to list of unequipped items in backend
-        world.addUnequippedItem(healthPotion);
-        onLoad(healthPotion);
-    }
-
-    /**
-     * load TheOneRing from the world, and pair it with an image in the GUI
-     */
-    private void loadTheOneRing(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        // add TheOneRing to list of unequipped items in backend
-        world.addUnequippedItem(theOneRing);
-        onLoad(theOneRing);
-    }
-
-    /**
-     * load random BasicItem from the world, and pair it with an image in the GUI
-     */
-    private void loadRandomBasicItem(){
-        // start by getting first available coordinates
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        BasicItem item = world.addUnequippedRandomBasicItem(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        onLoad(item);
-    }
-
-    /**
-     * Loads an item that already exists but has invalid X and Y values
-     *
-     * @param item The item being loaded
-     */
-    public void loadItem(Item item) {
-        Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-        item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
-        item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
-        world.addUnequippedItem(item);
-        onLoad(item);
-    }
-
     /**
      * run GUI events after an enemy is defeated, such as spawning items/experience/gold
      * @param enemy defeated enemy for which we should react to the death of
@@ -488,26 +385,17 @@ public class LoopManiaWorldController {
         int experienceGain = enemy.getExperienceGain(); // Get the experience obtained from defeating an enemy.
         character.addExperience(experienceGain);
         int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        // int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
         if (randomLoot == 0) {
             character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
         } else if (randomLoot == 1) {
             loadRandomCard();
         } else {
-            loadRandomBasicItem();
+            world.loadRandomBasicItem();
         }
 
-        List<Item> droppedLoot = enemy.dropLoot();
-
-        for (Item drops : droppedLoot) {
-            world.getFirstSlotRemoveIfFull();
-            loadItem(drops);
-        }
-
-        if (enemy instanceof Doggie) {
-            Pair<Integer, Integer> firstAvailableSlot = world.getFirstSlotRemoveIfFull();
-            DoggieCoin doggieCoin = new DoggieCoin(new SimpleIntegerProperty(firstAvailableSlot.getValue0()), new SimpleIntegerProperty(firstAvailableSlot.getValue1()), world.getDoggieCoinMarket());
-            loadItem(doggieCoin);
+        for (Item drops : enemy.dropLoot()) {
+            world.addUnequippedItem(drops);
         }
     }
 
@@ -539,11 +427,13 @@ public class LoopManiaWorldController {
         shopRoot.requestFocus();
 
         Stage shopStage = new Stage();
+        shopStage.initModality(Modality.APPLICATION_MODAL);
         shopStage.setScene(shopScene);
         shopStage.setResizable(false);
         shopStage.setTitle("Shop");
         ShopController shopController = shopLoader.getController();
         shopController.initialiseShop(world, strategy);
+
         shopStage.show();
 
         shopStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -570,8 +460,9 @@ public class LoopManiaWorldController {
             character.addGold(goldPayout);
             audioPlayer.playPickupGoldSound();
         } else if (pickUpVal == 1) {
-             // If they picked up a potion.
-            loadHealthPotion();
+            // If they picked up a potion.
+            //  world.addUnequippedItem will initialise c and y properly
+            world.addUnequippedItem(new HealthPotion(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0)));
             audioPlayer.playPickupPotionSound();
         } else {
             // Something is broken
@@ -597,12 +488,15 @@ public class LoopManiaWorldController {
     }
 
     /**
+     * <b>Don't call this function directly, you should call world.addUnequippedItem() instead!</b>
+     * world.addUnequippedItem() calls this method already because the shop doesn't know about this controller.
+     *
      * load an item into the GUI
      * Particularly, we must connect to the drag detection event handler,
      * and load the image into the unequippedInventory GridPane.
-     * @param item
+     * @param item The item being loaded
      */
-    private void onLoad(Item item) {
+    public void onLoad(Item item) {
         ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
         view.setId(item.getImage());
         addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);
@@ -617,13 +511,13 @@ public class LoopManiaWorldController {
      * and load the image into the equipped GridPane.
      * @param item
      */
-    private void onLoadEquipped(Item item) {
-        ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
+    // private void onLoadEquipped(Item item) {
+    //     ImageView view = new ImageView(new Image((new File(item.getImage())).toURI().toString()));
 
-        addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);//TODO may need to remove drageEventHandler here as we don't drag equipped item anywhere?
-        addEntity(item, view);
-        equippedItems.getChildren().add(view);
-    }
+    //     addDragEventHandlers(view, DRAGGABLE_TYPE.ITEM, unequippedInventory, equippedItems);//TODO may need to remove drageEventHandler here as we don't drag equipped item anywhere?
+    //     addEntity(item, view);
+    //     equippedItems.getChildren().add(view);
+    // }
 
     /**
      * load an enemy into the GUI

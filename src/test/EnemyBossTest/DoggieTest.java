@@ -10,17 +10,19 @@ import org.junit.jupiter.api.Test;
 
 import unsw.loopmania.Character;
 import unsw.loopmania.Doggie;
+import unsw.loopmania.DoggieCoinMarket;
 import unsw.loopmania.PathPosition;
 
 
 public class DoggieTest {
+    DoggieCoinMarket coinMarket = new DoggieCoinMarket();
 
     @Test
     public void testRadius() {
         PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
-        Doggie doggie = new Doggie(pos);
+        Doggie doggie = new Doggie(pos, coinMarket);
 
         assertEquals(doggie.getBattleRadius(), 1);
 
@@ -34,7 +36,7 @@ public class DoggieTest {
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3),
                                                               new Pair<>(0, 4)) );
-        Doggie doggie = new Doggie(pos);
+        Doggie doggie = new Doggie(pos, coinMarket);
         doggie.move();
 
         // Since doggie moves in a random direction, up or down the path, the valid y values will be 2, 3 or 4 since it started at 3.
@@ -49,7 +51,7 @@ public class DoggieTest {
         PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
-        Doggie doggie = new Doggie(pos);
+        Doggie doggie = new Doggie(pos, coinMarket);
         Character c = new Character(pos);
 
         doggie.attack(c);
@@ -66,7 +68,7 @@ public class DoggieTest {
         PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
-        Doggie doggie = new Doggie(pos);
+        Doggie doggie = new Doggie(pos, coinMarket);
         Character c = new Character(pos);
 
         doggie.stunAttack(c);   // An attack with 100% chance to stun.
@@ -77,7 +79,7 @@ public class DoggieTest {
 
         assertEquals(doggie.getHp(), 400);
 
-        c.attack(doggie);   
+        c.attack(doggie);
 
         assertEquals(doggie.getHp(), 400);
 

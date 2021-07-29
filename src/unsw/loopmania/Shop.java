@@ -46,7 +46,7 @@ public class Shop {
 	 */
 	private void generateShopInventory() {
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
-			this.inventory.add(this.itemGenerator.nextItem(0, 0));
+			this.inventory.add(this.itemGenerator.nextBasicItem(0, 0));
 		}
 	}
 

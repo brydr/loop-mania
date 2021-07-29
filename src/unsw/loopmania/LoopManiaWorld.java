@@ -21,11 +21,12 @@ import unsw.loopmania.util.CustomCollectors;
  * entity can occupy the same square.
  */
 public class LoopManiaWorld {
-
     public static final int unequippedInventoryWidth = 4;
     public static final int unequippedInventoryHeight = 4;
     public static final int numBasicItems = 7;
 
+    // This is bad but it's necessary for added items to appear in the front end
+    private LoopManiaWorldController controller;
     /**
      * width of the world in GridPane cells
      */
@@ -48,7 +49,7 @@ public class LoopManiaWorld {
     private List<Entity> nonSpecifiedEntities;
 
     private Character character;
-    
+
 
     // TODO = add more lists for other entities, for equipped inventory items, etc...
     private List<Entity> equippedInventoryItems;
@@ -58,6 +59,8 @@ public class LoopManiaWorld {
 
     private List<Card> cardEntities;
 
+    // The unequipped inventory of the character
+    // This shouldn't be added to directly, call addUnequippedItem() instead
     private List<Item> unequippedInventoryItems;
 
     private List<Building> buildingEntities;
@@ -107,6 +110,10 @@ public class LoopManiaWorld {
         nextCycle = false;
         worldPathLoot = new ArrayList<>();
         goalComplete = new SimpleBooleanProperty(false);
+    }
+
+    public void setController(LoopManiaWorldController controller) {
+        this.controller = controller;
     }
 
     public int getWidth() {
@@ -192,7 +199,7 @@ public class LoopManiaWorld {
         if (pos != null && bossAlreadySpawned == false && boss == false){
             int indexInPath = orderedPath.indexOf(pos);
             if (character.getCycles() == 20) {
-                Doggie doggie = new Doggie(new PathPosition(indexInPath, orderedPath));
+                Doggie doggie = new Doggie(new PathPosition(indexInPath, orderedPath), doggieCoinMarket);
                 enemies.add(doggie);
                 spawningEnemies.add(doggie);
                 bossAlreadySpawned = true;
@@ -283,7 +290,7 @@ public class LoopManiaWorld {
      * @return list of enemies which have been killed
      */
     public List<Enemy> runBattles() {
-        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code  
+        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code
         // TODO = modify this - currently the character automatically wins all battles without any damage!
         List<Enemy> defeatedEnemies = new ArrayList<Enemy>();
 
@@ -305,7 +312,7 @@ public class LoopManiaWorld {
                     int runAwayChance = (new Random()).nextInt(10);
                     if (runAwayChance < 3) {
                         e.setRunAway(false);
-                    } 
+                    }
                     break;
                 }
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
@@ -407,7 +414,7 @@ public class LoopManiaWorld {
                 boss = false;
                 if (e instanceof ElanMuske) {
                     doggieCoinMarket.setElanAlive(false);
-                } 
+                }
             }
             killEnemy(e);
         }
@@ -421,11 +428,14 @@ public class LoopManiaWorld {
     public Card loadRandomCard(){
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            // Cards full case
             // TODO may have to edit payout based on what is being deleted
-            payoutItem();
+            if (new Random().nextDouble() < 1. / 3) {
+                loadRandomBasicItem();
+            } else {
+                payoutGoldOrXp();
+            }
             removeCard(0);
-
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -435,21 +445,10 @@ public class LoopManiaWorld {
         return randCard;
     }
 
-    public Item loadRandomItem(){
-        // if adding more cards than have, remove the first card...
-        if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
-            payoutCard();
-            removeItemByPositionInUnequippedInventoryItems(0);
-
-            
-        }
-
+    public void loadRandomBasicItem() {
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Item item = new RandomItemGenerator().nextItem(unequippedInventoryItems.size(), 0);
-
-        unequippedInventoryItems.add(item);
-        return item;
+        // 0, 0 is fine as addUnequippedItem() sets them correctly later
+        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
     }
 
 
@@ -469,25 +468,32 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
+    private Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
         Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
         if (firstAvailableSlot == null){
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
             // give some cash/experience rewards for the discarding of the oldest sword
-            payoutCard();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
         return firstAvailableSlot;
     }
 
     /**
-     * spawn an item in the world and return the item entity
+     * Adds an item to the character's unequipped inventory in both the frontend and backend.
+     * Handles removing an item and adding gold and XP when the inventory is full.
+     * Overrides the item's X and Y to the next free inventory slot.
+     * This function calls onLoad() in the controller.
+     *
+     * @param item The item to be added
      * @return an item to be spawned in the controller as a JavaFX node
-     * @pre unequippedInventoryItems isn't full (getFirstSlotRemoveIfFull should be run before creating item for this method)
      */
-    public void addUnequippedItem(Item item){
+    public void addUnequippedItem(Item item) {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstSlotRemoveIfFull();
+        item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
+        item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
         unequippedInventoryItems.add(item);
+        controller.onLoad(item);
     }
 
 
@@ -503,8 +509,9 @@ public class LoopManiaWorld {
 
 /**
      * run moves which occur with every tick without needing to spawn anything immediately
+     * @return Whether the character is back at the castle
      */
-    public void runTickMoves(){
+    public boolean runTickMoves(){
         nextCycle = false;
 
         // Initialise firstPath
@@ -574,6 +581,8 @@ public class LoopManiaWorld {
         }
         moveBasicEnemies();
         doggieCoinMarket.tickPrice();
+
+        return nextCycle;
     }
 
     /**
@@ -600,39 +609,6 @@ public class LoopManiaWorld {
         equippedInventoryItems.remove(item);
     }
 
-    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-        Random randomGenerator = new Random();
-        BasicItem newItem;
-        int numBasicItems = 7;
-        switch (randomGenerator.nextInt(numBasicItems)) {
-            case 0:
-                newItem = new HealthPotion(x, y);
-                break;
-            case 1:
-                newItem = new Staff(x, y);
-                break;
-            case 2:
-                newItem = new Stake(x, y);
-                break;
-            case 3:
-                newItem = new Sword(x, y);
-                break;
-            case 4:
-                newItem = new Armour(x, y);
-                break;
-            case 5:
-                newItem = new Shield(x, y);
-                break;
-            case 6:
-                newItem = new Helmet(x, y);
-                break;
-            default: throw new RuntimeException("Can't generate random item");
-        }
-        unequippedInventoryItems.add(newItem);
-        return newItem;
-    }
-
-
     /**
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
@@ -647,7 +623,7 @@ public class LoopManiaWorld {
      * get the first pair of x,y coordinates which don't have any items in it in the unequipped inventory
      * @return x,y coordinate pair
      */
-    public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
+    private Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y = 0; y < unequippedInventoryHeight; y++){
@@ -664,7 +640,7 @@ public class LoopManiaWorld {
      * shift card coordinates down starting from x coordinate
      * @param x x coordinate which can range from 0 to width-1
      */
-    public void shiftCardsDownFromXCoordinate(int x){
+    private void shiftCardsDownFromXCoordinate(int x){
         for (Card c : cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
@@ -675,7 +651,7 @@ public class LoopManiaWorld {
     /**
      * move all enemies
      */
-    public void moveBasicEnemies() {
+    private void moveBasicEnemies() {
         // TODO = expand to more types of enemy
         for (Enemy e : enemies){
             e.move();
@@ -686,7 +662,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    public Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
+    private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
@@ -717,7 +693,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    public Pair<Integer, Integer> possiblyGetBossEnemySpawnPosition(){
+    private Pair<Integer, Integer> possiblyGetBossEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
@@ -740,7 +716,7 @@ public class LoopManiaWorld {
             return null;
         }
 
-    
+
     }
 
     /**
@@ -793,8 +769,8 @@ public class LoopManiaWorld {
             .collect(CustomCollectors.toSingleton());
 
         // Building CANNOT be spawned here IF (tile is incorrect type) OR (tile is the firstPath)
-        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) 
-            || (   buildingNodeX == firstPath.getX().getValue() 
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )
+            || (   buildingNodeX == firstPath.getX().getValue()
                 && buildingNodeY == firstPath.getY().getValue() )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
@@ -862,29 +838,14 @@ public class LoopManiaWorld {
         return this.unequippedInventoryItems;
     }
 
-    public void payoutItem() {
-        int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-        // Give the character gold, exp or a random weapon.
-        if (randomLoot == 0) {
-            character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-        } else if (randomLoot == 1) {
-            int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-            character.addExperience(randomExp);
-        } else {
-            loadRandomItem();
-        }
-    }
+    public void payoutGoldOrXp() {
+        if (new Random().nextDouble() < .5) {
+            // Character gets gold
+            character.addGold(new Random().nextInt(91) + 10);
 
-    public void payoutCard() {
-        int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-        // Give the character gold, exp or a random weapon.
-        if (randomLoot == 0) {
-            character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-        } else if (randomLoot == 1) {
-            int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-            character.addExperience(randomExp);
         } else {
-            loadRandomCard();
+            // Character gets XP
+            character.addExperience(new Random().nextInt(21) + 10);
         }
     }
 
