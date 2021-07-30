@@ -16,7 +16,7 @@ public class BattleResultsController {
     private String enemyList = "";
     private int totalExp;
     private Integer characterHp;
-    private int numEnemies[] = {0, 0, 0};
+    private int numEnemies[] = {0, 0, 0, 0, 0};
     
     public BattleResultsController(List<Enemy> defeatedEnemies, int characterHp) {
         this.characterHp = characterHp;
@@ -73,6 +73,12 @@ public class BattleResultsController {
             if (e instanceof Zombie) {
                 numEnemies[2]++;
             }
+            if (e instanceof Doggie) {
+                numEnemies[3]++;
+            }
+            if (e instanceof ElanMuske) {
+                numEnemies[4]++;
+            }
             addExp(e.getExperienceGain());
         }
     }
@@ -101,6 +107,22 @@ public class BattleResultsController {
         if (numEnemies[2] > 0) {
             enemyList = enemyList + numEnemies[2] + " Zombie";
             if (numEnemies[2] > 1) {
+                enemyList = enemyList + "s\n";
+            } else {
+                enemyList = enemyList + "\n";
+            }
+        }
+        if (numEnemies[3] > 0) {
+            enemyList = enemyList + numEnemies[3] + " Doggie";
+            if (numEnemies[3] > 1) {
+                enemyList = enemyList + "s\n";
+            } else {
+                enemyList = enemyList + "\n";
+            }
+        }
+        if (numEnemies[4] > 0) {
+            enemyList = enemyList + numEnemies[4] + " Elan Muske";
+            if (numEnemies[4] > 1) {
                 enemyList = enemyList + "s\n";
             } else {
                 enemyList = enemyList + "\n";
