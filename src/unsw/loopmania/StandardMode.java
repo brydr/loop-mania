@@ -10,4 +10,9 @@ public class StandardMode implements ShopStrategy {
 	public boolean checkItemLimits(BasicItem wanToBuy, List<BasicItem> purchaseHistory) {
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Standard Mode";
+	}
 }

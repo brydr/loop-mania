@@ -22,4 +22,9 @@ public class BerserkerMode implements ShopStrategy {
 
 		return protectiveGears;
 	}
+
+	@Override
+	public String toString() {
+		return "Berserker Mode";
+	}
 }

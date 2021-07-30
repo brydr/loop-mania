@@ -22,4 +22,9 @@ public class SurvivalMode implements ShopStrategy {
 
 		return healthPotions;
 	}
+
+	@Override
+	public String toString() {
+		return "Survival Mode";
+	}
 }
