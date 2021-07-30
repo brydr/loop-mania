@@ -402,8 +402,10 @@ public class LoopManiaWorldController {
             world.loadRandomBasicItem();
         }
 
-        for (Item drops : enemy.dropLoot()) {
-            world.addUnequippedItem(drops);
+        if (!world.getRareItems().isEmpty()) {
+            for (Item drops : enemy.dropLoot(world.getRareItems())) {
+                world.addUnequippedItem(drops);
+            }
         }
     }
 
@@ -662,6 +664,9 @@ public class LoopManiaWorldController {
                                 } else if (targetNode.getId().equals("shieldCell") && item instanceof Shield) {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
+                                } else if (targetNode.getId().equals("shieldCell") && item instanceof TreeStump) {
+                                    TreeStump treeStump = (TreeStump)item;
+                                    world.getCharacter().setEquippedShield(treeStump);
                                 } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);
@@ -872,6 +877,7 @@ public class LoopManiaWorldController {
         // check null for when slot is already filled with another image, no need to set opacity
         if (targetId == null) return false;
         if (draggedId.equals("src/images/shield.png") && targetId.equals("shieldCell")) return true;
+        else if (draggedId.equals("src/images/tree_stump.png") && targetId.equals("shieldCell")) return true;
         else if (draggedId.equals("src/images/helmet.png") && targetId.equals("helmetCell")) return true;
         else if (draggedId.equals("src/images/the_one_ring.png") && targetId.equals("rareItemCell")) return true;
         else if (draggedId.equals("src/images/brilliant_blue_new.png") && targetId.equals("potionCell")) return true;

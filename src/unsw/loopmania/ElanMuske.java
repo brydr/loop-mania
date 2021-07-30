@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
+
 import javafx.beans.property.SimpleIntegerProperty;
 public class ElanMuske extends BossEnemy {
 
@@ -37,15 +39,25 @@ public class ElanMuske extends BossEnemy {
     }
 
     @Override
-    public List<Item> dropLoot() {
+    public List<Item> dropLoot(JSONArray rareItems) {
         List<Item> loot = new ArrayList<Item>();
-        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-        if (oneRingChance < 3) {
-            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
-            loot.add(theOneRing);
+        int rareItemChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (rareItemChance < 3) {
+            String item = rareItems.getString(new Random().nextInt(rareItems.length()));  // Selects a random item from the rare items list
+            if (item.equals("the_one_ring")) {
+                TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(theOneRing);
+            } else if (item.equals("anduril_flame_of_the_west")) {
+                AndurilFlameOfTheWest andurilFlameOfTheWest = new AndurilFlameOfTheWest(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(andurilFlameOfTheWest);
+            } else if (item.equals("tree_stump")) {
+                TreeStump treeStump = new TreeStump(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(treeStump);
+            }
         }
         return loot;
     }
+
     @Override
     public void move() {
         // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
@@ -75,6 +87,9 @@ public class ElanMuske extends BossEnemy {
     @Override
     public void attack(Character character) {
         int attackPower = this.getAttack();
+        if (character.getEquippedShield() != null && character.getEquippedShield() instanceof TreeStump) {
+            attackPower = attackPower / 3;
+        }
         character.takeDamage(attackPower);
     }
 

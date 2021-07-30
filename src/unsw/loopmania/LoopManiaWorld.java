@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import org.javatuples.Pair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -81,6 +82,8 @@ public class LoopManiaWorld {
     private boolean nextCycle;
 
     private List<RandomPathLoot> worldPathLoot;
+
+    private JSONArray worldRareItems;
 
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
@@ -159,6 +162,14 @@ public class LoopManiaWorld {
 
     public void setGoals(JSONObject goals) {
         worldGoals = goals;
+    }
+
+    public void setRareItems(JSONArray rareItems) {
+        worldRareItems = rareItems;
+    }
+
+    public JSONArray getRareItems() {
+        return worldRareItems;
     }
 
     /**

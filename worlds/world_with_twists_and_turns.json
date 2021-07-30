@@ -1,7 +1,7 @@
 {
   "width": 8,
   "height": 14,
-  "rare_items": [],
+  "rare_items": ["the_one_ring","anduril_flame_of_the_west","tree_stump"],
   "goal-condition": {"goal": "bosses" },
   "entities": [
     {"x": 0, "y": 0, "type": "hero_castle"}

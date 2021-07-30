@@ -11,7 +11,7 @@ import javafx.beans.property.IntegerProperty;
 public class Character extends MovingEntity {
     private WeaponStrategy equippedWeapon;
     private Armour equippedArmour;
-    private Shield equippedShield;
+    private ProtectiveGear equippedShield;
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
     private List<AlliedSoldier> listAlliedSoldiers;
@@ -30,8 +30,8 @@ public class Character extends MovingEntity {
         this.experience = new SimpleIntegerProperty();
         this.cycles = new SimpleIntegerProperty();
         this.alliedSoldierNum = new SimpleIntegerProperty();
-        experience.setValue(10000);
-        cycles.setValue(19);
+        experience.setValue(0);
+        cycles.setValue(0);
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
@@ -86,11 +86,11 @@ public class Character extends MovingEntity {
         this.equippedArmour = equippedArmour;
     }
 
-    public Shield getEquippedShield() {
+    public ProtectiveGear getEquippedShield() {
         return equippedShield;
     }
 
-    public void setEquippedShield(Shield equippedShield) {
+    public void setEquippedShield(ProtectiveGear equippedShield) {
         this.equippedShield = equippedShield;
     }
 
