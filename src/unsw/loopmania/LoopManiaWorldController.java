@@ -403,10 +403,14 @@ public class LoopManiaWorldController {
             world.loadRandomBasicItem();
         }
 
-        JSONArray worldRareItems = world.getRareItems();
+        // A list of all rare items that can spawn in the world.
+        List<String> worldRareItems = world.getRareItems();
         //["the_one_ring", "anduril_flame_of_the_west", tree_stump"]
         for (Item drops : enemy.dropLoot()) {
-            if (drops instanceof TheOneRing && worldRareItems.contains("the_one_ring") == -1)
+            if (drops instanceof TheOneRing && !worldRareItems.contains("the_one_ring")) {
+                break;
+            } // Add more rare item drops.
+
             world.addUnequippedItem(drops);
         }
     }

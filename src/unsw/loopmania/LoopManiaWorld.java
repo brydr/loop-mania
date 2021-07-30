@@ -176,8 +176,17 @@ public class LoopManiaWorld {
         worldRareItems = rareItems;
     }
 
-    public JSONArray getRareItems() {
-        return worldRareItems;
+    /**
+     * Returns a String array list of rare items that can be spawned in the world.
+     * @return
+     */
+    public List<String> getRareItems() {
+        List<String> rareItemInWorld = new ArrayList<String>();
+        for (int i = 0; i < worldRareItems.length(); i++) {
+            String rareItem = worldRareItems.getString(i);
+            rareItemInWorld.add(rareItem);
+        }
+        return rareItemInWorld;
     }
 
     /**

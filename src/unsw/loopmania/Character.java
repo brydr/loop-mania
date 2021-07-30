@@ -20,7 +20,7 @@ public class Character extends MovingEntity {
     private IntegerProperty alliedSoldierNum;
     private Gold gold;
     private HealthPotion equippedHealthPotion;
-    private final static int MAX_HP = 200;
+    private final static int MAX_HP = 100000000;
     private boolean attackTwice;
     private int stunned;
     private int bossesKilled;
@@ -30,7 +30,7 @@ public class Character extends MovingEntity {
         this.experience = new SimpleIntegerProperty();
         this.cycles = new SimpleIntegerProperty();
         this.alliedSoldierNum = new SimpleIntegerProperty();
-        experience.setValue(10000);
+        experience.setValue(0);
         cycles.setValue(19);
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
