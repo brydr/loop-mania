@@ -4,8 +4,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class AndurilFlameOfTheWest extends Weapon implements AttackAbility {
 
-    private final static int ATTACK_POWER = 20;
-    private final static int BOSS_DAMAGE = 60;
+    private final static int ATTACK_POWER = 10;
+    private final static int BOSS_DAMAGE = 30;
 	private final static int BUY_PRICE = 0;
 	private final static int SELL_PRICE = 0;
 

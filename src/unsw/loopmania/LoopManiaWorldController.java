@@ -296,6 +296,7 @@ public class LoopManiaWorldController {
                 runEndScreen(true);
             }
             List<Enemy> defeatedEnemies = world.runBattles();
+            useTheOneRing(equippedItems);
             if (defeatedEnemies.size() > 0) {
                 for (Enemy e: defeatedEnemies){
                     reactToEnemyDefeat(e);
@@ -1089,5 +1090,34 @@ public class LoopManiaWorldController {
         gridPane.add(emptyPotionSlot, 1, 1);
         Node newNode = getNodeFromGridPane(gridPane, 1, 1);
         newNode.setId("potionCell");
+    }
+
+    /**
+     * Consume The One Ring
+     * @param gridPane The equipped items pane.
+     * @precondition Ring slot is at (col, row) = (0, 1)
+     */
+    private void useTheOneRing(GridPane gridPane) {
+        final boolean wasConsumed = world.getCharacter().consumeRareItem();
+        // If potion was ring, play sound
+        if (wasConsumed) {
+            //audioPlayer.playUsePotionSound();
+
+            // Remove ring node from gridPane
+            final Node node = getNodeFromGridPane(gridPane, 0, 1);
+            assert node != null;
+            gridPane.getChildren().remove(node);
+
+            // Add empty ring back to gridPane
+            // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
+            final ImageView emptyRingSlot = new ImageView(
+                new Image(
+                new File("src/images/ring_slot.png").toURI().toString()
+            ));
+            emptyRingSlot.setId("rareItemCell");
+            gridPane.add(emptyRingSlot, 0, 1);
+            Node newNode = getNodeFromGridPane(gridPane, 0, 1);
+            newNode.setId("rareItemCell");
+        }
     }
 }

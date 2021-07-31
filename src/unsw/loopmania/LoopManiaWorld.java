@@ -329,14 +329,21 @@ public class LoopManiaWorld {
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
 
                 int outputDamage = character.getEquippedWeapon().getDamage(e);
-                // reduce player damage by 15% if helmet equipped
+                // Reduce player damage by 15% if helmet equipped
                 if (character.getEquippedHelmet() != null)
                     outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
 
-                // If the character is next to a campfire, it will attack twice.
-                if (character.getAttackTwice()) {
-                    e.takeDamage(outputDamage);
+                // If the character has rare sword equipped, it will attack three times.
+                if (character.getEquippedWeapon() instanceof AndurilFlameOfTheWest) {
+                    character.setAttackMulti(3);
                 }
+                
+                // Loops through multiple attack for character (2 for campfire, 3 for rare sword)
+                while (character.getAttackMulti() > 1) {
+                    e.takeDamage(outputDamage);
+                    character.setAttackMulti(character.getAttackMulti() - 1);
+                }
+
                 // Add logic so the tower attacks too if in range.
                 for (Building building : buildingEntities) {
                     if (building instanceof TowerBuilding) {

@@ -19,9 +19,9 @@ public class CampfireBuilding extends Building implements BuildingHelpers {
         final double sqrDistFromCharacter = Math.pow(character.getX() - this.getX(), 2) +
                                             Math.pow(character.getY() - this.getY(), 2);
         if (sqrDistFromCharacter <= 3 * 3) {
-            character.setAttackTwice(true);
+            character.setAttackMulti(2);
         } else {
-            character.setAttackTwice(false);
+            character.setAttackMulti(1);
         }
     }
     

@@ -21,7 +21,7 @@ public class Character extends MovingEntity {
     private Gold gold;
     private HealthPotion equippedHealthPotion;
     private final static int MAX_HP = 200;
-    private boolean attackTwice;
+    private int numAttack;
     private int stunned;
     private int bossesKilled;
 
@@ -37,7 +37,7 @@ public class Character extends MovingEntity {
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
-        this.attackTwice = false;
+        this.numAttack = 1;
         this.stunned = 0;
     }
 
@@ -63,13 +63,14 @@ public class Character extends MovingEntity {
         this.bossesKilled++;
     }
 
-    public boolean getAttackTwice() {
-        return attackTwice;
+    public int getAttackMulti() {
+        return numAttack;
     }
 
-    public void setAttackTwice(boolean bool) {
-        this.attackTwice = bool;
+    public void setAttackMulti(int num) {
+        this.numAttack = num;
     }
+
     public WeaponStrategy getEquippedWeapon() {
         return equippedWeapon;
     }
@@ -205,11 +206,13 @@ public class Character extends MovingEntity {
      * @precondition Character HP currently {@code <= 0}
      * @postcondition Character alive again with HP of {@code MAX_HP}
      */
-    public void consumeRareItem() {
+    public boolean consumeRareItem() {
         if (this.equippedRareItem != null) {
             this.equippedRareItem = null;
             this.setHp(MAX_HP);
+            return true;
         }
+        return false;
     }
 
     /**
