@@ -103,5 +103,6 @@ public abstract class Enemy extends MovingEntity {
     public abstract void attack(Character character);
 
     public abstract List<Item> dropLoot();
+    
     public abstract String getImage();
 }

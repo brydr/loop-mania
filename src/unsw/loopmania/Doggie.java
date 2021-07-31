@@ -72,7 +72,6 @@ public class Doggie extends BossEnemy {
 
     @Override
     public String getImage() {
-        String slugImage = "src/images/doggie.png";
-        return slugImage;
+        return "src/images/doggie.png";
     }
 }

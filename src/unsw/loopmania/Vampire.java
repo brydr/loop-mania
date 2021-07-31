@@ -109,7 +109,6 @@ public class Vampire extends BasicEnemy implements Undead {
 
     @Override
     public String getImage() {
-        String vampireImage = "src/images/vampire.png";
-        return vampireImage;
+        return "src/images/vampire.png";
     }
 }
