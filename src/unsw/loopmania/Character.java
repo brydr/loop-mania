@@ -202,20 +202,6 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * Use "The One Ring" to get full HP
-     * @precondition Character HP currently {@code <= 0}
-     * @postcondition Character alive again with HP of {@code MAX_HP}
-     */
-    public boolean consumeRareItem() {
-        if (this.equippedRareItem != null) {
-            this.equippedRareItem = null;
-            this.setHp(MAX_HP);
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Apply attack to any allied soldiers first, otherwise reduce HP of 
      * The Character by an amount depending on armour equipped
      * @param baseDamage Raw/base damage dealt by enemy

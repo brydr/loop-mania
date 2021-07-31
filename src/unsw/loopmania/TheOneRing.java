@@ -7,10 +7,13 @@ public class TheOneRing extends Item implements RareItem {
 	}
     
     @Override
-    public void addEffect(Character character) {
+    public boolean effect(Character character) {
         if (character.getHp() <= 0) {
+            character.setEquippedRareItem(null);
             character.setHp(character.getMaxHp());
+            return true;
         }
+        return false;
     }
 
     @Override

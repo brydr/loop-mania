@@ -1098,26 +1098,28 @@ public class LoopManiaWorldController {
      * @precondition Ring slot is at (col, row) = (0, 1)
      */
     private void useTheOneRing(GridPane gridPane) {
-        final boolean wasConsumed = world.getCharacter().consumeRareItem();
-        // If potion was ring, play sound
-        if (wasConsumed) {
-            //audioPlayer.playUsePotionSound();
+        if (world.getCharacter().getEquippedRareItem() != null) {
+            final boolean wasConsumed = world.getCharacter().getEquippedRareItem().effect(world.getCharacter());
+            // If potion was ring, play sound
+            if (wasConsumed) {
+                //audioPlayer.playUsePotionSound();
 
-            // Remove ring node from gridPane
-            final Node node = getNodeFromGridPane(gridPane, 0, 1);
-            assert node != null;
-            gridPane.getChildren().remove(node);
+                // Remove ring node from gridPane
+                final Node node = getNodeFromGridPane(gridPane, 0, 1);
+                assert node != null;
+                gridPane.getChildren().remove(node);
 
-            // Add empty ring back to gridPane
-            // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
-            final ImageView emptyRingSlot = new ImageView(
-                new Image(
-                new File("src/images/ring_slot.png").toURI().toString()
-            ));
-            emptyRingSlot.setId("rareItemCell");
-            gridPane.add(emptyRingSlot, 0, 1);
-            Node newNode = getNodeFromGridPane(gridPane, 0, 1);
-            newNode.setId("rareItemCell");
+                // Add empty ring back to gridPane
+                // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
+                final ImageView emptyRingSlot = new ImageView(
+                    new Image(
+                    new File("src/images/ring_slot.png").toURI().toString()
+                ));
+                emptyRingSlot.setId("rareItemCell");
+                gridPane.add(emptyRingSlot, 0, 1);
+                Node newNode = getNodeFromGridPane(gridPane, 0, 1);
+                newNode.setId("rareItemCell");
+            }
         }
     }
 }

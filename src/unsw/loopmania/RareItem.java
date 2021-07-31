@@ -1,5 +1,5 @@
 package unsw.loopmania;
 
 public interface RareItem {
-    public void addEffect(Character character);
+    public boolean effect(Character character);
 }
