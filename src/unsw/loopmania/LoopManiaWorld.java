@@ -21,11 +21,12 @@ import unsw.loopmania.util.CustomCollectors;
  * entity can occupy the same square.
  */
 public class LoopManiaWorld {
-
     public static final int unequippedInventoryWidth = 4;
     public static final int unequippedInventoryHeight = 4;
     public static final int numBasicItems = 7;
 
+    // This is bad but it's necessary for added items to appear in the front end
+    private LoopManiaWorldController controller;
     /**
      * width of the world in GridPane cells
      */
@@ -37,28 +38,32 @@ public class LoopManiaWorld {
     private int height;
 
     /**
+     * Boolean whether or not a boss is on the world.
+     */
+    private boolean boss;
+    private boolean bossAlreadySpawned;
+
+    /**
      * generic entitites - i.e. those which don't have dedicated fields
      */
     private List<Entity> nonSpecifiedEntities;
 
     private Character character;
 
+
     // TODO = add more lists for other entities, for equipped inventory items, etc...
     private List<Entity> equippedInventoryItems;
 
-    private List<BasicEnemy> enemies;
+    private List<Enemy> enemies;
+
 
     private List<Card> cardEntities;
 
+    // The unequipped inventory of the character
+    // This shouldn't be added to directly, call addUnequippedItem() instead
     private List<Item> unequippedInventoryItems;
 
     private List<Building> buildingEntities;
-
-    private List<EnemySpawner> buildingSpawners;
-
-    private List<BuildingHelpers> buildingHelpers;
-
-    private List<BuildingAttackers> buildingAttackers;
 
     /**
      * list of x,y coordinate pairs in the order by which moving entities traverse them
@@ -69,13 +74,16 @@ public class LoopManiaWorld {
 
     private JSONObject worldGoals;
 
-    private BooleanProperty goalComplete;
+    public BooleanProperty goalComplete;
 
     private String goalsToComplete;
 
     private boolean nextCycle;
 
     private List<RandomPathLoot> worldPathLoot;
+
+    // Market for doggie coin
+    private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
 
     /**
      * create the world (constructor)
@@ -90,6 +98,9 @@ public class LoopManiaWorld {
         nonSpecifiedEntities = new ArrayList<>();
         character = null;
         enemies = new ArrayList<>();
+        boss = false;
+        bossAlreadySpawned = false;
+
         cardEntities = new ArrayList<>();
         unequippedInventoryItems = new ArrayList<>();
         equippedInventoryItems = new ArrayList<>();
@@ -101,6 +112,10 @@ public class LoopManiaWorld {
         goalComplete = new SimpleBooleanProperty(false);
     }
 
+    public void setController(LoopManiaWorldController controller) {
+        this.controller = controller;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -109,12 +124,16 @@ public class LoopManiaWorld {
         return height;
     }
 
+    public DoggieCoinMarket getDoggieCoinMarket() {
+        return doggieCoinMarket;
+    }
+
     // getEnemies and addEnemies is used for testing.
-    public List<BasicEnemy> getEnemies() {
+    public List<Enemy> getEnemies() {
         return enemies;
     }
 
-    public void addEnemies(BasicEnemy e) {
+    public void addEnemies(Enemy e) {
         enemies.add(e);
     }
 
@@ -170,6 +189,34 @@ public class LoopManiaWorld {
     }
 
     /**
+     * spawns boss enemies if the conditions warrant it, adds to world
+     * @return list of the boss enemies to be displayed on screen
+     */
+    public List<BossEnemy> possiblySpawnBossEnemies(){
+        // TODO = expand this very basic version
+        Pair<Integer, Integer> pos = possiblyGetBossEnemySpawnPosition();
+        List<BossEnemy> spawningEnemies = new ArrayList<>();
+        if (pos != null && !bossAlreadySpawned && !boss){
+            int indexInPath = orderedPath.indexOf(pos);
+            if (character.getCycles() == 20) {
+                Doggie doggie = new Doggie(new PathPosition(indexInPath, orderedPath), doggieCoinMarket);
+                enemies.add(doggie);
+                spawningEnemies.add(doggie);
+                bossAlreadySpawned = true;
+                boss = true;
+            } else if (character.getCycles() == 40 && character.getExperience() >= 10000) {
+                ElanMuske elan = new ElanMuske(new PathPosition(indexInPath, orderedPath));
+                enemies.add(elan);
+                spawningEnemies.add(elan);
+                bossAlreadySpawned = true;
+                boss = true;
+                doggieCoinMarket.setElanAlive(true);
+            }
+        }
+        return spawningEnemies;
+    }
+
+    /**
      * Drops random path loot at a 1% chance for each tile.
      * @return list of loot that will be dropped.
      */
@@ -211,7 +258,7 @@ public class LoopManiaWorld {
      * kill an enemy
      * @param enemy enemy to be killed
      */
-    private void killEnemy(BasicEnemy enemy){
+    private void killEnemy(Enemy enemy){
         enemy.destroy();
         enemies.remove(enemy);
     }
@@ -242,36 +289,12 @@ public class LoopManiaWorld {
      * run the expected battles in the world, based on current world state
      * @return list of enemies which have been killed
      */
-    public List<BasicEnemy> runBattles() {
-        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code  
+    public List<Enemy> runBattles() {
+        // TODO = Refactor - this is a nightmare to read - break into smaller private functions and use shorter lines of code
         // TODO = modify this - currently the character automatically wins all battles without any damage!
-        List<BasicEnemy> defeatedEnemies = new ArrayList<BasicEnemy>();
-        List<BasicEnemy> enemiesInRange = new ArrayList<BasicEnemy>();
-        boolean alreadyABattle = false;
+        List<Enemy> defeatedEnemies = new ArrayList<Enemy>();
 
-        BasicEnemy battledEnemy = null;
-        for (BasicEnemy e: enemies){
-            // Pythagoras: a^2+b^2 < radius^2 to see if within radius
-            // TODO = you should implement different RHS on this inequality, based on influence radii and battle radii
-            // If an enemy is in range add it into the enemiesInRange array. This enemy will be the enemy the character is battling.
-            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getBattleRadius(), 2)){
-                enemiesInRange.add(e);
-                battledEnemy = e;
-                alreadyABattle = true;
-                break;
-            }
-        }
-
-        for (BasicEnemy e: enemies) {
-            // Check if there is an enemy that it is battling since supports only help enemies that are battling.
-            if (alreadyABattle == false) {
-                break;
-            // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
-            // These enemies added will be the enemies supporting.
-            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getSupportRadius(), 2)) {
-                enemiesInRange.add(e);
-            }
-        }
+        List<Enemy> enemiesInRange = getEnemyInRange();
 
         int i = 0;
         // An array that will store all enemies that have turned into allied soldiers.
@@ -279,11 +302,19 @@ public class LoopManiaWorld {
 
         // End the while if there are no enemies left or the only enemies left are transformedEnemies.
         while (enemiesInRange.size() > 0) {
-            BasicEnemy e = enemiesInRange.get(i);
+            Enemy e = enemiesInRange.get(i);
             int enemyHealth = e.getHp();
             int charHealth = character.getHp();
 
             while (charHealth > 0 && enemyHealth > 0 && !(e.getInTrance())) {
+                // If the enemy can run away then break out of the while loop.
+                if (e.getRunAway()) {
+                    int runAwayChance = (new Random()).nextInt(10);
+                    if (runAwayChance < 3) {
+                        e.setRunAway(false);
+                    }
+                    break;
+                }
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
 
                 int outputDamage = character.getEquippedWeapon().getDamage(e);
@@ -303,6 +334,12 @@ public class LoopManiaWorld {
                     }
                 }
                 e.attack(character);    // Attacks allies first.
+
+                // If the enemy is a boss, then apply its healEnemies method which elan muske uses which heals the list of enemies passed in.
+                if (e instanceof BossEnemy) {
+                    BossEnemy boss = (BossEnemy) e;
+                    boss.healEnemies(enemiesInRange);
+                }
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {
                     enemiesInRange.add(e.getConvertedToEnemy());
@@ -337,13 +374,20 @@ public class LoopManiaWorld {
             if (enemyHealth <= 0) {
                 defeatedEnemies.add(e);
                 enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
-            // If an enemy did not die it means it was put in trance.
+            // If an enemy did not die it means it was put in trance or Elan ran away.
             } else {
                 // Adds the new allied soldier into the characters array of allied soldiers.
                 AlliedSoldier transformedSoldier = e.convertToFriendly(character);
-                transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
-                enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
-                i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
+                if (transformedSoldier != null) {
+                    transformedEnemies.add(transformedSoldier); // Add the transformed enemy into the transformedEnemy array which holds the allied soldier.
+                    enemiesInRange.remove(e);   // Remove the enemy from enemies that are in range.
+                    i--;    // Subtract 1 from i so that the index remains the same when i gets added with 1. This is so that it doesnt skip an enemy since an enemy got removed.
+                // If it is null, it means it was Elan who ran away and so break out of the while loop since the character never killed it.
+                } else {
+                    if (enemiesInRange.size() == 1) {
+                        break;
+                    }
+                }
             }
 
             i++;
@@ -361,10 +405,18 @@ public class LoopManiaWorld {
             defeatedEnemies.add(oldEnemy);
         }
 
-        for (BasicEnemy e: defeatedEnemies){
+        for (Enemy e: defeatedEnemies){
             // IMPORTANT = we kill enemies here, because killEnemy removes the enemy from the enemies list
             // if we killEnemy in prior loop, we get java.util.ConcurrentModificationException
             // due to mutating list we're iterating over
+            if (e instanceof BossEnemy) {
+                // Set boss = false meaning that there is no boss in the world.
+                boss = false;
+                character.addBossKilled();
+                if (e instanceof ElanMuske) {
+                    doggieCoinMarket.setElanAlive(false);
+                }
+            }
             killEnemy(e);
         }
         return defeatedEnemies;
@@ -377,21 +429,14 @@ public class LoopManiaWorld {
     public Card loadRandomCard(){
         // if adding more cards than have, remove the first card...
         if (cardEntities.size() >= getWidth()){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
+            // Cards full case
             // TODO may have to edit payout based on what is being deleted
-            payout();
-            removeCard(0);
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-
-            // Give the character gold, exp or a random weapon.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
+            if (new Random().nextDouble() < 1. / 3) {
+                loadRandomBasicItem();
             } else {
-                loadRandomItem();
+                payoutGoldOrXp();
             }
+            removeCard(0);
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
@@ -401,29 +446,10 @@ public class LoopManiaWorld {
         return randCard;
     }
 
-    public Item loadRandomItem(){
-        // if adding more cards than have, remove the first card...
-        if (unequippedInventoryItems.size() >= unequippedInventoryHeight * unequippedInventoryWidth){
-            // TODO = give some cash/experience/item rewards for the discarding of the oldest card
-            removeItemByPositionInUnequippedInventoryItems(0);
-
-            int randomLoot = new Random().nextInt(3); // A random value between 0 and 2 inclusive.
-            // Give the character gold, exp or a random card.
-            if (randomLoot == 0) {
-                character.addGold(new Random().nextInt(91)+10); // Add a random amount of gold ranging from 10 and 100 inclusive.
-            } else if (randomLoot == 1) {
-                int randomExp = new Random().nextInt(21) + 10; // A random value between 10 and 30
-                character.addExperience(randomExp);
-            } else {
-                loadRandomCard();
-            }
-        }
-
+    public void loadRandomBasicItem() {
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Item item = new RandomItemGenerator().nextItem(unequippedInventoryItems.size(), 0);
-
-        unequippedInventoryItems.add(item);
-        return item;
+        // 0, 0 is fine as addUnequippedItem() sets them correctly later
+        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
     }
 
 
@@ -443,25 +469,32 @@ public class LoopManiaWorld {
      * spawn a sword in the world and return the sword entity
      * @return a sword to be spawned in the controller as a JavaFX node
      */
-    public Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
+    private Pair<Integer, Integer> getFirstSlotRemoveIfFull() {
         Pair<Integer, Integer> firstAvailableSlot = getFirstAvailableSlotForItem();
         if (firstAvailableSlot == null){
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
             // give some cash/experience rewards for the discarding of the oldest sword
-            payout();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
         return firstAvailableSlot;
     }
 
     /**
-     * spawn an item in the world and return the item entity
+     * Adds an item to the character's unequipped inventory in both the frontend and backend.
+     * Handles removing an item and adding gold and XP when the inventory is full.
+     * Overrides the item's X and Y to the next free inventory slot.
+     * This function calls onLoad() in the controller.
+     *
+     * @param item The item to be added
      * @return an item to be spawned in the controller as a JavaFX node
-     * @pre unequippedInventoryItems isn't full (getFirstSlotRemoveIfFull should be run before creating item for this method)
      */
-    public void addUnequippedItem(Item item){
+    public void addUnequippedItem(Item item) {
+        Pair<Integer, Integer> firstAvailableSlot = getFirstSlotRemoveIfFull();
+        item.setX(new SimpleIntegerProperty(firstAvailableSlot.getValue0()));
+        item.setY(new SimpleIntegerProperty(firstAvailableSlot.getValue1()));
         unequippedInventoryItems.add(item);
+        controller.onLoad(item);
     }
 
 
@@ -475,10 +508,11 @@ public class LoopManiaWorld {
         removeUnequippedInventoryItem(item);
     }
 
-    /**
+/**
      * run moves which occur with every tick without needing to spawn anything immediately
+     * @return Whether the character is back at the castle
      */
-    public void runTickMoves(){
+    public boolean runTickMoves(){
         nextCycle = false;
 
         // Initialise firstPath
@@ -489,7 +523,7 @@ public class LoopManiaWorld {
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
 
-        if (GoalEvaluator.evaluate(finalGoal) == true) {
+        if (GoalEvaluator.evaluate(finalGoal)) {
             // Character achieved all goals
             goalComplete.setValue(true);
         }
@@ -499,6 +533,8 @@ public class LoopManiaWorld {
         if (character.getX() == firstPath.getX().get() && character.getY() == firstPath.getY().get()) {
             character.addCycles();
             nextCycle = true;
+            // Set bossAlreadySpawned to false meaning since it is a new cycle, a boss has not spawned.
+            bossAlreadySpawned = false;
         }
 
         List<Building> buildingToRemove = new ArrayList<>();
@@ -525,8 +561,8 @@ public class LoopManiaWorld {
             } else if (building instanceof TrapBuilding) {
                 BuildingAttackers buildingAttacker = (BuildingAttackers) building;
                 // Loop through all enemies and make the trap deal damage to them.
-                List<BasicEnemy> killedEnemies = new ArrayList<>();
-                for (BasicEnemy e: enemies) {
+                List<Enemy> killedEnemies = new ArrayList<>();
+                for (Enemy e: enemies) {
                     buildingAttacker.attackEnemy(e);
                     if (e.getHp() <= 0) {
                         killedEnemies.add(e);
@@ -536,7 +572,7 @@ public class LoopManiaWorld {
                     }
                 }
 
-                for (BasicEnemy e: killedEnemies) {
+                for (Enemy e: killedEnemies) {
                     killEnemy(e);
                 }
             }
@@ -545,6 +581,9 @@ public class LoopManiaWorld {
             buildingEntities.remove(buildingRemove);
         }
         moveBasicEnemies();
+        doggieCoinMarket.tickPrice();
+
+        return nextCycle;
     }
 
     /**
@@ -571,39 +610,6 @@ public class LoopManiaWorld {
         equippedInventoryItems.remove(item);
     }
 
-    public BasicItem addUnequippedRandomBasicItem(SimpleIntegerProperty x, SimpleIntegerProperty y) {
-        Random randomGenerator = new Random();
-        BasicItem newItem;
-        int numBasicItems = 7;
-        switch (randomGenerator.nextInt(numBasicItems)) {
-            case 0:
-                newItem = new HealthPotion(x, y);
-                break;
-            case 1:
-                newItem = new Staff(x, y);
-                break;
-            case 2:
-                newItem = new Stake(x, y);
-                break;
-            case 3:
-                newItem = new Sword(x, y);
-                break;
-            case 4:
-                newItem = new Armour(x, y);
-                break;
-            case 5:
-                newItem = new Shield(x, y);
-                break;
-            case 6:
-                newItem = new Helmet(x, y);
-                break;
-            default: throw new RuntimeException("Can't generate random item");
-        }
-        unequippedInventoryItems.add(newItem);
-        return newItem;
-    }
-
-
     /**
      * remove item at a particular index in the unequipped inventory items list (this is ordered based on age in the starter code)
      * @param index index from 0 to length-1
@@ -618,7 +624,7 @@ public class LoopManiaWorld {
      * get the first pair of x,y coordinates which don't have any items in it in the unequipped inventory
      * @return x,y coordinate pair
      */
-    public Pair<Integer, Integer> getFirstAvailableSlotForItem(){
+    private Pair<Integer, Integer> getFirstAvailableSlotForItem(){
         // first available slot for an item...
         // IMPORTANT - have to check by y then x, since trying to find first available slot defined by looking row by row
         for (int y = 0; y < unequippedInventoryHeight; y++){
@@ -635,7 +641,7 @@ public class LoopManiaWorld {
      * shift card coordinates down starting from x coordinate
      * @param x x coordinate which can range from 0 to width-1
      */
-    public void shiftCardsDownFromXCoordinate(int x){
+    private void shiftCardsDownFromXCoordinate(int x){
         for (Card c : cardEntities){
             if (c.getX() >= x){
                 c.x().set(c.getX()-1);
@@ -646,9 +652,9 @@ public class LoopManiaWorld {
     /**
      * move all enemies
      */
-    public void moveBasicEnemies() {
+    private void moveBasicEnemies() {
         // TODO = expand to more types of enemy
-        for (BasicEnemy e : enemies){
+        for (Enemy e : enemies){
             e.move();
         }
     }
@@ -657,7 +663,7 @@ public class LoopManiaWorld {
      * get a randomly generated position which could be used to spawn an enemy
      * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
      */
-    public Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
+    private Pair<Integer, Integer> possiblyGetBasicEnemySpawnPosition(){
         // TODO = modify this
 
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
@@ -682,6 +688,36 @@ public class LoopManiaWorld {
         } else {
             return null;
         }
+    }
+
+    /**
+     * get a randomly generated position which could be used to spawn an enemy
+     * @return null if random choice is that wont be spawning an enemy or it isn't possible, or random coordinate pair if should go ahead
+     */
+    private Pair<Integer, Integer> possiblyGetBossEnemySpawnPosition(){
+        // TODO = modify this
+
+        // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
+        Random rand = new Random();
+
+        if (!boss) {
+            List<Pair<Integer, Integer>> orderedPathSpawnCandidates = new ArrayList<>();
+            final int indexPosition = orderedPath.indexOf(new Pair<Integer, Integer>(character.getX(), character.getY()));
+            // inclusive start and exclusive end of range of positions not allowed
+            final int startNotAllowed = (indexPosition - 2 + orderedPath.size())%orderedPath.size();
+            final int endNotAllowed = (indexPosition + 3)%orderedPath.size();
+            // note terminating condition has to be != rather than < since wrap around...
+            for (int i = endNotAllowed; i != startNotAllowed; i = (i+1) % orderedPath.size()) {
+                orderedPathSpawnCandidates.add(orderedPath.get(i));
+            }
+            // choose random choice
+            Pair<Integer, Integer> spawnPosition = orderedPathSpawnCandidates.get(rand.nextInt(orderedPathSpawnCandidates.size()));
+            return spawnPosition;
+        } else {
+            return null;
+        }
+
+
     }
 
     /**
@@ -734,8 +770,8 @@ public class LoopManiaWorld {
             .collect(CustomCollectors.toSingleton());
 
         // Building CANNOT be spawned here IF (tile is incorrect type) OR (tile is the firstPath)
-        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) ) 
-            || (   buildingNodeX == firstPath.getX().getValue() 
+        if (!card.canSpawnOnTile( getTileType(buildingNodeX, buildingNodeY) )
+            || (   buildingNodeX == firstPath.getX().getValue()
                 && buildingNodeY == firstPath.getY().getValue() )) {
             // TODO = Change interface to use an `Exception` or `Optional<T>` instead
             return null;
@@ -803,12 +839,14 @@ public class LoopManiaWorld {
         return this.unequippedInventoryItems;
     }
 
-    public void payout() {
-        if (new Random().nextInt(100) >= 85) {
-            character.addGold(new Random().nextInt(90)+10);
-        }
-        if (new Random().nextInt(100) >= 50) {
-            character.addExperience(new Random().nextInt(20)+10);
+    public void payoutGoldOrXp() {
+        if (new Random().nextDouble() < .5) {
+            // Character gets gold
+            character.addGold(new Random().nextInt(91) + 10);
+
+        } else {
+            // Character gets XP
+            character.addExperience(new Random().nextInt(21) + 10);
         }
     }
 
@@ -831,6 +869,42 @@ public class LoopManiaWorld {
 
     public JSONObject getWorldGoals() {
         return worldGoals;
+    }
+
+    public List<Enemy> getEnemyInRange() {
+        List<Enemy> enemiesInRange = new ArrayList<Enemy>();
+        boolean alreadyABattle = false;
+
+        Enemy battledEnemy = null;
+
+        for (Enemy e: enemies){
+            // Pythagoras: a^2+b^2 < radius^2 to see if within radius
+            // TODO = you should implement different RHS on this inequality, based on influence radii and battle radii
+            // If an enemy is in range add it into the enemiesInRange array. This enemy will be the enemy the character is battling.
+            if (Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getBattleRadius(), 2)){
+                enemiesInRange.add(e);
+                battledEnemy = e;
+                alreadyABattle = true;
+                break;
+            }
+        }
+
+        for (Enemy e: enemies) {
+            // Check if there is an enemy that it is battling since supports only help enemies that are battling.
+            if (!alreadyABattle) {
+                break;
+            // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
+            // These enemies added will be the enemies supporting.
+            } else if (
+                battledEnemy != e && 
+                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)  
+                <= Math.pow(e.getSupportRadius(), 2)
+            ) {
+                enemiesInRange.add(e);
+            }
+        }
+
+        return enemiesInRange;
     }
 
 }

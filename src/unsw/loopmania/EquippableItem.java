@@ -15,4 +15,7 @@ public abstract  class EquippableItem extends BasicItem {
 	public boolean isBroken() {
 		return durability <= 0 ? true : false;
 	}
+
+	public abstract String getEmptySlotId();
+	public abstract String getEmptySlotImage();
 }

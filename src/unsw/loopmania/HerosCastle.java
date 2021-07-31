@@ -10,8 +10,7 @@ public class HerosCastle extends Building {
 
     @Override
     public String getImage() {
-        String herosCastle = "src/images/heros_castle.png";
-        return herosCastle;
+        return "src/images/heros_castle.png";
     }
     
 }

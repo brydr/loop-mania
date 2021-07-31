@@ -1,13 +1,17 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.time.Duration;
+
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Slug extends BasicEnemy {
-    
+    public static final int STARTING_HP = 30;
     public Slug(PathPosition position) {
         super(position);
         this.setAttack(3);
-        this.setHp(30);
+        this.setHp(STARTING_HP);
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);
@@ -30,14 +34,33 @@ public class Slug extends BasicEnemy {
     }
 
     @Override
+    public void setHp(int hp) {
+        if (hp > STARTING_HP) {
+            this.hp.setValue(STARTING_HP);
+        } else {
+            this.hp.setValue(hp);
+        }
+    }
+
+    @Override
     public void attack(Character character) {
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);
     }
 
     @Override
+    public List<Item> dropLoot() {
+        List<Item> loot = new ArrayList<Item>();
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (oneRingChance < 3) {
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            loot.add(theOneRing);
+        }
+        return loot;
+    }
+
+    @Override
     public String getImage() {
-        String slugImage = "src/images/slug.png";
-        return slugImage;
+        return "src/images/slug.png";
     }
 }

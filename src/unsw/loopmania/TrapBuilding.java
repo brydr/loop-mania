@@ -13,15 +13,14 @@ public class TrapBuilding extends Building implements BuildingAttackers {
 
     @Override
     public String getImage() {
-        String trapBuildingImage = "src/images/trap.png";
-        return trapBuildingImage;
+        return "src/images/trap.png";
     }
 
     /**
      * Deal damage to any enemies on the Trap, potentially killing them.
     */
     @Override
-    public void attackEnemy(BasicEnemy enemy) {
+    public void attackEnemy(Enemy enemy) {
         if (enemy.getX() == getX() && enemy.getY() == getY()) {
             this.destroy();
             enemy.takeDamage(TRAP_DAMAGE);

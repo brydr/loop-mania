@@ -19,7 +19,7 @@ public class Staff extends Weapon implements MagicAbility {
 	}
 
 	@Override
-	public int getDamage(BasicEnemy enemy) {
+	public int getDamage(Enemy enemy) {
 		durability -= 1;
 		if (this.shouldTrance()) {
 			enemy.setInTrance(true);
@@ -35,8 +35,7 @@ public class Staff extends Weapon implements MagicAbility {
 
 	@Override
 	public String getImage() {
-        String staffImage = "src/images/staff.png";
-        return staffImage;
+        return "src/images/staff.png";
     }
 
 }

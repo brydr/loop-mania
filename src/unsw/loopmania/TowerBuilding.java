@@ -10,12 +10,11 @@ public class TowerBuilding extends Building implements BuildingAttackers {
 
     @Override
     public String getImage() {
-        String towerBuildingImage = "src/images/tower.png";
-        return towerBuildingImage;
+        return "src/images/tower.png";
     }
 
     @Override
-    public void attackEnemy(BasicEnemy enemy) {
+    public void attackEnemy(Enemy enemy) {
         final double sqrDistFromEnemy = Math.pow(enemy.getX() - getX(), 2) + 
                                         Math.pow(enemy.getY() - getY(), 2);
         if (sqrDistFromEnemy <= 4 * 4) {

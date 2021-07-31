@@ -8,16 +8,19 @@ import java.util.List;
 import java.util.Random;
 
 import org.javatuples.Pair;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.RepeatedTest;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import test.DummyController;
 import unsw.loopmania.Armour;
 import unsw.loopmania.BasicItem;
 import unsw.loopmania.BerserkerMode;
 import unsw.loopmania.Character;
 import unsw.loopmania.HealthPotion;
 import unsw.loopmania.LoopManiaWorld;
+import unsw.loopmania.LoopManiaWorldController;
 import unsw.loopmania.PathPosition;
 import unsw.loopmania.RandomItemGenerator;
 import unsw.loopmania.Shield;
@@ -35,19 +38,17 @@ public class ShopTest {
 			Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 	private final Random random = new Random();
 	private final static long SEED = 22223;
+	private final LoopManiaWorldController controller = new DummyController();
 
 	/**
-	 * Shop inventory for seed 22223:
-	 * 0 Armour
-	 * 1 Helmet
-	 * 2 HealthPotion
-	 * 3 HealthPotion
-	 * 4 Shield
-	 * 5 Stake
-	 * 6 Armour
-	 * 7 Sword
-	 * 8 Shield
+	 * Shop inventory for seed 22223: 0 Armour 1 Helmet 2 HealthPotion 3
+	 * HealthPotion 4 Shield 5 Stake 6 Armour 7 Sword 8 Shield
 	 */
+
+	@Before
+	public void before() {
+		world.setController(controller);
+	}
 
 	// Main function for printing out shop item generation for a seed
 	public static void main(String args[]) {
@@ -78,7 +79,7 @@ public class ShopTest {
 
 		assertFalse(world.getInventory().contains(sword));
 		assertTrue(character.getGold() == 10 + sword.getSellPrice());
-}
+	}
 
 	@Test
 	public void testNoMoney() {
@@ -222,8 +223,12 @@ public class ShopTest {
 		assertFalse(world.getInventory().contains(healthPotion2));
 
 		// Asserts they were charged the right amount
-		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() - sword.getBuyPrice() - armour.getBuyPrice()
-				- shield.getBuyPrice() - healthPotion.getBuyPrice());
+		assertTrue(character.getGold() == 1000 
+										  - stake.getBuyPrice() 
+										  - sword.getBuyPrice() 
+										  - armour.getBuyPrice()
+										  - shield.getBuyPrice() 
+										  - healthPotion.getBuyPrice());
 	}
 
 	@Test
@@ -236,7 +241,9 @@ public class ShopTest {
 		List<BasicItem> inventory = shop.getInventory();
 
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
-			assertTrue(itemGenerator.nextItem(0, 0).getClass().equals(inventory.get(i).getClass()));
+			final var nextItemClass = itemGenerator.nextBasicItem(0, 0).getClass();
+			final var nextInvClass  = inventory.get(i).getClass();
+			assertTrue(nextItemClass.equals(nextInvClass));
 		}
 	}
 }

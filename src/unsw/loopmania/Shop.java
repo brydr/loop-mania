@@ -46,17 +46,17 @@ public class Shop {
 	 */
 	private void generateShopInventory() {
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
-			this.inventory.add(this.itemGenerator.nextItem(0, 0));
+			this.inventory.add(this.itemGenerator.nextBasicItem(0, 0));
 		}
 	}
 
 	/**
-	 * Gets a list of the shop's inventory. Caller shouldn't try to mutate the list
+	 * Gets the shop's inventory
 	 *
-	 * @return Shop's inventory
+	 * @return An immutable list containing the shop's inventory
 	 */
 	public List<BasicItem> getInventory() {
-		return this.inventory;
+		return List.copyOf(this.inventory);
 	}
 
 	/**

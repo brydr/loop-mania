@@ -26,26 +26,45 @@ public class Character extends MovingEntity {
     private HealthPotion equippedHealthPotion;
     private final static int MAX_HP = 200;
     private boolean attackTwice;
+    private int stunned;
+    private int bossesKilled;
 
     public Character(PathPosition position) {
         super(position);
         this.experience = new SimpleIntegerProperty();
         this.cycles = new SimpleIntegerProperty();
         this.alliedSoldierNum = new SimpleIntegerProperty();
-        experience.setValue(0);
-        cycles.setValue(0);
+        experience.setValue(10000);
+        cycles.setValue(19);
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
         this.attackTwice = false;
+        this.stunned = 0;
     }
 
     @Override
     public void setHp(int hp) {
         final int newHp = Integer.min(MAX_HP, hp);
         super.setHp(newHp);
+    }
+
+    public int getStunned() {
+        return stunned;
+    }
+
+    public void setStunned(int stunned) {
+        this.stunned = stunned;
+    }
+
+    public int getBossesKilled() {
+        return bossesKilled;
+    }
+
+    public void addBossKilled() {
+        this.bossesKilled++;
     }
 
     public boolean getAttackTwice() {
@@ -189,12 +208,12 @@ public class Character extends MovingEntity {
      * checks equippedItems that have lost durability and need to be destroyed
      * @return list of items and their location in equippableItems inventory to be removed in frontend
      */
-    public List<Triplet<Integer, Integer, BasicItem>> removeDamagedItems() {
-        List<Triplet<Integer, Integer, BasicItem>> brokenItems = new ArrayList<Triplet<Integer, Integer, BasicItem>>();
+    public List<Triplet<Integer, Integer, EquippableItem>> removeDamagedItems() {
+        List<Triplet<Integer, Integer, EquippableItem>> brokenItems = new ArrayList<Triplet<Integer, Integer, EquippableItem>>();
 
         if (equippedWeapon != null && equippedWeapon.isBroken()) {
             // unarmed.isBroken() will always return false so assume equippedWeapons is of type weapon/BasicItem
-            BasicItem item = (BasicItem)equippedWeapon;
+            EquippableItem item = (EquippableItem)equippedWeapon;
             brokenItems.add(new Triplet<>(0, 0, item));
             equippedWeapon = new Unarmed();
         }
@@ -258,22 +277,29 @@ public class Character extends MovingEntity {
      * Calls damage from equippedWeapon, outputs damage to given enemy.
      * @param enemy The enemy to be attacked
      */
-    public void attack(BasicEnemy enemy) {
-        // Get base damage according to equipped weapon
-        final int baseDamage = equippedWeapon.getDamage(enemy);
-        // Attack power is diminished by helmet
-        final int outputDamage = (equippedHelmet != null)
-            ? equippedHelmet.calculateDamage(baseDamage)
-            : baseDamage;
-        enemy.takeDamage(outputDamage);
-
-        // Check that enemy isn't in trance before allies attack
-        if (!enemy.getInTrance()) {
-            // All allies attack enemy
-            for (AlliedSoldier ally : listAlliedSoldiers) {
-                ally.attack(enemy);
-            }
+    public void attack(Enemy enemy) {
+        // If the character is currently stunned -1 to the stun duration and return.
+        if (stunned > 0) {
+            stunned -= 1;
+            return;
         }
+
+         // Get base damage according to equipped weapon
+         final int baseDamage = equippedWeapon.getDamage(enemy);
+         // Attack power is diminished by helmet
+         final int outputDamage = (equippedHelmet != null)
+             ? equippedHelmet.calculateDamage(baseDamage)
+             : baseDamage;
+         enemy.takeDamage(outputDamage);
+ 
+         // Check that enemy isn't in trance before allies attack
+         if (!enemy.getInTrance()) {
+             // All allies attack enemy
+             for (AlliedSoldier ally : listAlliedSoldiers) {
+                 ally.attack(enemy);
+             }
+         }
+ 
     }
 
     /**
@@ -352,7 +378,6 @@ public class Character extends MovingEntity {
         return charalliedSoldierNum;
     }
     public String getImage() {
-        String characterImage = "src/images/human_new.png";
-        return characterImage;
+        return "src/images/human_new.png";
     }
 }

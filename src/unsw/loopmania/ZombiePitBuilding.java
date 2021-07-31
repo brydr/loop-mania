@@ -10,8 +10,7 @@ public class ZombiePitBuilding extends Building implements EnemySpawner {
 
     @Override
     public String getImage() {
-        String zombiePitImage = "src/images/zombie_pit.png";
-        return zombiePitImage;
+        return "src/images/zombie_pit.png";
     }
 
     @Override

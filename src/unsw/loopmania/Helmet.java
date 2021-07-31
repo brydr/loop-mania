@@ -20,8 +20,7 @@ public class Helmet extends ProtectiveGear {
 
 	@Override
 	public String getImage() {
-        String helmetImage = "src/images/helmet.png";
-        return helmetImage;
+        return "src/images/helmet.png";
     }
 
 	@Override

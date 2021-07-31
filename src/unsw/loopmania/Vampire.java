@@ -1,7 +1,10 @@
 package unsw.loopmania;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.time.Duration;
+
+import javafx.beans.property.SimpleIntegerProperty;
 public class Vampire extends BasicEnemy implements Undead {
 
     // criticalChance is only used for testing, primarily for the shield.
@@ -40,6 +43,15 @@ public class Vampire extends BasicEnemy implements Undead {
     }
 
     @Override
+    public void setHp(int hp) {
+        if (hp > STARTING_HP) {
+            this.hp.setValue(STARTING_HP);
+        } else {
+            this.hp.setValue(hp);
+        }
+    }
+
+    @Override
     public void attack(Character character) {
 
         int criticalBiteChance;
@@ -57,7 +69,7 @@ public class Vampire extends BasicEnemy implements Undead {
             alreadyInCritical = false;
         }
 
-        if (criticalBiteChance <= 11 && alreadyInCritical == false) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
+        if (criticalBiteChance <= 11 && !alreadyInCritical) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
             alreadyInCritical = true;
             criticalBite();
         } else if (alreadyInCritical && criticalDuration != 0) {     // If the vampire is already in a criticalBite state.
@@ -85,8 +97,18 @@ public class Vampire extends BasicEnemy implements Undead {
     }
 
     @Override
+    public List<Item> dropLoot() {
+        List<Item> loot = new ArrayList<Item>();
+        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (oneRingChance < 3) {
+            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            loot.add(theOneRing);
+        }
+        return loot;
+    }
+
+    @Override
     public String getImage() {
-        String vampireImage = "src/images/vampire.png";
-        return vampireImage;
+        return "src/images/vampire.png";
     }
 }

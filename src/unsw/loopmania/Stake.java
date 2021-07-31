@@ -13,7 +13,7 @@ public class Stake extends Weapon implements AttackAbility {
 	}
 
 	@Override
-	public int getDamage(BasicEnemy enemy) {
+	public int getDamage(Enemy enemy) {
 		durability -= 1;
 		if (enemy.getClass().equals(Vampire.class)) {
 			// Do extra damage to vampires
@@ -24,8 +24,7 @@ public class Stake extends Weapon implements AttackAbility {
 	
 	@Override
 	public String getImage() {
-		String stakeImage = "src/images/stake.png";
-		return stakeImage;
+		return "src/images/stake.png";
 	}
 
 }

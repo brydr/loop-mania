@@ -18,7 +18,7 @@ public class BattleResultsController {
     private Integer characterHp;
     private int numEnemies[] = {0, 0, 0};
     
-    public BattleResultsController(List<BasicEnemy> defeatedEnemies, int characterHp) {
+    public BattleResultsController(List<Enemy> defeatedEnemies, int characterHp) {
         this.characterHp = characterHp;
         totalExp = 0;
         getEnemyList(defeatedEnemies);
@@ -59,12 +59,11 @@ public class BattleResultsController {
         Vbox.getChildren().add(Grid);
         Scene battleScene = new Scene(Vbox);
         battleResults.setScene(battleScene);
-        battleResults.show();
         return battleResults;
     }
 
-    public void getEnemyList(List<BasicEnemy> defeatedEnemies) {
-        for (BasicEnemy e : defeatedEnemies) {
+    public void getEnemyList(List<Enemy> defeatedEnemies) {
+        for (Enemy e : defeatedEnemies) {
             if (e instanceof Slug) {
                 numEnemies[0]++;
             }

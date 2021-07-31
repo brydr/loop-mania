@@ -24,18 +24,17 @@ public class TrapDamagesEnemyTest {
         LoopManiaWorld world = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 
         Character c = new Character(pos);
-        
+
         world.setCharacter(c);
-        
-        // Didnt know how to change this into a relative path.
-        String file_name = "C:\\Users\\jaeff\\Comp2511\\Project\\21T2-cs2511-project\\worlds\\basic_world_with_player.json";
+
+        String file_name = this.getClass().getResource("/basic_world_with_player.json").getFile();
         JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
         world.setGoals(JSONGoals);
 
         // Setup trap
         TrapBuilding trap = new TrapBuilding(new SimpleIntegerProperty(0), new SimpleIntegerProperty(2));
         world.addBuilding(trap);
-        
+
         // Spawn a vampire near a trap
         Vampire vampire = new Vampire(pos);
         world.addEnemies(vampire);
@@ -50,6 +49,6 @@ public class TrapDamagesEnemyTest {
         }
         // When Vampire lands on Trap, 30 damage is dealt - no need to go to next tick
         assertEquals(vampire.getHp(), Vampire.STARTING_HP - TrapBuilding.TRAP_DAMAGE);
-        
+
     }
 }

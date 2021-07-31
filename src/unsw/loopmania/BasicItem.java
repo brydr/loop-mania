@@ -20,6 +20,4 @@ public abstract class BasicItem extends Item {
 		return sellPrice;
 	}
 
-	public abstract String getEmptySlotId();
-	public abstract String getEmptySlotImage();
 }
