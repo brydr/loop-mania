@@ -14,6 +14,7 @@ public class Character extends MovingEntity {
     private ProtectiveGear equippedShield;
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
+    private List<RareItem> equippedRareItems;
     private List<AlliedSoldier> listAlliedSoldiers;
     private IntegerProperty experience;
     private IntegerProperty cycles;
@@ -35,9 +36,10 @@ public class Character extends MovingEntity {
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+        equippedRareItems = new ArrayList<RareItem>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
-        this.numAttack = 1;
+        this.numAttack = 0;
         this.stunned = 0;
     }
 
@@ -45,6 +47,19 @@ public class Character extends MovingEntity {
     public void setHp(int hp) {
         final int newHp = Integer.min(MAX_HP, hp);
         super.setHp(newHp);
+    }
+
+    /**
+     * numAttack is the amount of times the character will attack extra for. 
+     * For instance the campfire allows the character to attack twice since the campfire makes the character deal double damage.
+     * @return
+     */
+    public int getNumAttack() {
+        return numAttack;
+    }
+
+    public void setNumAttack(int numAttack) {
+        this.numAttack = numAttack;
     }
 
     public int getStunned() {
@@ -61,14 +76,6 @@ public class Character extends MovingEntity {
 
     public void addBossKilled() {
         this.bossesKilled++;
-    }
-
-    public int getAttackMulti() {
-        return numAttack;
-    }
-
-    public void setAttackMulti(int num) {
-        this.numAttack = num;
     }
 
     public WeaponStrategy getEquippedWeapon() {
@@ -182,6 +189,18 @@ public class Character extends MovingEntity {
         this.listAlliedSoldiers.remove(soldier);
     }
 
+    public List<RareItem> getListRareItems() {
+        return equippedRareItems;
+    }
+
+    public void addRareItem(RareItem rareItem) {
+        this.equippedRareItems.add(rareItem);
+    }
+
+    public void removeRareItem(RareItem rareItem) {
+        this.equippedRareItems.remove(rareItem);
+    }
+
     public int getMaxHp() {
         return MAX_HP;
     }
@@ -247,7 +266,14 @@ public class Character extends MovingEntity {
          final int outputDamage = (equippedHelmet != null)
              ? equippedHelmet.calculateDamage(baseDamage)
              : baseDamage;
+
+
          enemy.takeDamage(outputDamage);
+         // Check if the character has extra attacks.
+         while (numAttack > 0) {
+            enemy.takeDamage(outputDamage);
+            numAttack--;
+        }
  
          // Check that enemy isn't in trance before allies attack
          if (!enemy.getInTrance()) {

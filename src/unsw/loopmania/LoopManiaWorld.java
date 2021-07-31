@@ -326,23 +326,12 @@ public class LoopManiaWorld {
                     }
                     break;
                 }
+                // For every rare item equipped, do its effect.
+                for (RareItem rareItems : character.getListRareItems()) {
+                    rareItems.effect(character, e);
+                }
+
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
-
-                int outputDamage = character.getEquippedWeapon().getDamage(e);
-                // Reduce player damage by 15% if helmet equipped
-                if (character.getEquippedHelmet() != null)
-                    outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
-
-                // If the character has rare sword equipped, it will attack three times.
-                if (character.getEquippedWeapon() instanceof AndurilFlameOfTheWest) {
-                    character.setAttackMulti(3);
-                }
-                
-                // Loops through multiple attack for character (2 for campfire, 3 for rare sword)
-                while (character.getAttackMulti() > 1) {
-                    e.takeDamage(outputDamage);
-                    character.setAttackMulti(character.getAttackMulti() - 1);
-                }
 
                 // Add logic so the tower attacks too if in range.
                 for (Building building : buildingEntities) {
@@ -365,6 +354,12 @@ public class LoopManiaWorld {
                 }
                 charHealth = character.getHp();
                 enemyHealth = e.getHp();
+
+                // Only do the effect for the one ring.
+                RareItem theOneRing = character.getEquippedRareItem();
+                if (theOneRing != null) {
+                    theOneRing.effect(character, e);
+                }
 
                 // An array that will store all allies that need to be removed from the transformedEnemies array due to converting back into an enemy.
                 List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();

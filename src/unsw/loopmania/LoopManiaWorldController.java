@@ -406,6 +406,8 @@ public class LoopManiaWorldController {
         if (!world.getRareItems().isEmpty()) {
             for (Item drops : enemy.dropLoot(world.getRareItems())) {
                 world.addUnequippedItem(drops);
+                RareItem rareItem = (RareItem)drops;
+                character.addRareItem(rareItem);
             }
         }
     }
@@ -1099,7 +1101,7 @@ public class LoopManiaWorldController {
      */
     private void useTheOneRing(GridPane gridPane) {
         if (world.getCharacter().getEquippedRareItem() != null) {
-            final boolean wasConsumed = world.getCharacter().getEquippedRareItem().effect(world.getCharacter());
+            final boolean wasConsumed = world.getCharacter().getEquippedRareItem().effect(world.getCharacter(), null);
             // If potion was ring, play sound
             if (wasConsumed) {
                 //audioPlayer.playUsePotionSound();

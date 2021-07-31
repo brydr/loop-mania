@@ -87,10 +87,9 @@ public class ElanMuske extends BossEnemy {
     @Override
     public void attack(Character character) {
         int attackPower = this.getAttack();
-        if (character.getEquippedShield() != null && character.getEquippedShield() instanceof TreeStump) {
-            attackPower = attackPower / 3;
-        }
         character.takeDamage(attackPower);
+        // Set attack back to 50 in case of tree stump which reduces its attack by a 1/3.
+        this.setAttack(50);
     }
 
     @Override

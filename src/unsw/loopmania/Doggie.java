@@ -45,14 +45,13 @@ public class Doggie extends BossEnemy {
     public void attack(Character character) {
         int stunChance = (new Random()).nextInt(10); // A random number between 0 and 9.
         int attackPower = this.getAttack();
-        if (character.getEquippedShield() != null && character.getEquippedShield() instanceof TreeStump) {
-            attackPower = attackPower / 3;
-        }
         character.takeDamage(attackPower);
         // Stun the character at a 10% chance.
         if (stunChance == 0) {
             character.setStunned(3);
         }
+        // Set attack back to 20 since the tree stump reduces it by 1/3.
+        this.setAttack(20);
     }
 
     @Override

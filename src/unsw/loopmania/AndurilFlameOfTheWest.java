@@ -1,13 +1,16 @@
 package unsw.loopmania;
 
+import java.util.Random;
+
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class AndurilFlameOfTheWest extends Weapon implements AttackAbility {
+public class AndurilFlameOfTheWest extends Weapon implements RareItem {
 
     private final static int ATTACK_POWER = 10;
-    private final static int BOSS_DAMAGE = 30;
 	private final static int BUY_PRICE = 0;
 	private final static int SELL_PRICE = 0;
+
+    private int addEffectVal = new Random().nextInt(2);
 
     public AndurilFlameOfTheWest(SimpleIntegerProperty x, SimpleIntegerProperty y) {
         super(x, y, AndurilFlameOfTheWest.ATTACK_POWER, AndurilFlameOfTheWest.BUY_PRICE, AndurilFlameOfTheWest.SELL_PRICE);
@@ -15,12 +18,31 @@ public class AndurilFlameOfTheWest extends Weapon implements AttackAbility {
 
     @Override
 	public int getDamage(Enemy enemy) {
-		if (enemy.getClass().equals(BossEnemy.class)) {
-			// Do extra damage to bosses
-			return AndurilFlameOfTheWest.BOSS_DAMAGE;
-		}
 		return AndurilFlameOfTheWest.ATTACK_POWER;
 	}
+
+    @Override
+    public boolean effect(Character character, Enemy enemy) {
+        if (enemy instanceof BossEnemy) {
+            // Set it so the character attacks 2 more times for a total of 3 attacks, tripling the damage.
+            character.setNumAttack(2);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void addEffect(Character character, Enemy enemy) {
+        if (addEffectVal == 0 && enemy instanceof BossEnemy) {
+            int enemyAttack = enemy.getAttack();            // Tree stump effect
+            enemy.setAttack(enemyAttack/3);
+        } else {
+            if (character.getHp() <= 0) {
+                character.setEquippedRareItem(null);        // One Ring effect
+                character.setHp(character.getMaxHp());
+            }
+        }
+    }
 
     @Override
     public String getImage() {
