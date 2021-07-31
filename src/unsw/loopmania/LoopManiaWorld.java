@@ -196,7 +196,7 @@ public class LoopManiaWorld {
         // TODO = expand this very basic version
         Pair<Integer, Integer> pos = possiblyGetBossEnemySpawnPosition();
         List<BossEnemy> spawningEnemies = new ArrayList<>();
-        if (pos != null && bossAlreadySpawned == false && boss == false){
+        if (pos != null && !bossAlreadySpawned && !boss){
             int indexInPath = orderedPath.indexOf(pos);
             if (character.getCycles() == 20) {
                 Doggie doggie = new Doggie(new PathPosition(indexInPath, orderedPath), doggieCoinMarket);
@@ -523,7 +523,7 @@ public class LoopManiaWorld {
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(worldGoals, character);
 
-        if (GoalEvaluator.evaluate(finalGoal) == true) {
+        if (GoalEvaluator.evaluate(finalGoal)) {
             // Character achieved all goals
             goalComplete.setValue(true);
         }
@@ -700,14 +700,14 @@ public class LoopManiaWorld {
         // has a chance spawning a basic enemy on a tile the character isn't on or immediately before or after (currently space required = 2)...
         Random rand = new Random();
 
-        if (boss == false) {
+        if (!boss) {
             List<Pair<Integer, Integer>> orderedPathSpawnCandidates = new ArrayList<>();
-            int indexPosition = orderedPath.indexOf(new Pair<Integer, Integer>(character.getX(), character.getY()));
+            final int indexPosition = orderedPath.indexOf(new Pair<Integer, Integer>(character.getX(), character.getY()));
             // inclusive start and exclusive end of range of positions not allowed
-            int startNotAllowed = (indexPosition - 2 + orderedPath.size())%orderedPath.size();
-            int endNotAllowed = (indexPosition + 3)%orderedPath.size();
+            final int startNotAllowed = (indexPosition - 2 + orderedPath.size())%orderedPath.size();
+            final int endNotAllowed = (indexPosition + 3)%orderedPath.size();
             // note terminating condition has to be != rather than < since wrap around...
-            for (int i=endNotAllowed; i!=startNotAllowed; i=(i+1)%orderedPath.size()){
+            for (int i = endNotAllowed; i != startNotAllowed; i = (i+1) % orderedPath.size()) {
                 orderedPathSpawnCandidates.add(orderedPath.get(i));
             }
             // choose random choice
@@ -891,11 +891,15 @@ public class LoopManiaWorld {
 
         for (Enemy e: enemies) {
             // Check if there is an enemy that it is battling since supports only help enemies that are battling.
-            if (alreadyABattle == false) {
+            if (!alreadyABattle) {
                 break;
             // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
             // These enemies added will be the enemies supporting.
-            } else if (battledEnemy != e && Math.pow((character.getX()-e.getX()), 2) +  Math.pow((character.getY()-e.getY()), 2) <= Math.pow(e.getSupportRadius(), 2)) {
+            } else if (
+                battledEnemy != e && 
+                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)  
+                <= Math.pow(e.getSupportRadius(), 2)
+            ) {
                 enemiesInRange.add(e);
             }
         }

@@ -69,7 +69,7 @@ public class Vampire extends BasicEnemy implements Undead {
             alreadyInCritical = false;
         }
 
-        if (criticalBiteChance <= 11 && alreadyInCritical == false) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
+        if (criticalBiteChance <= 11 && !alreadyInCritical) {    // If a criticalBite chance occurs and the vampire is not already in a criticalBite state.
             alreadyInCritical = true;
             criticalBite();
         } else if (alreadyInCritical && criticalDuration != 0) {     // If the vampire is already in a criticalBite state.
