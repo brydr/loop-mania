@@ -17,13 +17,7 @@ public class ElanMuske extends BossEnemy {
         this.setBattleRadius(1);
         this.setSupportRadius(1);
         this.setExperienceGain(1000);
-        int runAwayChance = (new Random()).nextInt(10);
-        // runs away at a 70% chance.
-        if (runAwayChance < 7) {
-            runAway = true;   
-        } else {
-            runAway = false;
-        }
+        runAway = true;
     }
 
     @Override
