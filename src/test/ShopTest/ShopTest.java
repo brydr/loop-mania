@@ -22,7 +22,7 @@ import unsw.loopmania.HealthPotion;
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.LoopManiaWorldController;
 import unsw.loopmania.PathPosition;
-import unsw.loopmania.RandomItemGenerator;
+import unsw.loopmania.RandomObjectGenerator;
 import unsw.loopmania.Shield;
 import unsw.loopmania.Shop;
 import unsw.loopmania.Stake;
@@ -235,7 +235,7 @@ public class ShopTest {
 	@RepeatedTest(1000)
 	public void testShopItemGeneration() {
 		int seed = random.nextInt();
-		RandomItemGenerator itemGenerator = new RandomItemGenerator(seed);
+		RandomObjectGenerator itemGenerator = new RandomObjectGenerator(seed);
 
 		Shop shop = new Shop(world, new StandardMode(), seed);
 		List<BasicItem> inventory = shop.getInventory();
