@@ -22,7 +22,7 @@ import unsw.loopmania.HealthPotion;
 import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.LoopManiaWorldController;
 import unsw.loopmania.PathPosition;
-import unsw.loopmania.RandomItemGenerator;
+import unsw.loopmania.RandomObjectGenerator;
 import unsw.loopmania.Shield;
 import unsw.loopmania.Shop;
 import unsw.loopmania.Stake;
@@ -223,21 +223,27 @@ public class ShopTest {
 		assertFalse(world.getInventory().contains(healthPotion2));
 
 		// Asserts they were charged the right amount
-		assertTrue(character.getGold() == 1000 - stake.getBuyPrice() - sword.getBuyPrice() - armour.getBuyPrice()
-				- shield.getBuyPrice() - healthPotion.getBuyPrice());
+		assertTrue(character.getGold() == 1000 
+										  - stake.getBuyPrice() 
+										  - sword.getBuyPrice() 
+										  - armour.getBuyPrice()
+										  - shield.getBuyPrice() 
+										  - healthPotion.getBuyPrice());
 	}
 
 	@Test
 	@RepeatedTest(1000)
 	public void testShopItemGeneration() {
 		int seed = random.nextInt();
-		RandomItemGenerator itemGenerator = new RandomItemGenerator(seed);
+		RandomObjectGenerator itemGenerator = new RandomObjectGenerator(seed);
 
 		Shop shop = new Shop(world, new StandardMode(), seed);
 		List<BasicItem> inventory = shop.getInventory();
 
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
-			assertTrue(itemGenerator.nextBasicItem(0, 0).getClass().equals(inventory.get(i).getClass()));
+			final var nextItemClass = itemGenerator.nextBasicItem(0, 0).getClass();
+			final var nextInvClass  = inventory.get(i).getClass();
+			assertTrue(nextItemClass.equals(nextInvClass));
 		}
 	}
 }

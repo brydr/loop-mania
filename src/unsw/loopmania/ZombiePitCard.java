@@ -15,8 +15,7 @@ public class ZombiePitCard extends Card {
 
     @Override
     public String getImage() {
-        String zombiePitCardImage = "src/images/zombie_pit_card.png";
-        return zombiePitCardImage;
+        return "src/images/zombie_pit_card.png";
     }
 
 

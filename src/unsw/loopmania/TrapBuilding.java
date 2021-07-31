@@ -13,8 +13,7 @@ public class TrapBuilding extends Building implements BuildingAttackers {
 
     @Override
     public String getImage() {
-        String trapBuildingImage = "src/images/trap.png";
-        return trapBuildingImage;
+        return "src/images/trap.png";
     }
 
     /**

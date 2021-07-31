@@ -1,6 +1,7 @@
 package test.GoalTest;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Arrays;
 
@@ -25,12 +26,12 @@ public class GoalsTest {
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
 
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == false); // Should be false first;
+        assertFalse(GoalEvaluator.evaluate(finalGoal)); // Should be false first;
 
         // Add 123456 experience.
         c.addExperience(123456);
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == true); // Should be true.
+        assertTrue(GoalEvaluator.evaluate(finalGoal)); // Should be true.
     }
 
     @Test
@@ -44,12 +45,12 @@ public class GoalsTest {
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
 
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == false); // Should be false first;
+        assertFalse(GoalEvaluator.evaluate(finalGoal)); // Should be false first;
 
         // Add 900000 gold.
         c.addGold(900000);
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == true); // Should be true.
+        assertTrue(GoalEvaluator.evaluate(finalGoal)); // Should be true.
     }
 
     @Test
@@ -63,14 +64,14 @@ public class GoalsTest {
 
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
 
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == false); // Should be false first;
+        assertFalse(GoalEvaluator.evaluate(finalGoal)); // Should be false first;
 
         // Add 100 cycles
         for (int i = 0; i < 100; i++) {
             c.addCycles();
         }
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == true); // Should be true.
+        assertTrue(GoalEvaluator.evaluate(finalGoal)); // Should be true.
     }
 
     @Test
@@ -88,19 +89,19 @@ public class GoalsTest {
         }
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
 
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == false); // Should be false first since the character only has
+        assertFalse(GoalEvaluator.evaluate(finalGoal)); // Should be false first since the character only has
                                                                 // 100 cycles.
 
         c.addGold(900000); // Now add gold.
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == true); // Should be true now.
+        assertTrue(GoalEvaluator.evaluate(finalGoal)); // Should be true now.
 
         c.subtractGold(50); // Subtract gold so it should be false now.
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == false);
+        assertFalse(GoalEvaluator.evaluate(finalGoal));
 
         c.addExperience(123456); // Now add the experience
         finalGoal = GoalEvaluator.evaluateGoals(JSONGoals, c);
-        assertTrue(GoalEvaluator.evaluate(finalGoal) == true); // Should be true now.
+        assertTrue(GoalEvaluator.evaluate(finalGoal)); // Should be true now.
     }
 }

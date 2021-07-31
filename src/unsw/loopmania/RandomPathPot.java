@@ -5,8 +5,7 @@ public class RandomPathPot extends RandomPathLoot {
         super(position);
     }
     public String getImage() {
-        String potImage = "src/images/brilliant_blue_new.png";
-        return potImage;
+        return "src/images/brilliant_blue_new.png";
     }
 
     public int onPickUp() {

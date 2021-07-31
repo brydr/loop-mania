@@ -107,8 +107,7 @@ public class Zombie extends BasicEnemy implements Undead {
 
     @Override
     public String getImage() {
-        String zombieImage = "src/images/zombie.png";
-        return zombieImage;
+        return "src/images/zombie.png";
     }
 
 }

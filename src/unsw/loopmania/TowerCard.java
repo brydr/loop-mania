@@ -15,8 +15,7 @@ public class TowerCard extends Card {
 
     @Override
     public String getImage() {
-        String towerCardImage = "src/images/tower_card.png";
-        return towerCardImage;
+        return "src/images/tower_card.png";
     }
 
     @Override
