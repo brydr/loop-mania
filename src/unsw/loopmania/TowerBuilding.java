@@ -10,8 +10,7 @@ public class TowerBuilding extends Building implements BuildingAttackers {
 
     @Override
     public String getImage() {
-        String towerBuildingImage = "src/images/tower.png";
-        return towerBuildingImage;
+        return "src/images/tower.png";
     }
 
     @Override

@@ -10,8 +10,7 @@ public class VillageBuilding extends Building implements BuildingHelpers {
 
     @Override
     public String getImage() {
-        String VillageBuildingImage = "src/images/village.png";
-        return VillageBuildingImage;
+        return "src/images/village.png";
     }
 
     @Override

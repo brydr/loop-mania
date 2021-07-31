@@ -14,8 +14,7 @@ public class VillageCard extends Card {
 
     @Override
     public String getImage() {
-        String villageCardImage = "src/images/village_card.png";
-        return villageCardImage;
+        return "src/images/village_card.png";
     }
 
 

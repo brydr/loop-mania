@@ -12,7 +12,6 @@ public class HealthPotion extends Consumable {
     
     @Override
     public String getImage() {
-        String healthPotionImage = "src/images/brilliant_blue_new.png";
-        return healthPotionImage;
+        return "src/images/brilliant_blue_new.png";
     }
 }

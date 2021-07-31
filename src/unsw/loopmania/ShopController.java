@@ -35,9 +35,6 @@ public class ShopController {
 
 	private final static String LABEL_DEFAULT_TEXT = "Click items to buy, close window when done";
 
-	public ShopController() {
-	}
-
 	public void initialiseShop(LoopManiaWorld world, ShopStrategy strategy) {
 		this.world = world;
 		this.market = world.getDoggieCoinMarket();

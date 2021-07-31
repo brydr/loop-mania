@@ -44,5 +44,6 @@ public abstract class BasicEnemy extends Enemy {
     }
     
     public abstract void attack(Character character);
+    
     public abstract String getImage();
 }

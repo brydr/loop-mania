@@ -16,7 +16,6 @@ public class Armour extends ProtectiveGear {
 
 	@Override
 	public String getImage() {
-        String armourImage = "src/images/armour.png";
-        return armourImage;
+        return "src/images/armour.png";
     }
 }

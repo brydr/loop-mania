@@ -10,8 +10,7 @@ public class CampfireBuilding extends Building implements BuildingHelpers {
 
     @Override
     public String getImage() {
-        String campfireBuildingImage = "src/images/campfire.png";
-        return campfireBuildingImage;
+        return "src/images/campfire.png";
     }
 
     @Override

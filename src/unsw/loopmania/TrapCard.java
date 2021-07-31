@@ -17,8 +17,7 @@ public class TrapCard extends Card {
 
     @Override
     public String getImage() {
-        String trapCardImage = "src/images/trap_card.png";
-        return trapCardImage;
+        return "src/images/trap_card.png";
     }
 
 

@@ -13,6 +13,7 @@ public abstract class Card extends StaticEntity {
     }
 
     public abstract Building createBuilding(SimpleIntegerProperty buildingNodeX, SimpleIntegerProperty buildingNodeY);
+    
     public abstract String getImage();
 
     /**

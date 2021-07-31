@@ -16,8 +16,7 @@ public class VampireCastleBuilding extends Building implements EnemySpawner {
 
     @Override
     public String getImage() {
-        String vampireCastleBuildingImage = "src/images/vampire_castle_building_purple_background.png";
-        return vampireCastleBuildingImage;
+        return "src/images/vampire_castle_building_purple_background.png";
     }
 
     @Override

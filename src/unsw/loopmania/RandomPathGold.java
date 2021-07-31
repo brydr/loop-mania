@@ -7,8 +7,7 @@ public class RandomPathGold extends RandomPathLoot {
     }
 
     public String getImage() {
-        String goldImage = "src/images/gold_pile.png";
-        return goldImage;
+        return "src/images/gold_pile.png";
     }
 
     public int onPickUp() {

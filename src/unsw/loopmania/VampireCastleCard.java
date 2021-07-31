@@ -17,9 +17,9 @@ public class VampireCastleCard extends Card {
         return newBuilding;
     }
 
+    @Override
     public String getImage() {
-        String vampireCastleCardImage = "src/images/vampire_castle_card.png";
-        return vampireCastleCardImage;
+        return "src/images/vampire_castle_card.png";
     }
 
 
