@@ -4,12 +4,15 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public abstract  class EquippableItem extends BasicItem {
-	protected IntegerProperty durability;
-	private final static int MAX_DURABILITY = 30;
+	private IntegerProperty durabilityPercent;
+	private double durability;
+	private final static double MAX_DURABILITY = 50;
+	private final static double DURABILITY_BAR_WIDTH = 30;
 	public EquippableItem(SimpleIntegerProperty x, SimpleIntegerProperty y, int buyPrice, int sellPrice) {
 		super(x, y, buyPrice, sellPrice);
-		this.durability = new SimpleIntegerProperty();
-		this.durability.setValue(MAX_DURABILITY);
+		this.durabilityPercent = new SimpleIntegerProperty();
+		this.durabilityPercent.setValue(DURABILITY_BAR_WIDTH);
+		this.durability = MAX_DURABILITY;
 	}
 
 	/**
@@ -17,11 +20,16 @@ public abstract  class EquippableItem extends BasicItem {
 	 * @return {@code true} if gear is broken else {@code false}
 	 */
 	public boolean isBroken() {
-		return durability.getValue() <= 0 ? true : false;
+		return durability <= 0 ? true : false;
 	}
 
-	public IntegerProperty getDurability() {
-		return this.durability;
+	public IntegerProperty getDurabilityBar() {
+		return this.durabilityPercent;
+	}
+
+	public void decDurability() {
+		durability -= 1;
+		this.durabilityPercent.setValue(durability/MAX_DURABILITY*DURABILITY_BAR_WIDTH);
 	}
 
 	public abstract String getEmptySlotId();

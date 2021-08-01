@@ -300,7 +300,7 @@ public class LoopManiaWorldController {
         System.out.println("starting timer");
         isPaused = false;
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.2), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             boolean isAtCastle = world.runTickMoves();
             if (world.getCharacter().getHp() <= 0) {
                 pause();
@@ -668,20 +668,20 @@ public class LoopManiaWorldController {
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
                                     Weapon weapon = (Weapon)item;
                                     world.getCharacter().setEquippedWeapon(weapon);
-                                    swordDurability.widthProperty().bind(weapon.getDurability());
+                                    swordDurability.widthProperty().bind(weapon.getDurabilityBar());
                                 } else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet) {
                                     Helmet helmet = (Helmet)item;
                                     world.getCharacter().setEquippedHelmet(helmet);
-                                    helmetDurability.widthProperty().bind(helmet.getDurability());
+                                    helmetDurability.widthProperty().bind(helmet.getDurabilityBar());
                                 } else if (targetNode.getId().equals("armourCell") && item instanceof Armour) {
                                     Armour armour = (Armour)item;
                                     world.getCharacter().setEquippedArmour(armour);
-                                    armourDurability.widthProperty().bind(armour.getDurability());
+                                    armourDurability.widthProperty().bind(armour.getDurabilityBar());
                                     audioPlayer.playEquipArmourSound();
                                 } else if (targetNode.getId().equals("shieldCell") && item instanceof Shield) {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
-                                    shieldDurability.widthProperty().bind(shield.getDurability());
+                                    shieldDurability.widthProperty().bind(shield.getDurabilityBar());
                                 } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);
@@ -1097,10 +1097,6 @@ public class LoopManiaWorldController {
      */
     private void removeBrokenItems() {
         Character character = world.getCharacter();
-        System.out.println("armour" + character.getEquippedArmour());
-        System.out.println("helmet" + character.getEquippedHelmet());
-        System.out.println("shield" + character.getEquippedShield());
-        System.out.println("weapon" + character.getEquippedWeapon());
         List<Triplet<Integer, Integer, EquippableItem>> damagedItems = character.removeDamagedItems();
         for (Triplet<Integer, Integer, EquippableItem> triplet : damagedItems) {
             unequipItem(triplet);

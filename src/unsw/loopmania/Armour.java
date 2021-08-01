@@ -12,7 +12,7 @@ public class Armour extends ProtectiveGear {
 
 	@Override
 	public int calculateDamage(int attackPower) {
-		durability.setValue(durability.getValue() - 1);
+		decDurability();
 		return attackPower / 2;
 	}
 
