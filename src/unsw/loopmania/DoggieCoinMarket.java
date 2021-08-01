@@ -1,6 +1,6 @@
 package unsw.loopmania;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +15,7 @@ public class DoggieCoinMarket {
 	private int lastTickPrice = currentPrice;
 
 	private final Random randomGenerator;
-	private final List<Integer> priceHistory = new LinkedList<Integer>();
+	private final List<Integer> priceHistory = new ArrayList<Integer>();
 
 	public DoggieCoinMarket(long seed) {
 		randomGenerator = new Random(seed);

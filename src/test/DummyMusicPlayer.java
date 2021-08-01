@@ -10,16 +10,16 @@ public class DummyMusicPlayer extends MusicPlayer {
 
 	// This player does nothing
 
-	@Override
-	public void playMainTheme() {
-	}
+	// @Override
+	// public void playMainTheme() {
+	// }
 
-	@Override
-	public void playMegalovania() {
-	}
+	// @Override
+	// public void playMegalovania() {
+	// }
 
-	@Override
-	public void stopMegalovania() {
-	}
+	// @Override
+	// public void stopMegalovania() {
+	// }
 
 }

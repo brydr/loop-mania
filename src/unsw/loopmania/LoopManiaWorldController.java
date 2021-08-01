@@ -299,11 +299,12 @@ public class LoopManiaWorldController {
         System.out.println("starting timer");
         isPaused = false;
 
-        // Start playing main theme
-        musicPlayer.playMainTheme();
+        // Start playing music
+        musicPlayer.play();
+
 
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(.3), event -> {
             boolean isAtCastle = world.runTickMoves();
             if (world.getCharacter().getHp() <= 0) {
                 pause();
@@ -324,7 +325,7 @@ public class LoopManiaWorldController {
 
                 // End boss music (no-op if wasn't playing)
                 if (defeatedEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
-                    musicPlayer.stopMegalovania();
+                    musicPlayer.stopMegalovania();;
             }
             removeBrokenItems();
             world.possiblySpawnEnemies();
@@ -337,7 +338,7 @@ public class LoopManiaWorldController {
             }
             // Play boss music
             if (newEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
-                musicPlayer.playMegalovania();
+                musicPlayer.playMegalovania();;
 
             List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
             for (RandomPathLoot pathLoot : pickedUpLoot){
@@ -476,6 +477,7 @@ public class LoopManiaWorldController {
     @FXML
     private void openShop() throws IOException {
         pause();
+        musicPlayer.playShop();
 
         FXMLLoader shopLoader = new FXMLLoader(getClass().getResource("ShopView.fxml"));
         Parent shopRoot = shopLoader.load();
@@ -492,13 +494,11 @@ public class LoopManiaWorldController {
 
         shopStage.show();
 
-        shopStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                shopStage.close();
-                if (isPaused) {
-                    startTimer();
-                }
+        shopStage.setOnCloseRequest(e -> {
+            shopStage.close();
+            musicPlayer.stopShop();
+            if (isPaused) {
+                startTimer();
             }
         });
     }
