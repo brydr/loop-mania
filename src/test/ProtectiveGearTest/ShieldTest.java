@@ -1,5 +1,6 @@
 package test.ProtectiveGearTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public class ShieldTest {
 		character.setEquippedShield(shield);
 
 		vampire.attack(character);
-		assertTrue(vampire.criticalChance == 0.12);
+		assertEquals(.08, vampire.criticalChance);
 	}
 
 }
