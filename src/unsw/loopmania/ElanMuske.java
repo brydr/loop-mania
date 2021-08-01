@@ -7,14 +7,15 @@ import java.util.Random;
 import org.json.JSONArray;
 
 import javafx.beans.property.SimpleIntegerProperty;
-public class ElanMuske extends BossEnemy {
 
+public class ElanMuske extends BossEnemy {
+    private final static int HEAL_AMOUNT = 20;
+    private final static int STARTING_HP = 1000;
     private boolean runAway;
-    
+
     public ElanMuske(PathPosition position) {
-        super(position);
+        super(position, STARTING_HP);
         this.setAttack(50);
-        this.setHp(1000);
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);
@@ -22,7 +23,7 @@ public class ElanMuske extends BossEnemy {
         int runAwayChance = (new Random()).nextInt(10);
         // runs away at a 70% chance.
         if (runAwayChance < 7) {
-            runAway = true;   
+            runAway = true;
         } else {
             runAway = false;
         }
@@ -32,7 +33,7 @@ public class ElanMuske extends BossEnemy {
     public boolean getRunAway() {
         return runAway;
     }
-    
+
     @Override
     public void setRunAway(boolean runAway) {
         this.runAway = runAway;
@@ -60,28 +61,31 @@ public class ElanMuske extends BossEnemy {
 
     @Override
     public void move() {
-        // First subtract 1 to the speed and check if the speed goes to 0 then it will move and set speed back to 0.
-        // This is implemented this way in case the user may add items that may stun the enemy causing it not to move. In that case the speed to can be set to the amount of rounds the
+        // First subtract 1 to the speed and check if the speed goes to 0 then it will
+        // move and set speed back to 0.
+        // This is implemented this way in case the user may add items that may stun the
+        // enemy causing it not to move. In that case the speed to can be set to the
+        // amount of rounds the
         // enemy is stunned for.
-        // This is also useful for implementing the speed for zombies since they are slow and require two ticks to move.
+        // This is also useful for implementing the speed for zombies since they are
+        // slow and require two ticks to move.
         int speed = this.getSpeed();
         this.setSpeed(speed - 1);
 
         if (this.getSpeed() == 0) {
             int directionChoice = (new Random()).nextInt(2);
-            if (directionChoice == 0){
+            if (directionChoice == 0) {
                 for (int i = 0; i < 2; i++) {
                     moveUpPath();
                 }
-            }
-            else if (directionChoice == 1){
+            } else if (directionChoice == 1) {
                 for (int i = 0; i < 2; i++) {
                     moveDownPath();
                 }
             }
 
             this.setSpeed(1);
-        } 
+        }
     }
 
     @Override
@@ -92,12 +96,9 @@ public class ElanMuske extends BossEnemy {
         this.setAttack(50);
     }
 
-    @Override
     public void healEnemies(List<Enemy> enemies) {
         for (Enemy enemy : enemies) {
-            int enemyHp = enemy.getHp();
-            enemyHp += 20;
-            enemy.setHp(enemyHp);
+            enemy.heal(HEAL_AMOUNT);
         }
     }
 

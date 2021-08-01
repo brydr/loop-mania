@@ -15,15 +15,16 @@ public abstract class Enemy extends MovingEntity {
     private int battleRadius;
     private int supportRadius;
     private int experienceGain;
-    private boolean inTrance;
     private boolean runAway;
     private BasicEnemy convertedToEnemy;
+    private final int startingHp;
 
-    public Enemy(PathPosition position) {
+    public Enemy(PathPosition position, int startingHp) {
         super(position);
         convertedToEnemy = null;
-        inTrance = false;
         runAway = false;
+        this.startingHp = startingHp;
+        setHp(startingHp);
     }
 
     public boolean getRunAway() {
@@ -35,7 +36,7 @@ public abstract class Enemy extends MovingEntity {
     public int getAttack() {
         return attackPower;
     }
-    
+
     public int getBattleRadius() {
         return battleRadius;
     }
@@ -49,7 +50,7 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public void setAttack(int attack) {
-        
+
         this.attackPower = attack;
     }
     public void setBattleRadius(int battleRadius) {
@@ -71,7 +72,7 @@ public abstract class Enemy extends MovingEntity {
     public void setConvertedToEnemy(BasicEnemy e) {
         this.convertedToEnemy = e;
     }
-    
+
     /**
      * move the enemy
      */
@@ -87,9 +88,7 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    public Boolean getInTrance() {
-        return false;
-    }
+    public abstract boolean getInTrance();
 
     public void setInTrance(Boolean inTrance) {
     }
@@ -97,6 +96,10 @@ public abstract class Enemy extends MovingEntity {
     public void takeDamage(int damage) {
         int hp = this.getHp();
         this.setHp(hp - damage);
+    }
+
+    public void heal(int healAmount) {
+        setHp(Math.min(getHp() + healAmount, startingHp));
     }
 
     public AlliedSoldier convertToFriendly(Character character) {

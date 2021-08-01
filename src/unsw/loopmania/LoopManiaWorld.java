@@ -74,6 +74,8 @@ public class LoopManiaWorld {
 
     private JSONObject worldGoals;
 
+    private JSONArray worldRareItems;
+
     public BooleanProperty goalComplete;
 
     private String goalsToComplete;
@@ -161,6 +163,10 @@ public class LoopManiaWorld {
         return character;
     }
 
+    /**
+     * Set the worlds goals.
+     * @param goals
+     */
     public void setGoals(JSONObject goals) {
         worldGoals = goals;
     }
@@ -171,6 +177,27 @@ public class LoopManiaWorld {
 
     public JSONArray getRareItems() {
         return worldRareItems;
+    }
+
+    /**
+     * Set the worlds rare items.
+     * @param rareItems
+     */
+    public void setRareItems(JSONArray rareItems) {
+        worldRareItems = rareItems;
+    }
+
+    /**
+     * Returns a String array list of rare items that can be spawned in the world.
+     * @return
+     */
+    public List<String> getRareItems() {
+        List<String> rareItemInWorld = new ArrayList<String>();
+        for (int i = 0; i < worldRareItems.length(); i++) {
+            String rareItem = worldRareItems.getString(i);
+            rareItemInWorld.add(rareItem);
+        }
+        return rareItemInWorld;
     }
 
     /**
@@ -344,9 +371,9 @@ public class LoopManiaWorld {
                 e.attack(character);    // Attacks allies first.
 
                 // If the enemy is a boss, then apply its healEnemies method which elan muske uses which heals the list of enemies passed in.
-                if (e instanceof BossEnemy) {
-                    BossEnemy boss = (BossEnemy) e;
-                    boss.healEnemies(enemiesInRange);
+                if (e instanceof ElanMuske) {
+                    ElanMuske elan = (ElanMuske) e;
+                    elan.healEnemies(enemiesInRange);
                 }
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {
@@ -463,7 +490,7 @@ public class LoopManiaWorld {
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
+        Card randCard = new RandomObjectGenerator().nextCard(cardEntities.size(), 0);
 
         cardEntities.add(randCard);
         return randCard;
@@ -472,7 +499,7 @@ public class LoopManiaWorld {
     public void loadRandomBasicItem() {
         // TODO = Make RandomCardGenerator an instance variable to improve performance
         // 0, 0 is fine as addUnequippedItem() sets them correctly later
-        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
+        addUnequippedItem(new RandomObjectGenerator().nextBasicItem(0, 0));
     }
 
 

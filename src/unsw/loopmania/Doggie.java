@@ -10,11 +10,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class Doggie extends BossEnemy {
     private final DoggieCoinMarket market;
+    private final static int STARTING_HP = 400;
 
     public Doggie(PathPosition position, DoggieCoinMarket market) {
-        super(position);
+        super(position, STARTING_HP);
         this.setAttack(20);
-        this.setHp(400);
         this.setSpeed(1);
         this.setBattleRadius(1);
         this.setSupportRadius(1);

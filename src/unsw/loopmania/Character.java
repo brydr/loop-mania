@@ -2,7 +2,11 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.javatuples.Triplet;
+
 import javafx.beans.property.SimpleIntegerProperty;
+
 import javafx.beans.property.IntegerProperty;
 
 /**
@@ -227,6 +231,46 @@ public class Character extends MovingEntity {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * checks equippedItems that have lost durability and need to be destroyed
+     * @return list of items and their location in equippableItems inventory to be removed in frontend
+     */
+    public List<Triplet<Integer, Integer, EquippableItem>> removeDamagedItems() {
+        List<Triplet<Integer, Integer, EquippableItem>> brokenItems = new ArrayList<Triplet<Integer, Integer, EquippableItem>>();
+
+        if (equippedWeapon != null && equippedWeapon.isBroken()) {
+            // unarmed.isBroken() will always return false so assume equippedWeapons is of type weapon/BasicItem
+            EquippableItem item = (EquippableItem)equippedWeapon;
+            brokenItems.add(new Triplet<>(0, 0, item));
+            equippedWeapon = new Unarmed();
+        }
+        if (equippedHelmet != null && equippedHelmet.isBroken()) {
+            brokenItems.add(new Triplet<>(1, 0, equippedHelmet));
+            equippedHelmet = null;
+        }
+        if (equippedArmour != null && equippedArmour.isBroken()) {
+            brokenItems.add(new Triplet<>(2, 0, equippedArmour));
+            equippedArmour = null;
+        }
+        if (equippedShield != null && equippedShield.isBroken()) {
+            brokenItems.add(new Triplet<>(3, 0, equippedShield));
+            equippedShield = null;
+        }
+        return brokenItems;
+    }
+
+    /**
+     * Use "The One Ring" to get full HP
+     * @precondition Character HP currently {@code <= 0}
+     * @postcondition Character alive again with HP of {@code MAX_HP}
+     */
+    public void consumeRareItem() {
+        if (this.equippedRareItem != null) {
+            this.equippedRareItem = null;
+            this.setHp(MAX_HP);
         }
     }
 

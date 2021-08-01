@@ -36,7 +36,7 @@ public class AlwaysCriticalBiteZombie extends Zombie {
         } else {
             character.takeDamage(attackPower);
         }
-        System.out.println(String.format("char hp %d", character.getHp()));
+        // System.out.println(String.format("char hp %d", character.getHp()));
     }
 
 }

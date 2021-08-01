@@ -9,7 +9,7 @@ public class Shop {
 	private final List<BasicItem> inventory = new ArrayList<BasicItem>();
 	private final GameMode gameMode;
 	private final LoopManiaWorld world;
-	private final RandomItemGenerator itemGenerator;
+	private final RandomObjectGenerator itemGenerator;
 	public final static int MAX_SHOP_INVENTORY = Shop.SHOP_WIDTH * Shop.SHOP_HEIGHT;
 	private final List<BasicItem> purchaseHistory = new ArrayList<BasicItem>();
 	private final Character character;
@@ -23,7 +23,7 @@ public class Shop {
 	 * @param randomSeed Seed for the random generator
 	 */
 	public Shop(LoopManiaWorld world, long randomSeed) {
-		this.itemGenerator = new RandomItemGenerator(randomSeed);
+		this.itemGenerator = new RandomObjectGenerator(randomSeed);
 		this.world = world;
 		this.generateShopInventory();
 		this.character = world.getCharacter();
