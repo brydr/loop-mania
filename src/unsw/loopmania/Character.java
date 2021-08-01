@@ -245,6 +245,10 @@ public class Character extends MovingEntity {
             // unarmed.isBroken() will always return false so assume equippedWeapons is of type weapon/BasicItem
             EquippableItem item = (EquippableItem)equippedWeapon;
             brokenItems.add(new Triplet<>(0, 0, item));
+            if (equippedWeapon instanceof AndurilFlameOfTheWest) {
+                RareItem anduril = (RareItem)equippedWeapon;
+                removeRareItem(anduril);
+            }
             equippedWeapon = new Unarmed();
         }
         if (equippedHelmet != null && equippedHelmet.isBroken()) {
@@ -257,21 +261,13 @@ public class Character extends MovingEntity {
         }
         if (equippedShield != null && equippedShield.isBroken()) {
             brokenItems.add(new Triplet<>(3, 0, equippedShield));
+            if (equippedShield instanceof TreeStump) {
+                RareItem treeStump = (RareItem)equippedShield;
+                removeRareItem(treeStump);
+            }
             equippedShield = null;
         }
         return brokenItems;
-    }
-
-    /**
-     * Use "The One Ring" to get full HP
-     * @precondition Character HP currently {@code <= 0}
-     * @postcondition Character alive again with HP of {@code MAX_HP}
-     */
-    public void consumeRareItem() {
-        if (this.equippedRareItem != null) {
-            this.equippedRareItem = null;
-            this.setHp(MAX_HP);
-        }
     }
 
     /**
