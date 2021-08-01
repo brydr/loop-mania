@@ -501,6 +501,7 @@ public class LoopManiaWorld {
         if (firstAvailableSlot == null){
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
+            payoutGoldOrXp();
             // give some cash/experience rewards for the discarding of the oldest sword
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
