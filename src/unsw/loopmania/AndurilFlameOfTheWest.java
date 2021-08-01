@@ -32,7 +32,6 @@ public class AndurilFlameOfTheWest extends Weapon implements RareItem {
         } else {
             if (character.getHp() <= 0) {
                 character.setEquippedRareItem(null);        // One Ring effect
-                character.setOneRingUsed(true); 
                 character.setHp(character.getMaxHp());
             }
         }

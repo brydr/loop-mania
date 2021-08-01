@@ -424,10 +424,6 @@ public class LoopManiaWorldController {
         if (!world.getRareItems().isEmpty()) {
             for (Item drops : enemy.dropLoot(world.getRareItems())) {
                 world.addUnequippedItem(drops);
-                if (drops instanceof RareItem) {
-                    RareItem rareItem = (RareItem)drops;
-                    character.addRareItem(rareItem);
-                }
             }
         }
     }
@@ -672,6 +668,11 @@ public class LoopManiaWorldController {
                                     Weapon weapon = (Weapon)item;
                                     world.getCharacter().setEquippedWeapon(weapon);
                                     swordDurability.widthProperty().bind(weapon.getDurabilityBar());
+                                } else if (targetNode.getId().equals("swordCell") && item instanceof AndurilFlameOfTheWest) {
+                                    AndurilFlameOfTheWest anduril = (AndurilFlameOfTheWest)item;
+                                    world.getCharacter().setEquippedWeapon(anduril);
+                                    swordDurability.widthProperty().bind(anduril.getDurabilityBar());
+                                    world.getCharacter().addRareItem(anduril);
                                 } else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet) {
                                     Helmet helmet = (Helmet)item;
                                     world.getCharacter().setEquippedHelmet(helmet);
@@ -689,9 +690,11 @@ public class LoopManiaWorldController {
                                     TreeStump shield = (TreeStump)item;
                                     world.getCharacter().setEquippedShield(shield);
                                     shieldDurability.widthProperty().bind(shield.getDurabilityBar());
-                                } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
-                                    RareItem rareItem = (RareItem)item;
-                                    world.getCharacter().setEquippedRareItem(rareItem);
+                                    world.getCharacter().addRareItem(shield);
+                                } else if (targetNode.getId().equals("rareItemCell") && item instanceof TheOneRing) {
+                                    TheOneRing oneRing = (TheOneRing)item;
+                                    world.getCharacter().setEquippedRareItem(oneRing);
+                                    world.getCharacter().addRareItem(oneRing);
                                 } else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion) {
                                     HealthPotion healthPotion = (HealthPotion)item;
                                     world.getCharacter().setEquippedHealthPotion(healthPotion);
