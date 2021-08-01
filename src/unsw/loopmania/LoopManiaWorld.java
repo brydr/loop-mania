@@ -337,9 +337,9 @@ public class LoopManiaWorld {
                 e.attack(character);    // Attacks allies first.
 
                 // If the enemy is a boss, then apply its healEnemies method which elan muske uses which heals the list of enemies passed in.
-                if (e instanceof BossEnemy) {
-                    BossEnemy boss = (BossEnemy) e;
-                    boss.healEnemies(enemiesInRange);
+                if (e instanceof ElanMuske) {
+                    ElanMuske elan = (ElanMuske) e;
+                    elan.healEnemies(enemiesInRange);
                 }
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {

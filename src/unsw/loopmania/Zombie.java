@@ -17,10 +17,10 @@ public class Zombie extends BasicEnemy implements Undead {
 
     // Used for testing.
     public Zombie(PathPosition position, long seed) {
-        super(position);
+        super(position, STARTING_HP);
         this.randomGenerator = new Random(seed);
         this.setAttack(6);
-        this.setHp(STARTING_HP);
+        // this.setHp(STARTING_HP);
         this.setSpeed(2);
         this.setBattleRadius(2);
         this.setSupportRadius(2);
@@ -72,16 +72,6 @@ public class Zombie extends BasicEnemy implements Undead {
             loot.add(theOneRing);
         }
         return loot;
-    }
-
-
-    @Override
-    public void setHp(int hp) {
-        if (hp > STARTING_HP) {
-            this.hp.setValue(STARTING_HP);
-        } else {
-            this.hp.setValue(hp);
-        }
     }
 
     @Override

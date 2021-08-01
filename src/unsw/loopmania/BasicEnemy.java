@@ -11,8 +11,8 @@ public abstract class BasicEnemy extends Enemy {
 
     private BasicEnemy convertedToEnemy;
     private Boolean inTrance;
-    public BasicEnemy(PathPosition position) {
-        super(position);
+    public BasicEnemy(PathPosition position, int startingHealth) {
+        super(position, startingHealth);
         convertedToEnemy = null;
         inTrance = false;
     }
@@ -25,7 +25,8 @@ public abstract class BasicEnemy extends Enemy {
         this.convertedToEnemy = e;
     }
 
-    public Boolean getInTrance() {
+    @Override
+    public boolean getInTrance() {
         return inTrance;
     }
 
@@ -42,8 +43,8 @@ public abstract class BasicEnemy extends Enemy {
         this.setInTrance(true); // Dont need this line since the weapon already sets the enemies trance to true but useful for one of the character tests.
         return transformedSoldier;
     }
-    
+
     public abstract void attack(Character character);
-    
+
     public abstract String getImage();
 }

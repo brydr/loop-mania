@@ -19,8 +19,6 @@ public class StaffTest {
 	@RepeatedTest(1000)
 	@Test
 	public void attackDamageTest() {
-		// assertTrue(false);
-		// TODO handle trance case
 		SimpleIntegerProperty one = new SimpleIntegerProperty(1);
 		Weapon staff = new Staff(one, one);
 
@@ -32,8 +30,6 @@ public class StaffTest {
 			System.out.println(damage);
 		}
 
-
 		assertTrue(damage == 3 || damage == 0);
-
 	}
 }
