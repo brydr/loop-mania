@@ -181,6 +181,7 @@ public class ShopController {
 		@Override
 		public void handle(MouseEvent arg0) {
 			System.out.println("Clicked on " + item.toString());
+			BasicItem targetItem = (BasicItem) item;
 			if (!(item instanceof RareItem)) {
 				if (selling) {
 					System.out.println("Selling " + targetItem.toString());
