@@ -14,4 +14,14 @@ public class HealthPotion extends Consumable {
     public String getImage() {
         return "src/images/brilliant_blue_new.png";
     }
+
+    @Override
+	public String getEmptySlotId() {
+		return "potionCell";
+	}
+
+	@Override
+	public String getEmptySlotImage() {
+		return "src/images/potion_slot.png";
+	}
 }
