@@ -35,7 +35,7 @@ public class ShieldTest {
 		character.setEquippedShield(shield);
 
 		vampire.attack(character);
-		assertTrue(vampire.criticalChance == 0.12);
+		assertTrue(vampire.criticalChance == 0.08);
 	}
 
 }

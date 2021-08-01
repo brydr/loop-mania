@@ -26,8 +26,10 @@ public class SpawnAlliedSoldierTest {
 
         world.setCharacter(c);
 
-        String file_name = this.getClass().getResource("/basic_world_with_player.json").getFile();
-        JSONObject JSONGoals = GoalEvaluator.parseJSON(file_name);
+        // World with goals 100 cycles to win.
+        JSONObject JSONGoals = new JSONObject();
+        JSONGoals.put("goal", "cycles");
+        JSONGoals.put("quantity", 100);
         world.setGoals(JSONGoals);
 
         // Testing precondition that The Character has no allied soldiers, and is at (0, 1)
