@@ -9,6 +9,9 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.json.JSONArray;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -23,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -118,6 +122,18 @@ public class LoopManiaWorldController {
     private Label exp;
     @FXML
     private Label cycles;
+
+    /**
+     * rectangles that show durability of gear
+     */
+    @FXML
+    private Rectangle swordDurability;
+    @FXML
+    private Rectangle armourDurability;
+    @FXML
+    private Rectangle helmetDurability;
+    @FXML
+    private Rectangle shieldDurability;
 
     @FXML
     private Label alliedSoldierNum;
@@ -303,6 +319,7 @@ public class LoopManiaWorldController {
                 audioPlayer.playWinBattleSound();
                 runBattleResults(defeatedEnemies);
             }
+            removeBrokenItems();
             world.possiblySpawnEnemies();
             world.possiblySpawnBossEnemies();
             List<Enemy> newEnemies = world.getEnemies();
@@ -402,7 +419,14 @@ public class LoopManiaWorldController {
             world.loadRandomBasicItem();
         }
 
+        // A list of all rare items that can spawn in the world.
+        List<String> worldRareItems = world.getRareItems();
+        //["the_one_ring", "anduril_flame_of_the_west", tree_stump"]
         for (Item drops : enemy.dropLoot()) {
+            if (drops instanceof TheOneRing && !worldRareItems.contains("the_one_ring")) {
+                break;
+            } // Add more rare item drops.
+
             world.addUnequippedItem(drops);
         }
     }
@@ -652,16 +676,20 @@ public class LoopManiaWorldController {
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
                                     Weapon weapon = (Weapon)item;
                                     world.getCharacter().setEquippedWeapon(weapon);
+                                    swordDurability.widthProperty().bind(weapon.getDurabilityBar());
                                 } else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet) {
                                     Helmet helmet = (Helmet)item;
                                     world.getCharacter().setEquippedHelmet(helmet);
+                                    helmetDurability.widthProperty().bind(helmet.getDurabilityBar());
                                 } else if (targetNode.getId().equals("armourCell") && item instanceof Armour) {
                                     Armour armour = (Armour)item;
                                     world.getCharacter().setEquippedArmour(armour);
+                                    armourDurability.widthProperty().bind(armour.getDurabilityBar());
                                     audioPlayer.playEquipArmourSound();
                                 } else if (targetNode.getId().equals("shieldCell") && item instanceof Shield) {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
+                                    shieldDurability.widthProperty().bind(shield.getDurabilityBar());
                                 } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);
@@ -1065,23 +1093,36 @@ public class LoopManiaWorldController {
     private void useHealthPotion(GridPane gridPane) {
         final boolean wasConsumed = world.getCharacter().consumePotion();
         // If potion was consumed, play sound
-        if (wasConsumed)
+        if (wasConsumed) {
             audioPlayer.playUsePotionSound();
+            HealthPotion item = new HealthPotion(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+            unequipItem(new Triplet<>(1, 1, item));
+        }
+    }
 
-        // Remove potion node from gridPane
-        final Node node = getNodeFromGridPane(gridPane, 1, 1);
+    /**
+     * remove damaged equipped broken items after battle
+     */
+    private void removeBrokenItems() {
+        Character character = world.getCharacter();
+        List<Triplet<Integer, Integer, EquippableItem>> damagedItems = character.removeDamagedItems();
+        for (Triplet<Integer, Integer, EquippableItem> triplet : damagedItems) {
+            unequipItem(triplet);
+        }
+    }
+
+    private void unequipItem(Triplet<Integer, Integer, EquippableItem> triplet) {
+        final Node node = getNodeFromGridPane(equippedItems, triplet.getValue0(), triplet.getValue1());
         assert node != null;
-        gridPane.getChildren().remove(node);
+        equippedItems.getChildren().remove(node);
 
-        // Add empty potion back to gridPane
-        // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
-        final ImageView emptyPotionSlot = new ImageView(
+        final ImageView emptyslot = new ImageView(
             new Image(
-            new File("src/images/potion_slot.png").toURI().toString()
+            new File(triplet.getValue2().getEmptySlotImage()).toURI().toString()
         ));
-        emptyPotionSlot.setId("potionCell");
-        gridPane.add(emptyPotionSlot, 1, 1);
-        Node newNode = getNodeFromGridPane(gridPane, 1, 1);
-        newNode.setId("potionCell");
+        emptyslot.setId(triplet.getValue2().getEmptySlotId());
+        equippedItems.add(emptyslot, triplet.getValue0(), triplet.getValue1());
+        Node newNode = getNodeFromGridPane(equippedItems, triplet.getValue0(), triplet.getValue1());
+        newNode.setId(triplet.getValue2().getEmptySlotId());
     }
 }

@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 
 import org.javatuples.Pair;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.beans.property.SimpleIntegerProperty;
@@ -73,6 +74,8 @@ public class LoopManiaWorld {
     private PathPosition firstPath;
 
     private JSONObject worldGoals;
+
+    private JSONArray worldRareItems;
 
     public BooleanProperty goalComplete;
 
@@ -157,8 +160,33 @@ public class LoopManiaWorld {
         return character;
     }
 
+    /**
+     * Set the worlds goals.
+     * @param goals
+     */
     public void setGoals(JSONObject goals) {
         worldGoals = goals;
+    }
+
+    /**
+     * Set the worlds rare items.
+     * @param rareItems
+     */
+    public void setRareItems(JSONArray rareItems) {
+        worldRareItems = rareItems;
+    }
+
+    /**
+     * Returns a String array list of rare items that can be spawned in the world.
+     * @return
+     */
+    public List<String> getRareItems() {
+        List<String> rareItemInWorld = new ArrayList<String>();
+        for (int i = 0; i < worldRareItems.length(); i++) {
+            String rareItem = worldRareItems.getString(i);
+            rareItemInWorld.add(rareItem);
+        }
+        return rareItemInWorld;
     }
 
     /**
@@ -440,7 +468,7 @@ public class LoopManiaWorld {
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
+        Card randCard = new RandomObjectGenerator().nextCard(cardEntities.size(), 0);
 
         cardEntities.add(randCard);
         return randCard;
@@ -449,7 +477,7 @@ public class LoopManiaWorld {
     public void loadRandomBasicItem() {
         // TODO = Make RandomCardGenerator an instance variable to improve performance
         // 0, 0 is fine as addUnequippedItem() sets them correctly later
-        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
+        addUnequippedItem(new RandomObjectGenerator().nextBasicItem(0, 0));
     }
 
 
