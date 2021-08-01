@@ -10,6 +10,7 @@ import java.util.Random;
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
 import org.javatuples.Triplet;
+import org.junit.platform.console.shadow.picocli.CommandLine.ExitCode;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -457,11 +458,7 @@ public class LoopManiaWorldController {
         Stage end = endScreen.runEndScreen();
         end.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                try {
-                    switchToMainMenu();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                System.exit(ExitCode.OK);
             }
         });
     }
