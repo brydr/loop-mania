@@ -440,7 +440,7 @@ public class LoopManiaWorld {
         }
 
         // TODO = Make RandomCardGenerator an instance variable to improve performance
-        Card randCard = new RandomCardGenerator().nextCard(cardEntities.size(), 0);
+        Card randCard = new RandomObjectGenerator().nextCard(cardEntities.size(), 0);
 
         cardEntities.add(randCard);
         return randCard;
@@ -449,7 +449,7 @@ public class LoopManiaWorld {
     public void loadRandomBasicItem() {
         // TODO = Make RandomCardGenerator an instance variable to improve performance
         // 0, 0 is fine as addUnequippedItem() sets them correctly later
-        addUnequippedItem(new RandomItemGenerator().nextBasicItem(0, 0));
+        addUnequippedItem(new RandomObjectGenerator().nextBasicItem(0, 0));
     }
 
 
