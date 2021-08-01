@@ -16,6 +16,12 @@ public class MusicPlayer {
     private final double MAIN_THEME_VOL  = 0.7d;
     private final double MEGALOVANIA_VOL = 0.3d;
 
+    // This constructor is called during testing so it won't initialise the media players
+    public MusicPlayer(boolean testMode) {
+        mainPlayer = null;
+        megaPlayer = null;
+    }
+
     public MusicPlayer() {
         final URL musicURL = getClass().getResource(MAIN_THEME_FILE);
         final URL megaURL  = getClass().getResource(MEGALOVANIA_FILE);

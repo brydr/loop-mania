@@ -47,6 +47,9 @@ public class Character extends MovingEntity {
         this.numAttack = 0;
         this.stunned = 0;
         this.oneRingUsed = false;
+
+        cycles.setValue(39);
+        addExperience(10000);
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * numAttack is the amount of times the character will attack extra for. 
+     * numAttack is the amount of times the character will attack extra for.
      * For instance the campfire allows the character to attack twice since the campfire makes the character deal double damage.
      * @return
      */
@@ -171,7 +174,7 @@ public class Character extends MovingEntity {
     }
 
     public void subtractGold(int gold) {
-        
+
         this.gold.subtractGold(gold);
     }
 
@@ -271,7 +274,7 @@ public class Character extends MovingEntity {
     }
 
     /**
-     * Apply attack to any allied soldiers first, otherwise reduce HP of 
+     * Apply attack to any allied soldiers first, otherwise reduce HP of
      * The Character by an amount depending on armour equipped
      * @param baseDamage Raw/base damage dealt by enemy
      */
@@ -282,7 +285,7 @@ public class Character extends MovingEntity {
             ally.takeDamage(baseDamage);
             if (ally.getHp() <= 0)
                 removeAlliedSoldier(ally);
-            
+
         } else { /* no allied soldiers */
             int damage = baseDamage;
             // Transform the damage if "The Character" has protective gear
@@ -299,7 +302,7 @@ public class Character extends MovingEntity {
         }
     }
 
-    /** Attack a given enemy. Observer pattern applied to make all allied soldiers attack the enemy.  
+    /** Attack a given enemy. Observer pattern applied to make all allied soldiers attack the enemy.
      * Calls damage from equippedWeapon, outputs damage to given enemy.
      * @param enemy The enemy to be attacked
      */
@@ -324,7 +327,7 @@ public class Character extends MovingEntity {
             enemy.takeDamage(outputDamage);
             numAttack--;
         }
- 
+
          // Check that enemy isn't in trance before allies attack
          if (!enemy.getInTrance()) {
              // All allies attack enemy
@@ -332,7 +335,7 @@ public class Character extends MovingEntity {
                  ally.attack(enemy);
              }
          }
- 
+
     }
 
     /**

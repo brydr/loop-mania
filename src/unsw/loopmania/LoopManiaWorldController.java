@@ -45,6 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import test.DummyMusicPlayer;
 
 
 /**
@@ -158,10 +159,6 @@ public class LoopManiaWorldController {
      */
     private Timeline timeline;
 
-    private Image vampireCastleCardImage;
-    private Image swordImage;
-    private ImageView potionSlot;
-
     /**
      * the image currently being dragged, if there is one, otherwise null.
      * Holding the ImageView being dragged allows us to spawn it again in the drop location if appropriate.
@@ -209,10 +206,12 @@ public class LoopManiaWorldController {
     // Object handling playing audio
     private AudioPlayer audioPlayer = new AudioPlayer();
     // This will automatically begin music
-    private MusicPlayer musicPlayer = new MusicPlayer();
+    private final MusicPlayer musicPlayer;
 
     // Dummy constructor for the tests, otherwise it complains it doesn't have a UI, don't use anywhere else
-    public LoopManiaWorldController() {}
+    public LoopManiaWorldController() {
+        this.musicPlayer = new DummyMusicPlayer();
+    }
 
     /**
      * @param world world object loaded from file
@@ -222,9 +221,6 @@ public class LoopManiaWorldController {
         this.world = world;
         world.setController(this);
         entityImages = new ArrayList<>(initialEntities);
-        vampireCastleCardImage = new Image((new File("src/images/vampire_castle_card.png")).toURI().toString());
-        swordImage = new Image((new File("src/images/basic_sword.png")).toURI().toString());
-        potionSlot = new ImageView(new Image((new File("src/images/potion_slot.png")).toURI().toString()));
         currentlyDraggedImage = null;
         currentlyDraggedType = null;
 
@@ -234,6 +230,8 @@ public class LoopManiaWorldController {
         anchorPaneRootSetOnDragDropped = new EnumMap<DRAGGABLE_TYPE, EventHandler<DragEvent>>(DRAGGABLE_TYPE.class);
         gridPaneNodeSetOnDragEntered = new EnumMap<DRAGGABLE_TYPE, EventHandler<DragEvent>>(DRAGGABLE_TYPE.class);
         gridPaneNodeSetOnDragExited = new EnumMap<DRAGGABLE_TYPE, EventHandler<DragEvent>>(DRAGGABLE_TYPE.class);
+
+        musicPlayer = new MusicPlayer();
     }
 
     @FXML
@@ -333,9 +331,9 @@ public class LoopManiaWorldController {
             removeBrokenItems();
             world.possiblySpawnEnemies();
             world.possiblySpawnBossEnemies();
-            
+
             List<Enemy> newEnemies = world.getEnemies();
-            
+
             for (Enemy newEnemy : newEnemies){
                 onLoad(newEnemy);
             }
@@ -1192,18 +1190,4 @@ public class LoopManiaWorldController {
     public void setGameMode(GameMode gameMode) {
         world.setGameMode(gameMode);
     }
-
-    /**
-     * Play boss music if Elan Muske is present in bossEnemies. 
-     * Otherwise is a no-op.
-     * @param bossEnemies List of boss enemies.
-     */
-    private void playBossMusic(List<BossEnemy> bossEnemies) {
-        final boolean elanAlive = bossEnemies.parallelStream()
-            .anyMatch(boss -> boss instanceof ElanMuske);
-        if (elanAlive)
-            musicPlayer.playMegalovania();
-        // else stop
-    }
-
 }
