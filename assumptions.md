@@ -16,6 +16,7 @@
         * The trance has a 20% chance of occuring and has a random length between 3 seconds and 20 seconds.
     * A player with a **stake** deals 4 HP of damage to regular enemies (Slug, Zombie), but 16 HP of damage to Vampires.
     * A player with a **sword** does 8 HP of damage.
+    * A player with **AndurilFlameOfTheWest** deals 10 HP of damage to regular monsters and deals 30 HP of damage to boss monsters.
 
 ## Health Potions
 * A health potion restores the health of *The Character* to 200.
@@ -23,19 +24,20 @@
 * Each path tile in the game has a 1% chance of a health potion spawning on them every time *The Character* completes a full cycle.
 
 ## Rare Items
-* The One Ring has a 3% chance of dropping from defeating enemies.
+* The **One Ring**, **AndurilFlameOfTheWest** and **Tree Stump** has a combined 3% chance of dropping from defeating enemies.
 * Rare items can't be bought or sold in the shop
 
 ## Armour
 * **Body armour** reduces enemy attack by 50%
 * **Helmets** reduce enemy attack by 30%, but reduce player attack by 15%.
 * **Shields** give each enemy attack a 30% chance of being ineffectual (e.g. 0 HP damage).
+* **Tree Stump** gives each enemy attack a 55% chance of being ineffectual. It has a bonus effect of cutting the damage by a 1/3 against bosses.
 * Equipping both body armour and a helmet will have a compound effect - i.e. enemy attack will only deal `(1.00 - 0.30)*(1.00 - 0.50) = 35%` of their full damage.
 * Any non-integer damage value will round to the nearest integer.
 
 # Enemies and Allies
 * There is no maximum imposed on the amount of allied soldiers.
-* Both *The Character*, allied soldiers and enemies all have the same speed, moving at 1 tile per instance, except for Zombies which travel at half speed, moving at 0.5 tiles per instance meaning zombies will move one tile every two instances.
+* Both *The Character*, allied soldiers and enemies except for Elan Muske all have the same speed, moving at 1 tile per instance, except for Zombies which travel at half speed, moving at 0.5 tiles per instance meaning zombies will move one tile every two instances. Elan Muske moves at 2 tiles per instance.
 * Allied soldiers has 50 HP and don't have armour
 * Enemies converted into allied soldier via trance can't use their special abilities
 * When enemy converts to an ally (and vice versa), they keep their HP
@@ -45,12 +47,20 @@
     * **Slugs** have a battle radius of 1 unit, support radius of 1 unit
     * **Zombies** have a battle radius of 2 units, support radius of 2 units
     * **Vampires** have a battle radius of 2 units, support radius of 3 units
+    * **Doggie** have a battle radius of 1 units, support radius of 1 units
+    * **Elan Muske** have a battle radius of 1 units, support radius of 1 units
 * A **Slug** has 30 HP of health, and its attack incurs 3 HP damage.
 * A **Zombie** has 30 HP of health, and its attack incurs 6 HP of damage.
     * A crticial bite from a Zombie has a 10% chance of occuring.
 * A **Vampire** has 60 HP of health, and its attack incurs 12 HP of damage.
     * A critical bite from a Vampire has a 20% chance of occuring and deals between 4 and 20 HP of additional damage.
     * Number of random Vampire attacks that will have the random additional damage will last for 1 to 3 attacks starting with the initial critical bite.
+* A **Doggie** has 400 HP of health, and its attack incurs 20 HP damage.
+    * Doggie has a 10% chance to stun the player for 3 ticks.
+* A **Elan Muske** has 1000 HP of health, and its attack incurs 50 HP damage.
+    * Elan Muske can heal enemies within its radius by 20 HP per tick including itself.
+
+
 
 # Gold
 * The following items have the following prices.
@@ -73,6 +83,8 @@
 * A **Vampire Castle** has a spawn radius of 1 unit and vampires will spawn on any path tiles within that radius.
 
 # Experience
+* Defeating a elan muske gives 1000 XP.
+* Defeating a doggie gives 400 XP.
 * Defeating a vampire gives 200 XP.
 * Defeating a zombie gives 40 XP.
 * Defeating a slug gives 10 XP.
