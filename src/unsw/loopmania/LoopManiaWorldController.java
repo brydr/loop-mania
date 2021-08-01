@@ -284,6 +284,7 @@ public class LoopManiaWorldController {
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(world.getWorldGoals(), character);
         String goalsToComplete = GoalEvaluator.prettyPrint(finalGoal);
         allGoals.setText(goalsToComplete);
+        allGoals.setWrapText(true);
 
 
         // create the draggable icon
@@ -423,8 +424,10 @@ public class LoopManiaWorldController {
         if (!world.getRareItems().isEmpty()) {
             for (Item drops : enemy.dropLoot(world.getRareItems())) {
                 world.addUnequippedItem(drops);
-                RareItem rareItem = (RareItem)drops;
-                character.addRareItem(rareItem);
+                if (drops instanceof RareItem) {
+                    RareItem rareItem = (RareItem)drops;
+                    character.addRareItem(rareItem);
+                }
             }
         }
     }

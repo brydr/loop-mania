@@ -8,7 +8,7 @@ import org.json.JSONArray;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class Zombie extends BasicEnemy implements Undead {
+public class Zombie extends BasicEnemy {
     private int criticalBiteChance;
     private final Random randomGenerator;
 
@@ -83,11 +83,6 @@ public class Zombie extends BasicEnemy implements Undead {
             }
         }
         return loot;
-    }
-
-    @Override
-    public void criticalBite() {
-        // TODO
     }
 
     @Override
