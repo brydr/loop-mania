@@ -450,12 +450,6 @@ public class LoopManiaWorldController {
     @FXML
     private void openShop() throws IOException {
         pause();
-        // FIXME get difficulty from main menu
-        showShop(world, new StandardMode());
-    }
-
-    private void showShop(LoopManiaWorld world, ShopStrategy strategy) throws IOException {
-        pause();
 
         FXMLLoader shopLoader = new FXMLLoader(getClass().getResource("ShopView.fxml"));
         Parent shopRoot = shopLoader.load();
@@ -468,7 +462,7 @@ public class LoopManiaWorldController {
         shopStage.setResizable(false);
         shopStage.setTitle("Shop");
         ShopController shopController = shopLoader.getController();
-        shopController.initialiseShop(world, strategy);
+        shopController.initialiseShop(world);
 
         shopStage.show();
 
@@ -955,7 +949,7 @@ public class LoopManiaWorldController {
     private void switchToMainMenu() throws IOException {
         // TODO = possibly set other menu switchers
         pause();
-        mainMenuSwitcher.switchMenu();
+        mainMenuSwitcher.switchMenu(world.getGameMode());
     }
 
     /**
@@ -1083,5 +1077,14 @@ public class LoopManiaWorldController {
         gridPane.add(emptyPotionSlot, 1, 1);
         Node newNode = getNodeFromGridPane(gridPane, 1, 1);
         newNode.setId("potionCell");
+    }
+
+    /**
+     * Sets the game mode for the world
+     *
+     * @param gameMode The game mode to switch to
+     */
+    public void setGameMode(GameMode gameMode) {
+        world.setGameMode(gameMode);
     }
 }

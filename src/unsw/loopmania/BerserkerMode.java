@@ -2,7 +2,7 @@ package unsw.loopmania;
 
 import java.util.List;
 
-public class BerserkerMode implements ShopStrategy {
+public class BerserkerMode implements GameMode {
 	private final static int MAX_PROTECTIVE_GEAR = 1;
 
 	@Override

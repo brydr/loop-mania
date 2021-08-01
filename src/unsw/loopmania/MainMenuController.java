@@ -11,9 +11,9 @@ import javafx.scene.control.ChoiceBox;
  * a settings menu, or a menu to load particular maps.
  */
 public class MainMenuController {
-    private ShopStrategy selectedGameMode;
+    private GameMode selectedGameMode;
     @FXML
-    private ChoiceBox<ShopStrategy> gameModeDropDown;
+    private ChoiceBox<GameMode> gameModeDropDown;
 
     /**
      * facilitates switching to main game
@@ -31,7 +31,7 @@ public class MainMenuController {
      */
     @FXML
     private void switchToGame() throws IOException {
-        gameSwitcher.switchMenu();
+        gameSwitcher.switchMenu(selectedGameMode);
     }
 
     @FXML
@@ -41,15 +41,16 @@ public class MainMenuController {
         gameModeDropDown.getItems().add(new StandardMode());
         gameModeDropDown.getItems().add(new SurvivalMode());
         gameModeDropDown.getItems().add(new BerserkerMode());
+        gameModeDropDown.getItems().add(new ConfusingMode());
 
-        gameModeDropDown.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends ShopStrategy> observable, ShopStrategy oldValue, ShopStrategy newValue) -> {
+        gameModeDropDown.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends GameMode> observable, GameMode oldValue, GameMode newValue) -> {
             selectedGameMode = newValue;
-            System.out.println(String.format("Selected game mode %s", selectedGameMode));
+            System.out.println(String.format("Selected %s", selectedGameMode));
         });
         gameModeDropDown.getSelectionModel().select(0);
     }
 
-    public ShopStrategy getGameMode() {
+    public GameMode getGameMode() {
         // TODO
         return selectedGameMode;
     }

@@ -2,7 +2,7 @@ package unsw.loopmania;
 
 import java.util.List;
 
-public class SurvivalMode implements ShopStrategy {
+public class SurvivalMode implements GameMode {
 	private final static int MAX_HEALTH_POTIONS = 1;
 
 	@Override

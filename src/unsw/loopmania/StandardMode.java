@@ -2,7 +2,7 @@ package unsw.loopmania;
 
 import java.util.List;
 
-public class StandardMode implements ShopStrategy {
+public class StandardMode implements GameMode {
 	/**
 	 * Standard mode has no restrictions on item limits
 	 */

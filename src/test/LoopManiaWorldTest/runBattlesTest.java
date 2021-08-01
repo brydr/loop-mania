@@ -1,5 +1,6 @@
 package test.LoopManiaWorldTest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
@@ -9,26 +10,26 @@ import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.LoopManiaWorld;
-import unsw.loopmania.PathPosition;
 import unsw.loopmania.AlliedSoldier;
 import unsw.loopmania.Character;
 import unsw.loopmania.Enemy;
+import unsw.loopmania.LoopManiaWorld;
+import unsw.loopmania.PathPosition;
 import unsw.loopmania.Slug;
-import unsw.loopmania.Zombie;
 import unsw.loopmania.Staff;
 import unsw.loopmania.Sword;
+import unsw.loopmania.Zombie;
 
 public class runBattlesTest {
 
     // Test if the correct enemies die.
-    @Test 
+    @Test
     public void testEnemiesDead() {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 2)));
         LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 
         Character c = new Character(pos);
-        
+
         newWorld.setCharacter(c);
 
         while (newWorld.getEnemies().size() == 0) {
@@ -36,18 +37,18 @@ public class runBattlesTest {
         }
         List<Enemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0) instanceof Slug);  
+        assertTrue(deadEnemies.get(0) instanceof Slug);
         assertTrue(c.getHp() == 155);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
     // Test if the supporting enemies die.
-    @Test 
+    @Test
     public void testSupportingEnemiesDead() {
         PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 2)));
         LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 
         Character c = new Character(pos);
-        
+
         newWorld.setCharacter(c);
 
         while (newWorld.getEnemies().size() <= 1) {
@@ -56,8 +57,8 @@ public class runBattlesTest {
 
         List<Enemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0) instanceof Slug);  
-        assertTrue(deadEnemies.get(1) instanceof Slug); 
+        assertTrue(deadEnemies.get(0) instanceof Slug);
+        assertTrue(deadEnemies.get(1) instanceof Slug);
         assertTrue(c.getHp() == 110);    // Each slug should do 45 damage since it takes the character 15 hits to kill the slug and slugs deal 3 damage.
     }
 
@@ -69,16 +70,16 @@ public class runBattlesTest {
                                                                            new Pair<>(1, 0), new Pair<>(1, 1), new Pair<>(1, 2), new Pair<>(1, 3), new Pair<>(1, 4), new Pair<>(1, 5)));
 
         Character c = new Character(pos2);
-        
+
         newWorld.setCharacter(c);
         while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
         }
         List<Enemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.size() == 0);   
+        assertTrue(deadEnemies.size() == 0);
 
-        assertTrue(c.getHp() == 200);   
+        assertTrue(c.getHp() == 200);
     }
 
     @Test
@@ -97,14 +98,14 @@ public class runBattlesTest {
 
         List<Enemy> deadEnemies = newWorld.runBattles();
 
-        assertTrue(deadEnemies.get(0) instanceof Slug); 
+        assertTrue(deadEnemies.get(0) instanceof Slug);
 
-        assertTrue(c.getHp() == 200);   
+        assertTrue(c.getHp() == 200);
         // Since it is assumed soldiers are equipped with a sword they will deal 8 damage. The character without weapons will deal 2 damage.
         // Therefore, in total they will deal 10 damage to the slug each attack and therefore there will only be 3 attacks in total.
         // The slug deals 3 damage so the allied soldier must have taken 9 damage and allied soldiers have 50 hp.
-        assertTrue(allied.getHp() == 41);  
-    
+        assertTrue(allied.getHp() == 41);
+
     }
 
     @Test
@@ -113,7 +114,7 @@ public class runBattlesTest {
         LoopManiaWorld newWorld = new LoopManiaWorld(20, 20, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
 
         Character c = new Character(pos);
-        
+
         newWorld.setCharacter(c);
 
         while (newWorld.getEnemies().size() == 0) {
@@ -128,21 +129,21 @@ public class runBattlesTest {
 
         newWorld.runBattles();
 
-        while (newWorld.getEnemies().size() == 0) { 
+        while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
-        }   
+        }
 
         newWorld.runBattles();
 
-        while (newWorld.getEnemies().size() == 0) { 
+        while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
-        }   
+        }
 
         newWorld.runBattles();
 
         while (newWorld.getEnemies().size() == 0) {     // 5th slug should kill the character.
             newWorld.possiblySpawnEnemies();
-        }   
+        }
 
         newWorld.runBattles();
 
@@ -158,17 +159,17 @@ public class runBattlesTest {
         // This staff has a 100% chance to trance an enemy instead of the assumed 20%.
         Staff staff = new Staff(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0), 1);
         c.setEquippedWeapon(staff);
-        
+
         newWorld.setCharacter(c);
 
         while (newWorld.getEnemies().size() == 0) {
             newWorld.possiblySpawnEnemies();
         }
 
-        newWorld.runBattles();         
+        newWorld.runBattles();
         // If the enemy got tranced on the first attack then it should have only been able to deal 3 damage since it is a slug.
         // The enemy will then die since If the fight ends whilst the enemy is in a trance, the enemy dies.
-        assertTrue(c.getHp() == 197);  
+        assertTrue(c.getHp() == 197);
     }
 
     @Test
@@ -184,7 +185,7 @@ public class runBattlesTest {
         AlliedSoldier allied = new AlliedSoldier(pos);
         c.addAlliedSoldier(allied);
 
-        Zombie zombie = new Zombie(pos, 0); // A zombie with a 100% chance to inflict a critical bite.
+        Zombie zombie = new AlwaysCriticalBiteZombie(pos);
         newWorld.addEnemies(zombie);
 
         // On the first instance of the fight the zombie will turn the allied solider into a zombie.
@@ -197,11 +198,8 @@ public class runBattlesTest {
         // The characters hp is now 200 - 12 = 188.
         // The second zombie has 44 hp so it will take 6 rounds to kill it taking a total damage of 6 * 6 = 36.
         // Therefore the character in the end should have 152 hp at the end.
-        newWorld.runBattles(); 
+        newWorld.runBattles();
 
-        assertTrue(c.getHp() == 152);   
+        assertEquals(152, c.getHp());
     }
-
-
-    
 }

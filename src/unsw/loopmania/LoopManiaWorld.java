@@ -56,7 +56,6 @@ public class LoopManiaWorld {
 
     private List<Enemy> enemies;
 
-
     private List<Card> cardEntities;
 
     // The unequipped inventory of the character
@@ -84,6 +83,8 @@ public class LoopManiaWorld {
 
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
+
+    private GameMode gameMode;
 
     /**
      * create the world (constructor)
@@ -896,8 +897,8 @@ public class LoopManiaWorld {
             // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
             // These enemies added will be the enemies supporting.
             } else if (
-                battledEnemy != e && 
-                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)  
+                battledEnemy != e &&
+                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)
                 <= Math.pow(e.getSupportRadius(), 2)
             ) {
                 enemiesInRange.add(e);
@@ -907,4 +908,11 @@ public class LoopManiaWorld {
         return enemiesInRange;
     }
 
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
 }
