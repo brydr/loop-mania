@@ -9,7 +9,6 @@ import java.util.List;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import unsw.loopmania.BasicEnemy;
 import unsw.loopmania.Character;
 import unsw.loopmania.ElanMuske;
 import unsw.loopmania.Enemy;
@@ -91,7 +90,7 @@ public class ElanMuskeTest {
 
         assertEquals(zombie.getHp(), 25);
 
-        elan.healEnemies(enemies);  // Shouldnt heal above their max hp.
+        elan.healEnemies(enemies);  // Shouldn't heal above their max hp.
 
         assertEquals(zombie.getHp(), 30);
 

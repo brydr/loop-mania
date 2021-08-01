@@ -4,5 +4,20 @@
     "java.project.sourcePaths": [
         "src",
         "worlds"
+    ],
+    "cSpell.words": [
+        "Anduril",
+        "Heros",
+        "Muske",
+        "Tokener",
+        "VLAB",
+        "dragboard",
+        "equippable",
+        "gridpane",
+        "gridpanes",
+        "imageview",
+        "mutexes",
+        "tranced",
+        "unequip"
     ]
 }

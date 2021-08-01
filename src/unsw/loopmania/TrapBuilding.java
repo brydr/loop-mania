@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import java.util.List;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class TrapBuilding extends Building implements BuildingAttackers {
@@ -24,6 +22,6 @@ public class TrapBuilding extends Building implements BuildingAttackers {
         if (enemy.getX() == getX() && enemy.getY() == getY()) {
             this.destroy();
             enemy.takeDamage(TRAP_DAMAGE);
-        } 
+        }
     }
 }

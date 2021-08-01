@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 /**
  * represents an equipped or unequipped sword in the backend world
  */
-public class Sword extends Weapon implements AttackAbility {
+public class Sword extends Weapon  {
 	private final static int ATTACK_POWER = 8;
 	private final static int BUY_PRICE = 150;
 	private final static int SELL_PRICE = 75;

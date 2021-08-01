@@ -1,28 +1,22 @@
 package test.RareItemTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import unsw.loopmania.AndurilFlameOfTheWest;
 import unsw.loopmania.Character;
 import unsw.loopmania.ElanMuske;
 import unsw.loopmania.PathPosition;
-import unsw.loopmania.RareItem;
-import unsw.loopmania.TheOneRing;
-import unsw.loopmania.TreeStump;
-import unsw.loopmania.Weapon;
 import unsw.loopmania.Slug;
+import unsw.loopmania.TreeStump;
 
 public class TreeStumpTest {
     @Test
-    public void testDefense() {
+    public void testDefence() {
         PathPosition pos = new PathPosition( 0, Arrays.asList(new Pair<>(0, 1),
                                                               new Pair<>(0, 2),
                                                               new Pair<>(0, 3)) );
@@ -42,10 +36,10 @@ public class TreeStumpTest {
             treeStump.effect(c, slug);
             slug.attack(c);
         }
-        
+
         assertEquals(c.getHp(), 197);    // Slugs should deal 3 damage.
 
-        
+
         // Loop until elan lands a hit since the tree stump can block.
         while (c.getHp() == 197) {
             treeStump.effect(c, elan);

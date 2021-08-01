@@ -116,7 +116,7 @@ public class CharacterTest {
         assertEquals(listSoldiers.get(0).getY(), 3);
         assertEquals(listSoldiers.get(1).getX(), 0);
         assertEquals(listSoldiers.get(1).getY(), 3);
-        // check allie and character have moved up path
+        // check ally and character have moved up path
         c.moveUpPath();
         listSoldiers = c.getListAlliedSoldiers();
         assertEquals(c.getX(), 0);
@@ -175,14 +175,13 @@ public void convertBackToEnemyTest(){
 
 /**
  * Integration test for different equipped weapons and enemies
- * TODO implement different enemies, check trance
  */
 @Test
 public void integrationAttackTest(){
     PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
     Slug slug = new Slug(pos);
     Character c = new Character(pos);
-    assertEquals(slug.getHp(), 30);        
+    assertEquals(slug.getHp(), 30);
     // unarmed does 2 dmg
     c.attack(slug);
     assertEquals(slug.getHp(), 30-2);

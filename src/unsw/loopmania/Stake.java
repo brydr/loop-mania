@@ -2,7 +2,7 @@ package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class Stake extends Weapon implements AttackAbility {
+public class Stake extends Weapon {
 	private final static int ATTACK_POWER = 4;
 	private final static int VAMPIRE_DAMAGE = 16;
 	private final static int BUY_PRICE = 100;
@@ -21,7 +21,7 @@ public class Stake extends Weapon implements AttackAbility {
 		}
 		return Stake.ATTACK_POWER;
 	}
-	
+
 	@Override
 	public String getImage() {
 		return "src/images/stake.png";

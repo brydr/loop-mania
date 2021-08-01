@@ -1,7 +1,5 @@
 package unsw.loopmania;
 
-import java.util.List;
-
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class BarracksBuilding extends Building implements BuildingHelpers {
@@ -17,7 +15,7 @@ public class BarracksBuilding extends Building implements BuildingHelpers {
 
     /**
      * Spawn an allied soldier.
-     * @precondition "character" is at the barracks: 
+     * @precondition "character" is at the barracks:
      * {@code character.getX() == getX() && character.getY() == getY()}
      * @param theCharacter reference to "The Character" of the game.
      */
@@ -29,5 +27,5 @@ public class BarracksBuilding extends Building implements BuildingHelpers {
             character.addAlliedSoldier(newSoldier);
         }
     }
-    
+
 }

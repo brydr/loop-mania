@@ -11,21 +11,27 @@ public class MusicPlayer {
     private final MediaPlayer mainPlayer;
     private final MediaPlayer megaPlayer;
 
-    private final String MAIN_THEME_FILE  = "/audio/music/KahootTrap.mp3";
-    private final String MEGALOVANIA_FILE = "/audio/music/Megalovania.m4a";
+    private final String MAIN_THEME_FILE  = "/audio/music/KahootTrap.wav";
+    private final String MEGALOVANIA_FILE = "/audio/music/Megalovania.wav";
     private final double MAIN_THEME_VOL  = 0.7d;
-    private final double MEGALOVANIA_VOL = 0.3d; 
+    private final double MEGALOVANIA_VOL = 0.3d;
+
+    // This constructor is called during testing so it won't initialise the media players
+    public MusicPlayer(boolean testMode) {
+        mainPlayer = null;
+        megaPlayer = null;
+    }
 
     public MusicPlayer() {
         final URL musicURL = getClass().getResource(MAIN_THEME_FILE);
         final URL megaURL  = getClass().getResource(MEGALOVANIA_FILE);
-    
+
         mainPlayer = new MediaPlayer( new Media(musicURL.toString()) );
         megaPlayer = new MediaPlayer( new Media(megaURL.toString()) );
 
         mainPlayer.setVolume(MAIN_THEME_VOL);
         megaPlayer.setVolume(MEGALOVANIA_VOL);
-        
+
 
         // Style note: functional interfaces like `Runnable` can also have an explicit instance, or
         // use lambda functions

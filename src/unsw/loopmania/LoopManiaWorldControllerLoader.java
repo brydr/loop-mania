@@ -18,9 +18,9 @@ import java.io.File;
 /**
  * A LoopManiaLoader that also creates the necessary ImageViews for the UI,
  * connects them via listeners to the model, and creates a controller.
- * 
+ *
  * this should NOT be used to load any entities which spawn, or might be removed (use controller for that)
- * since this doesnt add listeners or teardown functions (so it will be very hacky to remove event handlers)
+ * since this doesn't add listeners or tear down functions (so it will be very hacky to remove event handlers)
  */
 public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
 
@@ -36,10 +36,9 @@ public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
         entities = new ArrayList<>();
         characterImage = new Image((new File("src/images/human_new.png")).toURI().toString());
         pathTilesImage = new Image((new File("src/images/32x32GrassAndDirtPath.png")).toURI().toString());
-        
+
     }
 
-    // TODO = load more entity types from the file
     @Override
     public void onLoad(Character character, HerosCastle herosCastle) {
         ImageView view = new ImageView(characterImage);
@@ -96,7 +95,7 @@ public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
 
 
     /**
-     * pair the  backendentity and view, so the view tracks the coordinates of the entity
+     * pair the  backend entity and view, so the view tracks the coordinates of the entity
      * @param entity backend entity
      * @param view frontend image to be paired with the backend entity
      */
@@ -109,7 +108,7 @@ public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
     /**
      * Track the position of entities which don't spawn or require removal.
      * We only setup the node to follow the coordinates of the backend entity.<br>
-     * Items which potentially need to be removed should be spawned by controller, and have listener handles and teardown functions added.
+     * Items which potentially need to be removed should be spawned by controller, and have listener handles and tear down functions added.
      * @param entity backend entity
      * @param node frontend image to track the coordinates of the backend entity
      */
@@ -140,7 +139,7 @@ public class LoopManiaWorldControllerLoader extends LoopManiaWorldLoader {
      * @throws FileNotFoundException
      */
     public LoopManiaWorldController loadController() throws FileNotFoundException {
-        return new LoopManiaWorldController(load(), entities);        
+        return new LoopManiaWorldController(load(), entities);
     }
 
 

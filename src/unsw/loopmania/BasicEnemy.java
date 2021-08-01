@@ -7,8 +7,6 @@ import java.util.Random;
  * a basic form of enemy in the world
  */
 public abstract class BasicEnemy extends Enemy {
-    // TODO = modify this, and add additional forms of enemy
-
     private BasicEnemy convertedToEnemy;
     private Boolean inTrance;
     public BasicEnemy(PathPosition position, int startingHealth) {
