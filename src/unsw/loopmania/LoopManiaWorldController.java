@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
+import org.json.JSONArray;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -402,7 +403,14 @@ public class LoopManiaWorldController {
             world.loadRandomBasicItem();
         }
 
+        // A list of all rare items that can spawn in the world.
+        List<String> worldRareItems = world.getRareItems();
+        //["the_one_ring", "anduril_flame_of_the_west", tree_stump"]
         for (Item drops : enemy.dropLoot()) {
+            if (drops instanceof TheOneRing && !worldRareItems.contains("the_one_ring")) {
+                break;
+            } // Add more rare item drops.
+
             world.addUnequippedItem(drops);
         }
     }
