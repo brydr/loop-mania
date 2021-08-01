@@ -22,13 +22,11 @@ public class AndurilFlameOfTheWest extends Weapon implements RareItem {
 	}
 
     @Override
-    public boolean effect(Character character, Enemy enemy) {
+    public void effect(Character character, Enemy enemy) {
         if (enemy instanceof BossEnemy) {
             // Set it so the character attacks 2 more times for a total of 3 attacks, tripling the damage.
             character.setNumAttack(2);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -39,6 +37,7 @@ public class AndurilFlameOfTheWest extends Weapon implements RareItem {
         } else {
             if (character.getHp() <= 0) {
                 character.setEquippedRareItem(null);        // One Ring effect
+                character.setOneRingUsed(true); 
                 character.setHp(character.getMaxHp());
             }
         }

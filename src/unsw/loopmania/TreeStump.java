@@ -32,13 +32,11 @@ public class TreeStump extends ProtectiveGear implements RareItem{
 	}
 
     @Override
-    public boolean effect(Character character, Enemy enemy) {
+    public void effect(Character character, Enemy enemy) {
         if (enemy instanceof BossEnemy) {
             int enemyAttack = enemy.getAttack();
             enemy.setAttack(enemyAttack/3);
-            return true;
         }
-        return false;
     }
 
     @Override
@@ -48,6 +46,7 @@ public class TreeStump extends ProtectiveGear implements RareItem{
         } else {
             if (character.getHp() <= 0) {
                 character.setEquippedRareItem(null);        // One Ring effect
+                character.setOneRingUsed(true); 
                 character.setHp(character.getMaxHp());
             }
         }

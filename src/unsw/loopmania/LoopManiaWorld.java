@@ -382,6 +382,7 @@ public class LoopManiaWorld {
 
             if (charHealth <= 0) {
                 // Character is dead so game over.
+                return defeatedEnemies;
             }
 
             if (enemyHealth <= 0) {

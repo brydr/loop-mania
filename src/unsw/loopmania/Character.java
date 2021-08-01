@@ -25,6 +25,7 @@ public class Character extends MovingEntity {
     private int numAttack;
     private int stunned;
     private int bossesKilled;
+    private boolean oneRingUsed;
 
     public Character(PathPosition position) {
         super(position);
@@ -41,6 +42,7 @@ public class Character extends MovingEntity {
         equippedWeapon = new Unarmed();
         this.numAttack = 0;
         this.stunned = 0;
+        this.oneRingUsed = false;
     }
 
     @Override
@@ -60,6 +62,14 @@ public class Character extends MovingEntity {
 
     public void setNumAttack(int numAttack) {
         this.numAttack = numAttack;
+    }
+
+    public boolean getOneRingUsed() {
+        return oneRingUsed;
+    }
+
+    public void setOneRingUsed(boolean used) {
+        this.oneRingUsed = used;
     }
 
     public int getStunned() {

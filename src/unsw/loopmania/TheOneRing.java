@@ -11,16 +11,15 @@ public class TheOneRing extends Item implements RareItem {
 	}
     
     @Override
-    public boolean effect(Character character, Enemy enemy) {
+    public void effect(Character character, Enemy enemy) {
         if (character.getHp() <= 0) {
             RareItem oneRing = character.getEquippedRareItem();
             // Remove the rare item from the characters equipped rare item list and set its equipped ring to null.
             character.removeRareItem(oneRing);
             character.setEquippedRareItem(null);
+            character.setOneRingUsed(true); 
             character.setHp(character.getMaxHp());
-            return true;
         }
-        return false;
     }
 
     @Override

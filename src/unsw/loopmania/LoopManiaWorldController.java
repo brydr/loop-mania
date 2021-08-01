@@ -1100,8 +1100,8 @@ public class LoopManiaWorldController {
      * @precondition Ring slot is at (col, row) = (0, 1)
      */
     private void useTheOneRing(GridPane gridPane) {
-        if (world.getCharacter().getEquippedRareItem() != null) {
-            final boolean wasConsumed = world.getCharacter().getEquippedRareItem().effect(world.getCharacter(), null);
+        if (world.getCharacter().getEquippedRareItem() == null) {
+            final boolean wasConsumed = world.getCharacter().getOneRingUsed(); 
             // If potion was ring, play sound
             if (wasConsumed) {
                 //audioPlayer.playUsePotionSound();
@@ -1121,6 +1121,7 @@ public class LoopManiaWorldController {
                 gridPane.add(emptyRingSlot, 0, 1);
                 Node newNode = getNodeFromGridPane(gridPane, 0, 1);
                 newNode.setId("rareItemCell");
+                world.getCharacter().setOneRingUsed(false); 
             }
         }
     }
