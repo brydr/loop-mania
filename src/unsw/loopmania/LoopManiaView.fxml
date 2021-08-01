@@ -204,7 +204,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label fx:id="allGoals" prefHeight="17.0" prefWidth="101.0" GridPane.columnIndex="1" />
+                  <Label fx:id="allGoals" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="101.0" GridPane.columnIndex="1" />
                   <CheckBox fx:id="goalComplete" disable="true" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" />
                </children>
             </GridPane>
