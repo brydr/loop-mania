@@ -172,7 +172,7 @@ public class ShopController {
 		@Override
 		public void handle(MouseEvent arg0) {
 			System.out.println("Clicked on " + item.toString());
-			if (item instanceof BasicItem) {
+			if (!(item instanceof RareItem)) {
 				if (selling) {
 					System.out.println("Selling " + item.toString());
 
@@ -203,7 +203,7 @@ public class ShopController {
 		@Override
 		public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 			if (newValue) {
-				if (item instanceof BasicItem) {
+				if (!(item instanceof RareItem)) {
 					priceLabel.setText(String.format("Click to %s for %d gold", selling ? "sell" : "buy",
 							selling ? ((BasicItem) item).getSellPrice() : ((BasicItem) item).getBuyPrice()));
 				} else {

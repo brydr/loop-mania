@@ -84,6 +84,8 @@ public class LoopManiaWorld {
 
     private List<RandomPathLoot> worldPathLoot;
 
+    private JSONArray worldRareItems;
+
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
 
@@ -167,6 +169,14 @@ public class LoopManiaWorld {
      */
     public void setGoals(JSONObject goals) {
         worldGoals = goals;
+    }
+
+    public void setRareItems(JSONArray rareItems) {
+        worldRareItems = rareItems;
+    }
+
+    public JSONArray getRareItems() {
+        return worldRareItems;
     }
 
     /**
@@ -344,17 +354,13 @@ public class LoopManiaWorld {
                     }
                     break;
                 }
+                // For every rare item equipped, do its effect.
+                for (RareItem rareItems : character.getListRareItems()) {
+                    rareItems.effect(character, e);
+                }
+
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
 
-                int outputDamage = character.getEquippedWeapon().getDamage(e);
-                // reduce player damage by 15% if helmet equipped
-                if (character.getEquippedHelmet() != null)
-                    outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
-
-                // If the character is next to a campfire, it will attack twice.
-                if (character.getAttackTwice()) {
-                    e.takeDamage(outputDamage);
-                }
                 // Add logic so the tower attacks too if in range.
                 for (Building building : buildingEntities) {
                     if (building instanceof TowerBuilding) {
@@ -377,6 +383,12 @@ public class LoopManiaWorld {
                 charHealth = character.getHp();
                 enemyHealth = e.getHp();
 
+                // Only do the effect for the one ring.
+                RareItem theOneRing = character.getEquippedRareItem();
+                if (theOneRing != null) {
+                    theOneRing.effect(character, e);
+                }
+
                 // An array that will store all allies that need to be removed from the transformedEnemies array due to converting back into an enemy.
                 List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();
 
@@ -394,10 +406,19 @@ public class LoopManiaWorld {
                     enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
                     transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
                 }
+
+                // If the game is in confusing mode do extra effects for the rare items.
+                if (gameMode instanceof ConfusingMode) {
+                    // For every rare item equipped, do its added effect.
+                    for (RareItem rareItems : character.getListRareItems()) {
+                        rareItems.addEffect(character, e);
+                    }
+                }
             }
 
             if (charHealth <= 0) {
                 // Character is dead so game over.
+                return defeatedEnemies;
             }
 
             if (enemyHealth <= 0) {
