@@ -3,6 +3,7 @@ package unsw.loopmania;
 import java.io.File;
 import java.util.List;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -16,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 public class ShopController {
 	private Shop shop;
@@ -32,14 +34,19 @@ public class ShopController {
 	private Label dgePrice;
 	@FXML
 	private LineChart<Number, Number> dgeChart;
+	@FXML
+	private Label messageLabel;
+	@FXML
+	private Label goldLabel;
 
-	private final static String LABEL_DEFAULT_TEXT = "Click items to buy, close window when done";
+	private final static String LABEL_DEFAULT_TEXT = "Click to buy/sell, close when done";
+	private final static int MESSAGE_POPUP_TIME = 3;
 
 	public void initialiseShop(LoopManiaWorld world) {
 		this.world = world;
 		this.market = world.getDoggieCoinMarket();
 		shop = new Shop(world);
-		updateGridPanes();
+		updateFrontend();
 		drawChart();
 	}
 
@@ -78,9 +85,10 @@ public class ShopController {
 		dgePrice.setText(priceText);
 	}
 
-	private void updateGridPanes() {
+	private void updateFrontend() {
 		updateShopGridPanes();
 		updateCharacterPanes();
+		updateGoldAmount();
 	}
 
 	private void updateShopGridPanes() {
@@ -158,6 +166,7 @@ public class ShopController {
 	@FXML
 	private void initialize() {
 		priceLabel.setText(LABEL_DEFAULT_TEXT);
+		messageLabel.setOpacity(0);
 	}
 
 	private class ClickHandler implements EventHandler<MouseEvent> {
@@ -173,20 +182,28 @@ public class ShopController {
 		public void handle(MouseEvent arg0) {
 			System.out.println("Clicked on " + item.toString());
 			if (item instanceof BasicItem) {
+				BasicItem targetItem = (BasicItem) item;
 				if (selling) {
-					System.out.println("Selling " + item.toString());
+					System.out.println("Selling " + targetItem.toString());
 
-					if (!shop.sell((BasicItem) item)) {
-						priceLabel.setText("Couldn't sell item because it's not in your inventory");
+					if (shop.sell(targetItem)) {
+						showMessage(String.format("Sold for %d gold", targetItem.getSellPrice()), MESSAGE_POPUP_TIME,
+								Color.GREEN);
+					} else {
+						showMessage("Couldn't sell item because it's not in your inventory", MESSAGE_POPUP_TIME,
+								Color.RED);
 					}
 				} else {
-					System.out.println("Buying " + item.toString());
+					System.out.println("Buying " + targetItem.toString());
 
-					if (!shop.buy((BasicItem) item)) {
-						priceLabel.setText("You can't afford this item");
+					if (shop.buy(targetItem)) {
+						showMessage(String.format("Bought for %d gold", targetItem.getBuyPrice()), MESSAGE_POPUP_TIME,
+								Color.GREEN);
+					} else {
+						showMessage("You can't buy this item", MESSAGE_POPUP_TIME, Color.RED);
 					}
 				}
-				updateGridPanes();
+				updateFrontend();
 			}
 		}
 	}
@@ -214,5 +231,21 @@ public class ShopController {
 			}
 
 		}
+
+	}
+
+	private void showMessage(String message, int seconds, Color colour) {
+		messageLabel.setTextFill(colour);
+		messageLabel.setText(message);
+		messageLabel.setOpacity(1);
+		PauseTransition wait = new PauseTransition(Duration.seconds(seconds));
+		wait.setOnFinished((event) -> {
+			messageLabel.setOpacity(0);
+		});
+		wait.play();
+	}
+
+	private void updateGoldAmount() {
+		goldLabel.setText(String.format("You have %d gold", world.getCharacter().getGold()));
 	}
 }
