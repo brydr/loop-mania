@@ -208,6 +208,8 @@ public class LoopManiaWorldController {
 
     // Object handling playing audio
     private AudioPlayer audioPlayer = new AudioPlayer();
+    // This will automatically begin music
+    private MusicPlayer musicPlayer = new MusicPlayer();
 
     // Dummy constructor for the tests, otherwise it complains it doesn't have a UI, don't use anywhere else
     public LoopManiaWorldController() {}
@@ -300,6 +302,10 @@ public class LoopManiaWorldController {
         // TODO = handle more aspects of the behaviour required by the specification
         System.out.println("starting timer");
         isPaused = false;
+
+        // Start playing main theme
+        musicPlayer.playMainTheme();
+
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             boolean isAtCastle = world.runTickMoves();
@@ -314,19 +320,28 @@ public class LoopManiaWorldController {
             List<Enemy> defeatedEnemies = world.runBattles();
             useTheOneRing(equippedItems);
             if (defeatedEnemies.size() > 0) {
-                for (Enemy e: defeatedEnemies){
+                for (Enemy e : defeatedEnemies){
                     reactToEnemyDefeat(e);
                 }
                 audioPlayer.playWinBattleSound();
                 runBattleResults(defeatedEnemies);
+
+                // End boss music (no-op if wasn't playing)
+                if (defeatedEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
+                    musicPlayer.stopMegalovania();
             }
             removeBrokenItems();
             world.possiblySpawnEnemies();
             world.possiblySpawnBossEnemies();
+            
             List<Enemy> newEnemies = world.getEnemies();
-            for (Enemy newEnemy: newEnemies){
+            
+            for (Enemy newEnemy : newEnemies){
                 onLoad(newEnemy);
             }
+            // Play boss music
+            if (newEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
+                musicPlayer.playMegalovania();
 
             List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
             for (RandomPathLoot pathLoot : pickedUpLoot){
@@ -1176,6 +1191,19 @@ public class LoopManiaWorldController {
      */
     public void setGameMode(GameMode gameMode) {
         world.setGameMode(gameMode);
+    }
+
+    /**
+     * Play boss music if Elan Muske is present in bossEnemies. 
+     * Otherwise is a no-op.
+     * @param bossEnemies List of boss enemies.
+     */
+    private void playBossMusic(List<BossEnemy> bossEnemies) {
+        final boolean elanAlive = bossEnemies.parallelStream()
+            .anyMatch(boss -> boss instanceof ElanMuske);
+        if (elanAlive)
+            musicPlayer.playMegalovania();
+        // else stop
     }
 
 }

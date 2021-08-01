@@ -63,14 +63,14 @@ public final class AudioPlayer {
      */
     public AudioPlayer() {
         // Initialise AudioClips
-        this.winBattleSound = newAudioClipFromPath(WIN_BATTLE_FILE);
-        this.pickupGoldSound = newAudioClipFromPath(PICKUP_GOLD_FILE);
-        this.pickupPotionSound = newAudioClipFromPath(PICKUP_POTION_FILE);
-        this.usePotionSound = newAudioClipFromPath(USE_POTION_FILE);
-        this.equipDefaultSound = newAudioClipFromPath(EQUIP_DEFAULT_FILE);
-        this.equipArmourSound = newAudioClipFromPath(EQUIP_ARMOUR_FILE);
-        this.equipSwordSound = newAudioClipFromPath(EQUIP_SWORD_FILE);
-        this.dropBuildingSound = newAudioClipFromPath(DROP_BUILDING_FILE);
+        this.winBattleSound =       newAudioClipFromPath(WIN_BATTLE_FILE);
+        this.pickupGoldSound =      newAudioClipFromPath(PICKUP_GOLD_FILE);
+        this.pickupPotionSound =    newAudioClipFromPath(PICKUP_POTION_FILE);
+        this.usePotionSound =       newAudioClipFromPath(USE_POTION_FILE);
+        this.equipDefaultSound =    newAudioClipFromPath(EQUIP_DEFAULT_FILE);
+        this.equipArmourSound =     newAudioClipFromPath(EQUIP_ARMOUR_FILE);
+        this.equipSwordSound =      newAudioClipFromPath(EQUIP_SWORD_FILE);
+        this.dropBuildingSound =    newAudioClipFromPath(DROP_BUILDING_FILE);
     }
 
     public void playWinBattleSound() {
