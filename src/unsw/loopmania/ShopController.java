@@ -35,16 +35,12 @@ public class ShopController {
 
 	private final static String LABEL_DEFAULT_TEXT = "Click items to buy, close window when done";
 
-	public ShopController() {
-	}
-
-	public void initialiseShop(LoopManiaWorld world, ShopStrategy strategy) {
+	public void initialiseShop(LoopManiaWorld world) {
 		this.world = world;
 		this.market = world.getDoggieCoinMarket();
-		shop = new Shop(world, strategy);
+		shop = new Shop(world);
 		updateGridPanes();
 		drawChart();
-		world.getCharacter().addGold(100000000); // FIXME remove for final product
 	}
 
 	private void drawChart() {
@@ -176,13 +172,19 @@ public class ShopController {
 		@Override
 		public void handle(MouseEvent arg0) {
 			System.out.println("Clicked on " + item.toString());
-			if (item instanceof BasicItem) {
+			if (!(item instanceof RareItem)) {
 				if (selling) {
 					System.out.println("Selling " + item.toString());
-					shop.sell((BasicItem) item);
+
+					if (!shop.sell((BasicItem) item)) {
+						priceLabel.setText("Couldn't sell item because it's not in your inventory");
+					}
 				} else {
 					System.out.println("Buying " + item.toString());
-					shop.buy((BasicItem) item);
+
+					if (!shop.buy((BasicItem) item)) {
+						priceLabel.setText("You can't afford this item");
+					}
 				}
 				updateGridPanes();
 			}
@@ -201,7 +203,7 @@ public class ShopController {
 		@Override
 		public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 			if (newValue) {
-				if (item instanceof BasicItem) {
+				if (!(item instanceof RareItem)) {
 					priceLabel.setText(String.format("Click to %s for %d gold", selling ? "sell" : "buy",
 							selling ? ((BasicItem) item).getSellPrice() : ((BasicItem) item).getBuyPrice()));
 				} else {

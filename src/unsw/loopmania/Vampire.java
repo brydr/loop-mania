@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
+
 import javafx.beans.property.SimpleIntegerProperty;
 public class Vampire extends BasicEnemy implements Undead {
 
@@ -15,9 +17,8 @@ public class Vampire extends BasicEnemy implements Undead {
     public static final int STARTING_HP = 60;
 
     public Vampire(PathPosition position) {
-        super(position);
+        super(position, STARTING_HP);
         this.setAttack(12);
-        this.setHp(STARTING_HP);
         this.setSpeed(1);
         this.setBattleRadius(2);
         this.setSupportRadius(3);
@@ -42,26 +43,18 @@ public class Vampire extends BasicEnemy implements Undead {
         }
     }
 
-    @Override
-    public void setHp(int hp) {
-        if (hp > STARTING_HP) {
-            this.hp.setValue(STARTING_HP);
-        } else {
-            this.hp.setValue(hp);
-        }
-    }
 
     @Override
     public void attack(Character character) {
 
         int criticalBiteChance;
 
-        if (character.getEquippedShield() == null) {
+        if (character.getEquippedShield() != null && character.getEquippedShield() instanceof Shield) {
+            criticalBiteChance = (new Random()).nextInt(100); // Random number between 0 and 99 inclusive
+            criticalChance = 0.08;
+        } else {
             criticalBiteChance = (new Random()).nextInt(55); // Random number between 0 and 54 inclusive
             criticalChance = 0.2;
-        } else {
-            criticalBiteChance = (new Random()).nextInt(100); // Random number between 0 and 99 inclusive
-            criticalChance = 0.12;
         }
 
 
@@ -97,12 +90,21 @@ public class Vampire extends BasicEnemy implements Undead {
     }
 
     @Override
-    public List<Item> dropLoot() {
+    public List<Item> dropLoot(JSONArray rareItems) {
         List<Item> loot = new ArrayList<Item>();
-        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-        if (oneRingChance < 3) {
-            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
-            loot.add(theOneRing);
+        int rareItemChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (rareItemChance < 3) {
+            String item = rareItems.getString(new Random().nextInt(rareItems.length()));  // Selects a random item from the rare items list
+            if (item.equals("the_one_ring")) {
+                TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(theOneRing);
+            } else if (item.equals("anduril_flame_of_the_west")) {
+                AndurilFlameOfTheWest andurilFlameOfTheWest = new AndurilFlameOfTheWest(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(andurilFlameOfTheWest);
+            } else if (item.equals("tree_stump")) {
+                TreeStump treeStump = new TreeStump(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(treeStump);
+            }
         }
         return loot;
     }

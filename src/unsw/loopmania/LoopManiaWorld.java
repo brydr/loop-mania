@@ -57,7 +57,6 @@ public class LoopManiaWorld {
 
     private List<Enemy> enemies;
 
-
     private List<Card> cardEntities;
 
     // The unequipped inventory of the character
@@ -87,6 +86,8 @@ public class LoopManiaWorld {
 
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
+
+    private GameMode gameMode;
 
     /**
      * create the world (constructor)
@@ -168,25 +169,12 @@ public class LoopManiaWorld {
         worldGoals = goals;
     }
 
-    /**
-     * Set the worlds rare items.
-     * @param rareItems
-     */
     public void setRareItems(JSONArray rareItems) {
         worldRareItems = rareItems;
     }
 
-    /**
-     * Returns a String array list of rare items that can be spawned in the world.
-     * @return
-     */
-    public List<String> getRareItems() {
-        List<String> rareItemInWorld = new ArrayList<String>();
-        for (int i = 0; i < worldRareItems.length(); i++) {
-            String rareItem = worldRareItems.getString(i);
-            rareItemInWorld.add(rareItem);
-        }
-        return rareItemInWorld;
+    public JSONArray getRareItems() {
+        return worldRareItems;
     }
 
     /**
@@ -343,17 +331,13 @@ public class LoopManiaWorld {
                     }
                     break;
                 }
+                // For every rare item equipped, do its effect.
+                for (RareItem rareItems : character.getListRareItems()) {
+                    rareItems.effect(character, e);
+                }
+
                 character.attack(e);    // character.attack(e) also makes all allies of it attack too.
 
-                int outputDamage = character.getEquippedWeapon().getDamage(e);
-                // reduce player damage by 15% if helmet equipped
-                if (character.getEquippedHelmet() != null)
-                    outputDamage = character.getEquippedHelmet().calculateDamage(outputDamage);
-
-                // If the character is next to a campfire, it will attack twice.
-                if (character.getAttackTwice()) {
-                    e.takeDamage(outputDamage);
-                }
                 // Add logic so the tower attacks too if in range.
                 for (Building building : buildingEntities) {
                     if (building instanceof TowerBuilding) {
@@ -364,9 +348,9 @@ public class LoopManiaWorld {
                 e.attack(character);    // Attacks allies first.
 
                 // If the enemy is a boss, then apply its healEnemies method which elan muske uses which heals the list of enemies passed in.
-                if (e instanceof BossEnemy) {
-                    BossEnemy boss = (BossEnemy) e;
-                    boss.healEnemies(enemiesInRange);
+                if (e instanceof ElanMuske) {
+                    ElanMuske elan = (ElanMuske) e;
+                    elan.healEnemies(enemiesInRange);
                 }
                 // If a zombie critical bite occurs and an allied soldier got transformed then it should be added to the enemies.
                 if (e.getConvertedToEnemy() != null) {
@@ -375,6 +359,12 @@ public class LoopManiaWorld {
                 }
                 charHealth = character.getHp();
                 enemyHealth = e.getHp();
+
+                // Only do the effect for the one ring.
+                RareItem theOneRing = character.getEquippedRareItem();
+                if (theOneRing != null) {
+                    theOneRing.effect(character, e);
+                }
 
                 // An array that will store all allies that need to be removed from the transformedEnemies array due to converting back into an enemy.
                 List<AlliedSoldier> convertBackAlliedSoldier = new ArrayList<AlliedSoldier>();
@@ -393,10 +383,19 @@ public class LoopManiaWorld {
                     enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
                     transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
                 }
+
+                // If the game is in confusing mode do extra effects for the rare items.
+                if (gameMode instanceof ConfusingMode) {
+                    // For every rare item equipped, do its added effect.
+                    for (RareItem rareItems : character.getListRareItems()) {
+                        rareItems.addEffect(character, e);
+                    }
+                }
             }
 
             if (charHealth <= 0) {
                 // Character is dead so game over.
+                return defeatedEnemies;
             }
 
             if (enemyHealth <= 0) {
@@ -924,8 +923,8 @@ public class LoopManiaWorld {
             // Check that the enemy is not the enemy the character is battling to avoid adding it into the enemiesInRange array again.
             // These enemies added will be the enemies supporting.
             } else if (
-                battledEnemy != e && 
-                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)  
+                battledEnemy != e &&
+                Math.pow(character.getX() - e.getX(), 2) + Math.pow(character.getY()- e.getY(), 2)
                 <= Math.pow(e.getSupportRadius(), 2)
             ) {
                 enemiesInRange.add(e);
@@ -935,4 +934,11 @@ public class LoopManiaWorld {
         return enemiesInRange;
     }
 
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
 }

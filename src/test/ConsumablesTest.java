@@ -48,7 +48,7 @@ public class ConsumablesTest {
         character.setEquippedRareItem(theOneRing);
         character.setHp(0);
         assertTrue(character.getHp() == 0);
-        character.consumeRareItem();
+        theOneRing.effect(character, null);
         assertTrue(character.getHp() == character.getMaxHp());
     }
 }

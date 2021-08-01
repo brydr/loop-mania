@@ -312,6 +312,7 @@ public class LoopManiaWorldController {
                 runEndScreen(true);
             }
             List<Enemy> defeatedEnemies = world.runBattles();
+            useTheOneRing(equippedItems);
             if (defeatedEnemies.size() > 0) {
                 for (Enemy e: defeatedEnemies){
                     reactToEnemyDefeat(e);
@@ -419,15 +420,12 @@ public class LoopManiaWorldController {
             world.loadRandomBasicItem();
         }
 
-        // A list of all rare items that can spawn in the world.
-        List<String> worldRareItems = world.getRareItems();
-        //["the_one_ring", "anduril_flame_of_the_west", tree_stump"]
-        for (Item drops : enemy.dropLoot()) {
-            if (drops instanceof TheOneRing && !worldRareItems.contains("the_one_ring")) {
-                break;
-            } // Add more rare item drops.
-
-            world.addUnequippedItem(drops);
+        if (!world.getRareItems().isEmpty()) {
+            for (Item drops : enemy.dropLoot(world.getRareItems())) {
+                world.addUnequippedItem(drops);
+                RareItem rareItem = (RareItem)drops;
+                character.addRareItem(rareItem);
+            }
         }
     }
 
@@ -474,12 +472,6 @@ public class LoopManiaWorldController {
     @FXML
     private void openShop() throws IOException {
         pause();
-        // FIXME get difficulty from main menu
-        showShop(world, new StandardMode());
-    }
-
-    private void showShop(LoopManiaWorld world, ShopStrategy strategy) throws IOException {
-        pause();
 
         FXMLLoader shopLoader = new FXMLLoader(getClass().getResource("ShopView.fxml"));
         Parent shopRoot = shopLoader.load();
@@ -492,7 +484,7 @@ public class LoopManiaWorldController {
         shopStage.setResizable(false);
         shopStage.setTitle("Shop");
         ShopController shopController = shopLoader.getController();
-        shopController.initialiseShop(world, strategy);
+        shopController.initialiseShop(world);
 
         shopStage.show();
 
@@ -900,6 +892,7 @@ public class LoopManiaWorldController {
         // check null for when slot is already filled with another image, no need to set opacity
         if (targetId == null) return false;
         if (draggedId.equals("src/images/shield.png") && targetId.equals("shieldCell")) return true;
+        else if (draggedId.equals("src/images/tree_stump.png") && targetId.equals("shieldCell")) return true;
         else if (draggedId.equals("src/images/helmet.png") && targetId.equals("helmetCell")) return true;
         else if (draggedId.equals("src/images/the_one_ring.png") && targetId.equals("rareItemCell")) return true;
         else if (draggedId.equals("src/images/brilliant_blue_new.png") && targetId.equals("potionCell")) return true;
@@ -983,7 +976,7 @@ public class LoopManiaWorldController {
     private void switchToMainMenu() throws IOException {
         // TODO = possibly set other menu switchers
         pause();
-        mainMenuSwitcher.switchMenu();
+        mainMenuSwitcher.switchMenu(world.getGameMode());
     }
 
     /**
@@ -1125,4 +1118,46 @@ public class LoopManiaWorldController {
         Node newNode = getNodeFromGridPane(equippedItems, triplet.getValue0(), triplet.getValue1());
         newNode.setId(triplet.getValue2().getEmptySlotId());
     }
+
+    /**
+     * Consume The One Ring
+     * @param gridPane The equipped items pane.
+     * @precondition Ring slot is at (col, row) = (0, 1)
+     */
+    private void useTheOneRing(GridPane gridPane) {
+        if (world.getCharacter().getEquippedRareItem() == null) {
+            final boolean wasConsumed = world.getCharacter().getOneRingUsed(); 
+            // If potion was ring, play sound
+            if (wasConsumed) {
+                //audioPlayer.playUsePotionSound();
+
+                // Remove ring node from gridPane
+                final Node node = getNodeFromGridPane(gridPane, 0, 1);
+                assert node != null;
+                gridPane.getChildren().remove(node);
+
+                // Add empty ring back to gridPane
+                // TODO = Make this Image/ImageView persistent so we're not constantly reloading/allocating
+                final ImageView emptyRingSlot = new ImageView(
+                    new Image(
+                    new File("src/images/ring_slot.png").toURI().toString()
+                ));
+                emptyRingSlot.setId("rareItemCell");
+                gridPane.add(emptyRingSlot, 0, 1);
+                Node newNode = getNodeFromGridPane(gridPane, 0, 1);
+                newNode.setId("rareItemCell");
+                world.getCharacter().setOneRingUsed(false); 
+            }
+        }
+    }
+
+    /**
+     * Sets the game mode for the world
+     *
+     * @param gameMode The game mode to switch to
+     */
+    public void setGameMode(GameMode gameMode) {
+        world.setGameMode(gameMode);
+    }
+
 }

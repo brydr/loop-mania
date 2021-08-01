@@ -48,6 +48,7 @@ public class ShopTest {
 	@Before
 	public void before() {
 		world.setController(controller);
+		world.setGameMode(new StandardMode());
 	}
 
 	// Main function for printing out shop item generation for a seed
@@ -58,7 +59,7 @@ public class ShopTest {
 
 	// Helper function for setting up tests
 	private void printInventory(long seed) {
-		Shop shop = new Shop(world, new StandardMode(), seed);
+		Shop shop = new Shop(world, seed);
 
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {
 			System.out.println(shop.getInventory().get(i).getClass());
@@ -69,7 +70,7 @@ public class ShopTest {
 	public void testSell() {
 		world.setCharacter(character);
 		assertTrue(world.getInventory().isEmpty());
-		Shop shop = new Shop(world, new StandardMode(), SEED);
+		Shop shop = new Shop(world, SEED);
 		character.addGold(10);
 		Sword sword = new Sword(new SimpleIntegerProperty(0), new SimpleIntegerProperty(1));
 		world.addUnequippedItem(sword);
@@ -85,7 +86,7 @@ public class ShopTest {
 	public void testNoMoney() {
 		world.setCharacter(character);
 		assertTrue(world.getInventory().isEmpty());
-		Shop shop = new Shop(world, new StandardMode(), SEED);
+		Shop shop = new Shop(world, SEED);
 
 		BasicItem shield = shop.getInventory().get(8);
 		assertTrue(shield instanceof Shield);
@@ -105,9 +106,10 @@ public class ShopTest {
 
 	@Test
 	public void testStandard() {
+		world.setGameMode(new StandardMode());
 		world.setCharacter(character);
 		assertTrue(world.getInventory().isEmpty());
-		Shop shop = new Shop(world, new StandardMode(), SEED);
+		Shop shop = new Shop(world, SEED);
 
 		BasicItem shield = shop.getInventory().get(8);
 		assertTrue(shield instanceof Shield);
@@ -140,13 +142,14 @@ public class ShopTest {
 
 	@Test
 	public void testBerserker() {
+		world.setGameMode(new BerserkerMode());
 		world.setCharacter(character);
 		assertTrue(character.getGold() == 0);
 		character.addGold(1000);
 		assertTrue(character.getGold() == 1000);
 
 		assertTrue(world.getInventory().isEmpty());
-		Shop shop = new Shop(world, new BerserkerMode(), SEED);
+		Shop shop = new Shop(world, SEED);
 
 		BasicItem shield = shop.getInventory().get(4);
 		BasicItem stake = shop.getInventory().get(5);
@@ -179,13 +182,14 @@ public class ShopTest {
 
 	@Test
 	public void testSurvival() {
+		world.setGameMode(new SurvivalMode());
 		world.setCharacter(character);
 		assertTrue(character.getGold() == 0);
 		character.addGold(1000);
 		assertTrue(character.getGold() == 1000);
 
 		assertTrue(world.getInventory().isEmpty());
-		Shop shop = new Shop(world, new SurvivalMode(), SEED);
+		Shop shop = new Shop(world, SEED);
 
 		BasicItem shield = shop.getInventory().get(8);
 		BasicItem stake = shop.getInventory().get(5);
@@ -223,21 +227,21 @@ public class ShopTest {
 		assertFalse(world.getInventory().contains(healthPotion2));
 
 		// Asserts they were charged the right amount
-		assertTrue(character.getGold() == 1000 
-										  - stake.getBuyPrice() 
-										  - sword.getBuyPrice() 
+		assertTrue(character.getGold() == 1000
+										  - stake.getBuyPrice()
+										  - sword.getBuyPrice()
 										  - armour.getBuyPrice()
-										  - shield.getBuyPrice() 
+										  - shield.getBuyPrice()
 										  - healthPotion.getBuyPrice());
 	}
 
-	@Test
 	@RepeatedTest(1000)
+	// @Test
 	public void testShopItemGeneration() {
 		int seed = random.nextInt();
 		RandomObjectGenerator itemGenerator = new RandomObjectGenerator(seed);
 
-		Shop shop = new Shop(world, new StandardMode(), seed);
+		Shop shop = new Shop(world, seed);
 		List<BasicItem> inventory = shop.getInventory();
 
 		for (int i = 0; i < Shop.MAX_SHOP_INVENTORY; i++) {

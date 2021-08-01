@@ -7,7 +7,7 @@ public class Shop {
 	public final static int SHOP_WIDTH = 3;
 	public final static int SHOP_HEIGHT = 3;
 	private final List<BasicItem> inventory = new ArrayList<BasicItem>();
-	private final ShopStrategy shopStrategy;
+	private final GameMode gameMode;
 	private final LoopManiaWorld world;
 	private final RandomObjectGenerator itemGenerator;
 	public final static int MAX_SHOP_INVENTORY = Shop.SHOP_WIDTH * Shop.SHOP_HEIGHT;
@@ -22,12 +22,12 @@ public class Shop {
 	 *                   an item
 	 * @param randomSeed Seed for the random generator
 	 */
-	public Shop(LoopManiaWorld world, ShopStrategy strategy, long randomSeed) {
+	public Shop(LoopManiaWorld world, long randomSeed) {
 		this.itemGenerator = new RandomObjectGenerator(randomSeed);
-		this.shopStrategy = strategy;
 		this.world = world;
 		this.generateShopInventory();
 		this.character = world.getCharacter();
+		this.gameMode = world.getGameMode();
 	}
 
 	/**
@@ -37,8 +37,8 @@ public class Shop {
 	 * @param strategy Difficulty setting to determine whether the player can buy an
 	 *                 item
 	 */
-	public Shop(LoopManiaWorld world, ShopStrategy strategy) {
-		this(world, strategy, System.nanoTime());
+	public Shop(LoopManiaWorld world) {
+		this(world, System.nanoTime());
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class Shop {
 	private boolean canBuy(BasicItem item) {
 		boolean inStock = inventory.contains(item);
 		boolean hasEnoughGold = character.getGold() - item.getBuyPrice() >= 0;
-		boolean passesItemLimits = shopStrategy.checkItemLimits(item, this.purchaseHistory);
+		boolean passesItemLimits = gameMode.checkItemLimits(item, this.purchaseHistory);
 
 		return inStock && hasEnoughGold && passesItemLimits;
 	}
