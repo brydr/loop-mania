@@ -103,8 +103,8 @@ public class ShopController {
 					continue;
 				}
 
-				System.out.print(listIndex + " ");
-				System.out.println(shop.getInventory().get(listIndex).getClass());
+				// System.out.print(listIndex + " ");
+				// System.out.println(shop.getInventory().get(listIndex).getClass());
 				Item itemAtNode = shop.getInventory().get(listIndex);
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
@@ -130,8 +130,8 @@ public class ShopController {
 					continue;
 				}
 
-				System.out.print(listIndex + " ");
-				System.out.println(world.getInventory().get(listIndex).getClass());
+				// System.out.print(listIndex + " ");
+				// System.out.println(world.getInventory().get(listIndex).getClass());
 				Item itemAtNode = world.getInventory().get(listIndex);
 				File imageFile = new File(itemAtNode.getImage());
 				ImageView image = new ImageView(imageFile.toURI().toString());
