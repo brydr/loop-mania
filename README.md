@@ -22,7 +22,7 @@ Equipping items
 ### Elan Musk Jumping
 jumping over character is when no battle is triggered\
 100% chance to jump over character on 1st interaction\
-75% chance to jump over character on all other interactions
+70% chance to jump over character on all other interactions
 
 ### DoggieCoin Graph
 Graph of price of DoggieCoin over time shown in shop
