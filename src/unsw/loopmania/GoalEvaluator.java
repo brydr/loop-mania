@@ -49,10 +49,10 @@ public class GoalEvaluator {
             int cycleValue = goal.getInt("quantity");
             returnGoal = new GoalBaseCycles(c, cycleValue);
 
-        // Recursive cases for when goal equals an OR and AND.
         } else if (goal.getString("goal").equals("bosses")) {
             returnGoal = new GoalBaseBosses(c); 
-            
+        
+        // Recursive cases for when goal equals an OR and AND.
         } else if (goal.getString("goal").equals("OR")) {
             // First get all the subgoals.
             JSONArray subGoals = (JSONArray) goal.get("subgoals");
