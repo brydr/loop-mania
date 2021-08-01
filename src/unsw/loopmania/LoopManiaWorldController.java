@@ -9,9 +9,7 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
-import org.javatuples.Pair;
 import org.javatuples.Triplet;
-import org.json.JSONArray;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -26,7 +24,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,6 +39,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -662,6 +660,7 @@ public class LoopManiaWorldController {
                             case ITEM:
                                 Node targetNode = getNodeFromGridPane(targetGridPane, x, y);
                                 Item item = world.getUnequippedItemTypeByCoordinates(nodeX, nodeY);
+                                boolean consumedHealthPotion = false;
                                 // Set this to true if none of the conditions occur
                                 placeBack = false;
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
@@ -698,6 +697,7 @@ public class LoopManiaWorldController {
                                 } else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion) {
                                     HealthPotion healthPotion = (HealthPotion)item;
                                     world.getCharacter().setEquippedHealthPotion(healthPotion);
+                                    consumedHealthPotion = true;
                                 } else {
                                     placeBack = true;
                                 }
@@ -712,28 +712,31 @@ public class LoopManiaWorldController {
                                         audioPlayer.playEquipSwordSound();
                                     else
                                         audioPlayer.playEquipDefaultSound();
+
+                                    if (consumedHealthPotion)
+                                        useHealthPotion(equippedItems);
                                 }
                                 break;
-                            default:
-                             // Something went very wrong
+                                default:
+                                // Something went very wrong
                                 assert false;
+                            }
+
+                            // Set the dragged item back to true if it got placed in a non valid tile.
+                            if (placeBack) {
+                                currentlyDraggedImage.setVisible(true);
+                            }
+
+                            draggedEntity.setVisible(false);
+                            draggedEntity.setMouseTransparent(false);
+                            // remove drag event handlers before setting currently dragged image to null
+                            currentlyDraggedImage = null;
+                            currentlyDraggedType = null;
+                            printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
+
                         }
-
-                        // Set the dragged item back to true if it got placed in a non valid tile.
-                        if (placeBack) {
-                            currentlyDraggedImage.setVisible(true);
-                        }
-
-                        draggedEntity.setVisible(false);
-                        draggedEntity.setMouseTransparent(false);
-                        // remove drag event handlers before setting currently dragged image to null
-                        currentlyDraggedImage = null;
-                        currentlyDraggedType = null;
-                        printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
-
                     }
-                }
-                event.setDropCompleted(true);
+                    event.setDropCompleted(true);
                 // consuming prevents the propagation of the event to the anchorPaneRoot (as a sub-node of anchorPaneRoot, GridPane is prioritized)
                 // https://openjfx.io/javadoc/11/javafx.base/javafx/event/Event.html#consume()
                 // to understand this in full detail, ask your tutor or read https://docs.oracle.com/javase/8/javafx/events-tutorial/processing.htm
@@ -1136,7 +1139,7 @@ public class LoopManiaWorldController {
      */
     private void useTheOneRing(GridPane gridPane) {
         if (world.getCharacter().getEquippedRareItem() == null) {
-            final boolean wasConsumed = world.getCharacter().getOneRingUsed(); 
+            final boolean wasConsumed = world.getCharacter().getOneRingUsed();
             // If potion was ring, play sound
             if (wasConsumed) {
                 //audioPlayer.playUsePotionSound();
@@ -1156,7 +1159,7 @@ public class LoopManiaWorldController {
                 gridPane.add(emptyRingSlot, 0, 1);
                 Node newNode = getNodeFromGridPane(gridPane, 0, 1);
                 newNode.setId("rareItemCell");
-                world.getCharacter().setOneRingUsed(false); 
+                world.getCharacter().setOneRingUsed(false);
             }
         }
     }
