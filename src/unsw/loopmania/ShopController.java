@@ -35,13 +35,12 @@ public class ShopController {
 
 	private final static String LABEL_DEFAULT_TEXT = "Click items to buy, close window when done";
 
-	public void initialiseShop(LoopManiaWorld world, ShopStrategy strategy) {
+	public void initialiseShop(LoopManiaWorld world) {
 		this.world = world;
 		this.market = world.getDoggieCoinMarket();
-		shop = new Shop(world, strategy);
+		shop = new Shop(world);
 		updateGridPanes();
 		drawChart();
-		world.getCharacter().addGold(100000000); // FIXME remove for final product
 	}
 
 	private void drawChart() {
@@ -176,10 +175,16 @@ public class ShopController {
 			if (item instanceof BasicItem) {
 				if (selling) {
 					System.out.println("Selling " + item.toString());
-					shop.sell((BasicItem) item);
+
+					if (!shop.sell((BasicItem) item)) {
+						priceLabel.setText("Couldn't sell item because it's not in your inventory");
+					}
 				} else {
 					System.out.println("Buying " + item.toString());
-					shop.buy((BasicItem) item);
+
+					if (!shop.buy((BasicItem) item)) {
+						priceLabel.setText("You can't afford this item");
+					}
 				}
 				updateGridPanes();
 			}

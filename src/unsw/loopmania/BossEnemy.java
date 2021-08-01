@@ -1,19 +1,19 @@
 package unsw.loopmania;
 
-import java.util.List;
-
 /**
  * a boss form of enemy in the world
  */
 public abstract class BossEnemy extends Enemy {
     // TODO = modify this, and add additional forms of enemy
 
-    public BossEnemy(PathPosition position) {
-        super(position);
+    public BossEnemy(PathPosition position, int startingHp) {
+        super(position, startingHp);
     }
 
-    // A hook that ElanMuske implements.
-    public void healEnemies(List<Enemy> enemies) {
+    @Override
+    public boolean getInTrance() {
+        // Bosses can't be tranced
+        return false;
     }
 
     public abstract String getImage();

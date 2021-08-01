@@ -51,7 +51,7 @@ public class ElanMuskeTest {
         elan.move();
 
         // Elan moves 5 tiles, either up or down at 100% chance so valid y values are 2 and 12 if he started at 7.
-        List<Integer> validValues = Arrays.asList(2, 12);
+        List<Integer> validValues = Arrays.asList(5, 9);
 
         assertEquals(elan.getX(), 0);
         assertTrue(validValues.contains(elan.getY()));
