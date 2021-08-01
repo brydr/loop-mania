@@ -3,6 +3,8 @@ package unsw.loopmania;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
+
 /**
  * an of enemy in the world
  */
@@ -105,7 +107,6 @@ public abstract class Enemy extends MovingEntity {
     }
     public abstract void attack(Character character);
 
-    public abstract List<Item> dropLoot();
-
+    public abstract List<Item> dropLoot(JSONArray rareItems);
     public abstract String getImage();
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.json.JSONArray;
+
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class ElanMuske extends BossEnemy {
@@ -18,13 +20,7 @@ public class ElanMuske extends BossEnemy {
         this.setBattleRadius(1);
         this.setSupportRadius(1);
         this.setExperienceGain(1000);
-        int runAwayChance = (new Random()).nextInt(10);
-        // runs away at a 70% chance.
-        if (runAwayChance < 7) {
-            runAway = true;
-        } else {
-            runAway = false;
-        }
+        runAway = true;
     }
 
     @Override
@@ -38,12 +34,21 @@ public class ElanMuske extends BossEnemy {
     }
 
     @Override
-    public List<Item> dropLoot() {
+    public List<Item> dropLoot(JSONArray rareItems) {
         List<Item> loot = new ArrayList<Item>();
-        int oneRingChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-        if (oneRingChance < 3) {
-            TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
-            loot.add(theOneRing);
+        int rareItemChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
+        if (rareItemChance < 3) {
+            String item = rareItems.getString(new Random().nextInt(rareItems.length()));  // Selects a random item from the rare items list
+            if (item.equals("the_one_ring")) {
+                TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(theOneRing);
+            } else if (item.equals("anduril_flame_of_the_west")) {
+                AndurilFlameOfTheWest andurilFlameOfTheWest = new AndurilFlameOfTheWest(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(andurilFlameOfTheWest);
+            } else if (item.equals("tree_stump")) {
+                TreeStump treeStump = new TreeStump(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));
+                loot.add(treeStump);
+            }
         }
         return loot;
     }
@@ -81,6 +86,8 @@ public class ElanMuske extends BossEnemy {
     public void attack(Character character) {
         int attackPower = this.getAttack();
         character.takeDamage(attackPower);
+        // Set attack back to 50 in case of tree stump which reduces its attack by a 1/3.
+        this.setAttack(50);
     }
 
     public void healEnemies(List<Enemy> enemies) {

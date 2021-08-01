@@ -15,9 +15,10 @@ import javafx.beans.property.IntegerProperty;
 public class Character extends MovingEntity {
     private WeaponStrategy equippedWeapon;
     private Armour equippedArmour;
-    private Shield equippedShield;
+    private ProtectiveGear equippedShield;
     private Helmet equippedHelmet;
     private RareItem equippedRareItem;
+    private List<RareItem> equippedRareItems;
     private List<AlliedSoldier> listAlliedSoldiers;
     private IntegerProperty experience;
     private IntegerProperty cycles;
@@ -25,9 +26,10 @@ public class Character extends MovingEntity {
     private Gold gold;
     private HealthPotion equippedHealthPotion;
     private final static int MAX_HP = 200;
-    private boolean attackTwice;
+    private int numAttack;
     private int stunned;
     private int bossesKilled;
+    private boolean oneRingUsed;
 
     public Character(PathPosition position) {
         super(position);
@@ -39,16 +41,39 @@ public class Character extends MovingEntity {
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
+        equippedRareItems = new ArrayList<RareItem>();
         gold = new Gold();
         equippedWeapon = new Unarmed();
-        this.attackTwice = false;
+        this.numAttack = 0;
         this.stunned = 0;
+        this.oneRingUsed = false;
     }
 
     @Override
     public void setHp(int hp) {
         final int newHp = Integer.min(MAX_HP, hp);
         super.setHp(newHp);
+    }
+
+    /**
+     * numAttack is the amount of times the character will attack extra for. 
+     * For instance the campfire allows the character to attack twice since the campfire makes the character deal double damage.
+     * @return
+     */
+    public int getNumAttack() {
+        return numAttack;
+    }
+
+    public void setNumAttack(int numAttack) {
+        this.numAttack = numAttack;
+    }
+
+    public boolean getOneRingUsed() {
+        return oneRingUsed;
+    }
+
+    public void setOneRingUsed(boolean used) {
+        this.oneRingUsed = used;
     }
 
     public int getStunned() {
@@ -67,13 +92,6 @@ public class Character extends MovingEntity {
         this.bossesKilled++;
     }
 
-    public boolean getAttackTwice() {
-        return attackTwice;
-    }
-
-    public void setAttackTwice(boolean bool) {
-        this.attackTwice = bool;
-    }
     public WeaponStrategy getEquippedWeapon() {
         return equippedWeapon;
     }
@@ -90,11 +108,11 @@ public class Character extends MovingEntity {
         this.equippedArmour = equippedArmour;
     }
 
-    public Shield getEquippedShield() {
+    public ProtectiveGear getEquippedShield() {
         return equippedShield;
     }
 
-    public void setEquippedShield(Shield equippedShield) {
+    public void setEquippedShield(ProtectiveGear equippedShield) {
         this.equippedShield = equippedShield;
     }
 
@@ -183,6 +201,18 @@ public class Character extends MovingEntity {
 
     public void removeAlliedSoldier(AlliedSoldier soldier) {
         this.listAlliedSoldiers.remove(soldier);
+    }
+
+    public List<RareItem> getListRareItems() {
+        return equippedRareItems;
+    }
+
+    public void addRareItem(RareItem rareItem) {
+        this.equippedRareItems.add(rareItem);
+    }
+
+    public void removeRareItem(RareItem rareItem) {
+        this.equippedRareItems.remove(rareItem);
     }
 
     public int getMaxHp() {
@@ -290,7 +320,14 @@ public class Character extends MovingEntity {
          final int outputDamage = (equippedHelmet != null)
              ? equippedHelmet.calculateDamage(baseDamage)
              : baseDamage;
+
+
          enemy.takeDamage(outputDamage);
+         // Check if the character has extra attacks.
+         while (numAttack > 0) {
+            enemy.takeDamage(outputDamage);
+            numAttack--;
+        }
  
          // Check that enemy isn't in trance before allies attack
          if (!enemy.getInTrance()) {
