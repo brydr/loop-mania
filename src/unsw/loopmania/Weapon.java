@@ -12,10 +12,21 @@ public abstract class Weapon extends EquippableItem implements WeaponStrategy {
 	}
 
 	public int getDamage(Enemy enemy) {
+		decDurability();
 		return attackPower;
 	}
 
 	public int getAttackPower() {
 		return attackPower;
+	}
+
+	@Override
+	public String getEmptySlotId() {
+		return "swordCell";
+	}
+
+	@Override
+	public String getEmptySlotImage() {
+		return "src/images/sword_unequipped.png";
 	}
 }

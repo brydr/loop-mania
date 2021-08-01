@@ -2,7 +2,11 @@ package unsw.loopmania;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.javatuples.Triplet;
+
 import javafx.beans.property.SimpleIntegerProperty;
+
 import javafx.beans.property.IntegerProperty;
 
 /**
@@ -30,8 +34,8 @@ public class Character extends MovingEntity {
         this.experience = new SimpleIntegerProperty();
         this.cycles = new SimpleIntegerProperty();
         this.alliedSoldierNum = new SimpleIntegerProperty();
-        experience.setValue(10000);
-        cycles.setValue(19);
+        experience.setValue(0);
+        cycles.setValue(0);
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();
@@ -198,6 +202,34 @@ public class Character extends MovingEntity {
         } else {
             return false;
         }
+    }
+
+    /**
+     * checks equippedItems that have lost durability and need to be destroyed
+     * @return list of items and their location in equippableItems inventory to be removed in frontend
+     */
+    public List<Triplet<Integer, Integer, EquippableItem>> removeDamagedItems() {
+        List<Triplet<Integer, Integer, EquippableItem>> brokenItems = new ArrayList<Triplet<Integer, Integer, EquippableItem>>();
+
+        if (equippedWeapon != null && equippedWeapon.isBroken()) {
+            // unarmed.isBroken() will always return false so assume equippedWeapons is of type weapon/BasicItem
+            EquippableItem item = (EquippableItem)equippedWeapon;
+            brokenItems.add(new Triplet<>(0, 0, item));
+            equippedWeapon = new Unarmed();
+        }
+        if (equippedHelmet != null && equippedHelmet.isBroken()) {
+            brokenItems.add(new Triplet<>(1, 0, equippedHelmet));
+            equippedHelmet = null;
+        }
+        if (equippedArmour != null && equippedArmour.isBroken()) {
+            brokenItems.add(new Triplet<>(2, 0, equippedArmour));
+            equippedArmour = null;
+        }
+        if (equippedShield != null && equippedShield.isBroken()) {
+            brokenItems.add(new Triplet<>(3, 0, equippedShield));
+            equippedShield = null;
+        }
+        return brokenItems;
     }
 
     /**
