@@ -20,7 +20,7 @@ public class Staff extends Weapon implements MagicAbility {
 
 	@Override
 	public int getDamage(Enemy enemy) {
-		durability -= 1;
+		durability.setValue(durability.getValue() - 1);
 		if (this.shouldTrance()) {
 			enemy.setInTrance(true);
 			return 0;

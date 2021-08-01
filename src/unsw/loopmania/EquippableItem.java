@@ -1,11 +1,15 @@
 package unsw.loopmania;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public abstract  class EquippableItem extends BasicItem {
-	protected int durability = 1;
+	protected IntegerProperty durability;
+	private final static int MAX_DURABILITY = 30;
 	public EquippableItem(SimpleIntegerProperty x, SimpleIntegerProperty y, int buyPrice, int sellPrice) {
 		super(x, y, buyPrice, sellPrice);
+		this.durability = new SimpleIntegerProperty();
+		this.durability.setValue(MAX_DURABILITY);
 	}
 
 	/**
@@ -13,7 +17,11 @@ public abstract  class EquippableItem extends BasicItem {
 	 * @return {@code true} if gear is broken else {@code false}
 	 */
 	public boolean isBroken() {
-		return durability <= 0 ? true : false;
+		return durability.getValue() <= 0 ? true : false;
+	}
+
+	public IntegerProperty getDurability() {
+		return this.durability;
 	}
 
 	public abstract String getEmptySlotId();

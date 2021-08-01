@@ -12,7 +12,7 @@ public abstract class Weapon extends EquippableItem implements WeaponStrategy {
 	}
 
 	public int getDamage(Enemy enemy) {
-		durability -= 1;
+		durability.setValue(durability.getValue() - 1);
 		return attackPower;
 	}
 

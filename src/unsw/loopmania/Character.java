@@ -35,7 +35,7 @@ public class Character extends MovingEntity {
         this.cycles = new SimpleIntegerProperty();
         this.alliedSoldierNum = new SimpleIntegerProperty();
         experience.setValue(10000);
-        cycles.setValue(19);
+        cycles.setValue(1);
         alliedSoldierNum.setValue(0);
         this.setHp(MAX_HP);
         listAlliedSoldiers = new ArrayList<AlliedSoldier>();

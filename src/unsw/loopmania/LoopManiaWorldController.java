@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -120,6 +121,18 @@ public class LoopManiaWorldController {
     private Label exp;
     @FXML
     private Label cycles;
+
+    /**
+     * rectangles that show durability of gear
+     */
+    @FXML
+    private Rectangle swordDurability;
+    @FXML
+    private Rectangle armourDurability;
+    @FXML
+    private Rectangle helmetDurability;
+    @FXML
+    private Rectangle shieldDurability;
 
     @FXML
     private Label alliedSoldierNum;
@@ -287,7 +300,7 @@ public class LoopManiaWorldController {
         System.out.println("starting timer");
         isPaused = false;
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
+        timeline = new Timeline(new KeyFrame(Duration.seconds(0.2), event -> {
             boolean isAtCastle = world.runTickMoves();
             if (world.getCharacter().getHp() <= 0) {
                 pause();
@@ -655,16 +668,20 @@ public class LoopManiaWorldController {
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
                                     Weapon weapon = (Weapon)item;
                                     world.getCharacter().setEquippedWeapon(weapon);
+                                    swordDurability.widthProperty().bind(weapon.getDurability());
                                 } else if (targetNode.getId().equals("helmetCell") && item instanceof Helmet) {
                                     Helmet helmet = (Helmet)item;
                                     world.getCharacter().setEquippedHelmet(helmet);
+                                    helmetDurability.widthProperty().bind(helmet.getDurability());
                                 } else if (targetNode.getId().equals("armourCell") && item instanceof Armour) {
                                     Armour armour = (Armour)item;
                                     world.getCharacter().setEquippedArmour(armour);
+                                    armourDurability.widthProperty().bind(armour.getDurability());
                                     audioPlayer.playEquipArmourSound();
                                 } else if (targetNode.getId().equals("shieldCell") && item instanceof Shield) {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
+                                    shieldDurability.widthProperty().bind(shield.getDurability());
                                 } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);

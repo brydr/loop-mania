@@ -22,7 +22,7 @@ public class Shield extends ProtectiveGear {
 
 	@Override
 	public int calculateDamage(int attackPower) {
-		durability -= 1;
+		durability.setValue(durability.getValue() - 1);
 		return this.negateAllDamage() ? 0 : attackPower;
 	}
 

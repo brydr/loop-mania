@@ -14,7 +14,7 @@ public class Helmet extends ProtectiveGear {
 
 	@Override
 	public int calculateDamage(int attackPower) {
-		durability -= 1;
+		durability.setValue(durability.getValue() - 1);
 		return (int) Math.round(Helmet.DAMAGE_MULTIPLIER * attackPower);
 	}
 
