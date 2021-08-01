@@ -26,12 +26,15 @@
 ## Rare Items
 * The **One Ring**, **AndurilFlameOfTheWest** and **Tree Stump** has a combined 3% chance of dropping from defeating enemies.
 * Rare items can't be bought or sold in the shop
+* Confusing mode will stack rare item effects on top of one another, for instance, if the character has equipped The One Ring with 
+the Tree Stumps abilities and also has a Tree Stump equipped, the bosses damage will only be 11% effective since the Tree Stump reduces
+bosses damage to a 1/3 so 100 * 1/3 * 1/3 = 11.
 
 ## Armour
 * **Body armour** reduces enemy attack by 50%
 * **Helmets** reduce enemy attack by 30%, but reduce player attack by 15%.
 * **Shields** give each enemy attack a 30% chance of being ineffectual (e.g. 0 HP damage).
-* **Tree Stump** gives each enemy attack a 55% chance of being ineffectual. It has a bonus effect of cutting the damage by a 1/3 against bosses.
+* **Tree Stump** gives each enemy attack a 55% chance of being ineffectual. It has a bonus effect of cutting the damage to a 1/3 of the damage against bosses.
 * Equipping both body armour and a helmet will have a compound effect - i.e. enemy attack will only deal `(1.00 - 0.30)*(1.00 - 0.50) = 35%` of their full damage.
 * Any non-integer damage value will round to the nearest integer.
 
