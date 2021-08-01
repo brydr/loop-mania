@@ -204,7 +204,7 @@
                </rowConstraints>
                <children>
                   <Label fx:id="allGoals" prefHeight="17.0" prefWidth="101.0" GridPane.columnIndex="1" />
-                  <CheckBox fx:id="goalComplete" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" />
+                  <CheckBox fx:id="goalComplete" disable="true" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" />
                </children>
             </GridPane>
             <Button fx:id="shopButton" mnemonicParsing="false" onAction="#openShop" text="Force open shop" />

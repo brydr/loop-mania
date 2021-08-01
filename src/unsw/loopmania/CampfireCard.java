@@ -16,8 +16,7 @@ public class CampfireCard extends Card {
 
     @Override
     public String getImage() {
-        String campfireCardImage = "src/images/campfire_card.png";
-        return campfireCardImage;
+        return "src/images/campfire_card.png";
     }
 
     @Override

@@ -371,7 +371,6 @@ public class Character extends MovingEntity {
         return charalliedSoldierNum;
     }
     public String getImage() {
-        String characterImage = "src/images/human_new.png";
-        return characterImage;
+        return "src/images/human_new.png";
     }
 }

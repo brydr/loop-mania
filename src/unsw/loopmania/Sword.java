@@ -16,7 +16,6 @@ public class Sword extends Weapon implements AttackAbility {
 
 	@Override
 	public String getImage() {
-        String swordImage = "src/images/basic_sword.png";
-        return swordImage;
+        return "src/images/basic_sword.png";
     }
 }

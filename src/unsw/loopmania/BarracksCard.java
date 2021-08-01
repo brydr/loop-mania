@@ -15,8 +15,7 @@ public class BarracksCard extends Card {
 
     @Override
     public String getImage() {
-        String barracksCardImage = "src/images/barracks_card.png";
-        return barracksCardImage;
+        return "src/images/barracks_card.png";
     }
 
     @Override

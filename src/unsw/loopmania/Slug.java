@@ -72,7 +72,6 @@ public class Slug extends BasicEnemy {
 
     @Override
     public String getImage() {
-        String slugImage = "src/images/slug.png";
-        return slugImage;
+        return "src/images/slug.png";
     }
 }

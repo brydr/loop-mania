@@ -103,7 +103,6 @@ public class ElanMuske extends BossEnemy {
 
     @Override
     public String getImage() {
-        String slugImage = "src/images/ElanMuske.png";
-        return slugImage;
+        return "src/images/ElanMuske.png";
     }
 }

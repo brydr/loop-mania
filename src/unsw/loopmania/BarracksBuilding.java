@@ -12,8 +12,7 @@ public class BarracksBuilding extends Building implements BuildingHelpers {
 
     @Override
     public String getImage() {
-        String barracksBuildingImage = "src/images/barracks.png";
-        return barracksBuildingImage;
+        return "src/images/barracks.png";
     }
 
     /**

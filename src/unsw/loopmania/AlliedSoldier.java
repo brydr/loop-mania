@@ -73,7 +73,6 @@ public class AlliedSoldier extends MovingEntity {
     }
 
     public String getImage() {
-        String alliedSoldierImage = "src/images/deep_elf_master_archer.png";
-        return alliedSoldierImage;
+        return "src/images/deep_elf_master_archer.png";
     }
 }

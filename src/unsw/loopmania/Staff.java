@@ -34,8 +34,7 @@ public class Staff extends Weapon implements MagicAbility {
 
 	@Override
 	public String getImage() {
-        String staffImage = "src/images/staff.png";
-        return staffImage;
+        return "src/images/staff.png";
     }
 
 }
