@@ -3,7 +3,8 @@
 * All random variables have uniform probability distributions - e.g. the additional damage inflicted by a vampire attack.
 
 * *The Character*, then the allied soldiers, then the tower and then the enemies will attack. Allied soldiers strike, if any strike, then *The Character*, then any surviving enemies retaliate. The battle ends when either *The Character* or all enemies are killed.
-* The player must press <kbd>Q</kbd> for *The Character* to consume a health potion.
+* The player can consume health potions by dragging the potion from their inventory to the health potion slot.
+<!-- * The player must press <kbd>Q</kbd> for *The Character* to consume a health potion. -->
 * For each instance of the game where *The Character* moves from one tile to the next, there will be at most 1 battle with any enemy and any number of supporting enemies.
 
 

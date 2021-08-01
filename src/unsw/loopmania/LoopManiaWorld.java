@@ -503,6 +503,7 @@ public class LoopManiaWorld {
         if (firstAvailableSlot == null){
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
+            payoutGoldOrXp();
             // give some cash/experience rewards for the discarding of the oldest sword
             payoutGoldOrXp();
             firstAvailableSlot = getFirstAvailableSlotForItem();
@@ -763,7 +764,7 @@ public class LoopManiaWorld {
         final var subjectTile = Pair.with(x, y);
 
         // See if path matches
-        boolean isPathTile = orderedPath.parallelStream()
+        final boolean isPathTile = orderedPath.parallelStream()
             .anyMatch(tile -> tile.equals(subjectTile));
         if (isPathTile)
             return TileType.PathTile;
@@ -776,7 +777,7 @@ public class LoopManiaWorld {
             return (x - 1 <= tileX) && (tileX <= x + 1)
                 && (y - 1 <= tileY) && (tileY <= y + 1);
         };
-        boolean isAdjacentTile = orderedPath.parallelStream()
+        final boolean isAdjacentTile = orderedPath.parallelStream()
             .anyMatch(isAdjacentTo);
         if (isAdjacentTile)
             return TileType.PathAdjacentTile;

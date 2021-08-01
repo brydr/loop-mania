@@ -9,9 +9,8 @@ import java.util.Random;
 
 import org.codefx.libfx.listener.handle.ListenerHandle;
 import org.codefx.libfx.listener.handle.ListenerHandles;
-import org.javatuples.Pair;
 import org.javatuples.Triplet;
-import org.json.JSONArray;
+import org.junit.platform.console.shadow.picocli.CommandLine.ExitCode;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -26,7 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,6 +40,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -209,6 +208,8 @@ public class LoopManiaWorldController {
 
     // Object handling playing audio
     private AudioPlayer audioPlayer = new AudioPlayer();
+    // This will automatically begin music
+    private MusicPlayer musicPlayer = new MusicPlayer();
 
     // Dummy constructor for the tests, otherwise it complains it doesn't have a UI, don't use anywhere else
     public LoopManiaWorldController() {}
@@ -301,6 +302,10 @@ public class LoopManiaWorldController {
         // TODO = handle more aspects of the behaviour required by the specification
         System.out.println("starting timer");
         isPaused = false;
+
+        // Start playing main theme
+        musicPlayer.playMainTheme();
+
         // trigger adding code to process main game logic to queue. JavaFX will target framerate of 0.3 seconds
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.3), event -> {
             boolean isAtCastle = world.runTickMoves();
@@ -315,19 +320,28 @@ public class LoopManiaWorldController {
             List<Enemy> defeatedEnemies = world.runBattles();
             useTheOneRing(equippedItems);
             if (defeatedEnemies.size() > 0) {
-                for (Enemy e: defeatedEnemies){
+                for (Enemy e : defeatedEnemies){
                     reactToEnemyDefeat(e);
                 }
                 audioPlayer.playWinBattleSound();
                 runBattleResults(defeatedEnemies);
+
+                // End boss music (no-op if wasn't playing)
+                if (defeatedEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
+                    musicPlayer.stopMegalovania();
             }
             removeBrokenItems();
             world.possiblySpawnEnemies();
             world.possiblySpawnBossEnemies();
+            
             List<Enemy> newEnemies = world.getEnemies();
-            for (Enemy newEnemy: newEnemies){
+            
+            for (Enemy newEnemy : newEnemies){
                 onLoad(newEnemy);
             }
+            // Play boss music
+            if (newEnemies.stream().anyMatch(e -> e instanceof BossEnemy))
+                musicPlayer.playMegalovania();
 
             List<RandomPathLoot> pickedUpLoot = world.pickUpLoot();
             for (RandomPathLoot pathLoot : pickedUpLoot){
@@ -459,11 +473,7 @@ public class LoopManiaWorldController {
         Stage end = endScreen.runEndScreen();
         end.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                try {
-                    switchToMainMenu();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                System.exit(ExitCode.OK);
             }
         });
     }
@@ -662,6 +672,7 @@ public class LoopManiaWorldController {
                             case ITEM:
                                 Node targetNode = getNodeFromGridPane(targetGridPane, x, y);
                                 Item item = world.getUnequippedItemTypeByCoordinates(nodeX, nodeY);
+                                boolean consumedHealthPotion = false;
                                 // Set this to true if none of the conditions occur
                                 placeBack = false;
                                 if (targetNode.getId().equals("swordCell") && item instanceof Weapon) {
@@ -698,6 +709,7 @@ public class LoopManiaWorldController {
                                 } else if (targetNode.getId().equals("potionCell") && item instanceof HealthPotion) {
                                     HealthPotion healthPotion = (HealthPotion)item;
                                     world.getCharacter().setEquippedHealthPotion(healthPotion);
+                                    consumedHealthPotion = true;
                                 } else {
                                     placeBack = true;
                                 }
@@ -712,28 +724,31 @@ public class LoopManiaWorldController {
                                         audioPlayer.playEquipSwordSound();
                                     else
                                         audioPlayer.playEquipDefaultSound();
+
+                                    if (consumedHealthPotion)
+                                        useHealthPotion(equippedItems);
                                 }
                                 break;
-                            default:
-                             // Something went very wrong
+                                default:
+                                // Something went very wrong
                                 assert false;
+                            }
+
+                            // Set the dragged item back to true if it got placed in a non valid tile.
+                            if (placeBack) {
+                                currentlyDraggedImage.setVisible(true);
+                            }
+
+                            draggedEntity.setVisible(false);
+                            draggedEntity.setMouseTransparent(false);
+                            // remove drag event handlers before setting currently dragged image to null
+                            currentlyDraggedImage = null;
+                            currentlyDraggedType = null;
+                            printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
+
                         }
-
-                        // Set the dragged item back to true if it got placed in a non valid tile.
-                        if (placeBack) {
-                            currentlyDraggedImage.setVisible(true);
-                        }
-
-                        draggedEntity.setVisible(false);
-                        draggedEntity.setMouseTransparent(false);
-                        // remove drag event handlers before setting currently dragged image to null
-                        currentlyDraggedImage = null;
-                        currentlyDraggedType = null;
-                        printThreadingNotes("DRAG DROPPED ON GRIDPANE HANDLED");
-
                     }
-                }
-                event.setDropCompleted(true);
+                    event.setDropCompleted(true);
                 // consuming prevents the propagation of the event to the anchorPaneRoot (as a sub-node of anchorPaneRoot, GridPane is prioritized)
                 // https://openjfx.io/javadoc/11/javafx.base/javafx/event/Event.html#consume()
                 // to understand this in full detail, ask your tutor or read https://docs.oracle.com/javase/8/javafx/events-tutorial/processing.htm
@@ -963,6 +978,14 @@ public class LoopManiaWorldController {
         case Q:
             useHealthPotion(equippedItems);
             break;
+        case P:
+            if (isPaused){
+                startTimer();
+            }
+            else{
+                pause();
+            }
+        break;
         default:
             break;
         }
@@ -1136,7 +1159,7 @@ public class LoopManiaWorldController {
      */
     private void useTheOneRing(GridPane gridPane) {
         if (world.getCharacter().getEquippedRareItem() == null) {
-            final boolean wasConsumed = world.getCharacter().getOneRingUsed(); 
+            final boolean wasConsumed = world.getCharacter().getOneRingUsed();
             // If potion was ring, play sound
             if (wasConsumed) {
                 //audioPlayer.playUsePotionSound();
@@ -1156,7 +1179,7 @@ public class LoopManiaWorldController {
                 gridPane.add(emptyRingSlot, 0, 1);
                 Node newNode = getNodeFromGridPane(gridPane, 0, 1);
                 newNode.setId("rareItemCell");
-                world.getCharacter().setOneRingUsed(false); 
+                world.getCharacter().setOneRingUsed(false);
             }
         }
     }
@@ -1168,6 +1191,19 @@ public class LoopManiaWorldController {
      */
     public void setGameMode(GameMode gameMode) {
         world.setGameMode(gameMode);
+    }
+
+    /**
+     * Play boss music if Elan Muske is present in bossEnemies. 
+     * Otherwise is a no-op.
+     * @param bossEnemies List of boss enemies.
+     */
+    private void playBossMusic(List<BossEnemy> bossEnemies) {
+        final boolean elanAlive = bossEnemies.parallelStream()
+            .anyMatch(boss -> boss instanceof ElanMuske);
+        if (elanAlive)
+            musicPlayer.playMegalovania();
+        // else stop
     }
 
 }
