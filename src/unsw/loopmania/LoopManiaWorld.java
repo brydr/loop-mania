@@ -84,8 +84,6 @@ public class LoopManiaWorld {
 
     private List<RandomPathLoot> worldPathLoot;
 
-    private JSONArray worldRareItems;
-
     // Market for doggie coin
     private DoggieCoinMarket doggieCoinMarket = new DoggieCoinMarket();
 
@@ -177,27 +175,6 @@ public class LoopManiaWorld {
 
     public JSONArray getRareItems() {
         return worldRareItems;
-    }
-
-    /**
-     * Set the worlds rare items.
-     * @param rareItems
-     */
-    public void setRareItems(JSONArray rareItems) {
-        worldRareItems = rareItems;
-    }
-
-    /**
-     * Returns a String array list of rare items that can be spawned in the world.
-     * @return
-     */
-    public List<String> getRareItems() {
-        List<String> rareItemInWorld = new ArrayList<String>();
-        for (int i = 0; i < worldRareItems.length(); i++) {
-            String rareItem = worldRareItems.getString(i);
-            rareItemInWorld.add(rareItem);
-        }
-        return rareItemInWorld;
     }
 
     /**

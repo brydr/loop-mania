@@ -57,5 +57,15 @@ public class TreeStump extends ProtectiveGear implements RareItem{
         String treeStumpImage = "src/images/tree_stump.png";
         return treeStumpImage;
     }
+
+    @Override
+	public String getEmptySlotId() {
+		return "shieldCell";
+	}
+
+	@Override
+	public String getEmptySlotImage() {
+		return "src/images/shield_unequipped.png";
+	}
     
 }
