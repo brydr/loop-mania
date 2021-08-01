@@ -7,7 +7,7 @@ import java.util.Random;
 import org.json.JSONArray;
 
 import javafx.beans.property.SimpleIntegerProperty;
-public class Vampire extends BasicEnemy implements Undead {
+public class Vampire extends BasicEnemy {
 
     // criticalChance is only used for testing, primarily for the shield.
     public double criticalChance;

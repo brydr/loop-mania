@@ -28,6 +28,7 @@ public class Shop {
 		this.generateShopInventory();
 		this.character = world.getCharacter();
 		this.gameMode = world.getGameMode();
+		// world.getCharacter().addGold(90000000);
 	}
 
 	/**

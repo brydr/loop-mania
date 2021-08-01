@@ -71,6 +71,9 @@ public class Doggie extends BossEnemy {
                 loot.add(treeStump);
             }
         }
+
+        DoggieCoin coin = new DoggieCoin(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0), market);
+        loot.add(coin);
         return loot;
     }
 

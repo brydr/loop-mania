@@ -44,7 +44,7 @@
          <font>
             <Font size="24.0" />
          </font></Label>
-      <Label fx:id="priceLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="117.0" layoutY="357.0" text="Click items to buy, close window when done">
+      <Label fx:id="priceLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="252.0" layoutY="357.0" text="Click to buy/sell, close when done">
          <font>
             <Font size="24.0" />
          </font>
@@ -80,5 +80,15 @@
       <Line endX="350.0" layoutX="382.0" layoutY="404.0" startX="-350.0" />
       <Label layoutX="598.0" layoutY="417.0" text="DoggieCoin price today:" />
       <Label fx:id="dgePrice" layoutX="597.0" layoutY="435.0" text="10" textAlignment="RIGHT" />
+      <Label fx:id="goldLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="58.0" layoutY="334.0" text="You have 9999 gold">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="messageLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="217.0" layoutY="420.0" text="You can't afford this item">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

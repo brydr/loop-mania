@@ -284,6 +284,7 @@ public class LoopManiaWorldController {
         GoalNode finalGoal = GoalEvaluator.evaluateGoals(world.getWorldGoals(), character);
         String goalsToComplete = GoalEvaluator.prettyPrint(finalGoal);
         allGoals.setText(goalsToComplete);
+        allGoals.setWrapText(true);
 
 
         // create the draggable icon
