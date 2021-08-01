@@ -55,7 +55,7 @@ public class Character extends MovingEntity {
         // cycles.setValue(39);
         // addExperience(10000);
 
-        // Uncomment these to give character lots of health and gold
+        // Uncomment these to give character lots of gold
         // gold.amount.setValue(99999999);
     }
 
@@ -63,6 +63,9 @@ public class Character extends MovingEntity {
     public void setHp(int hp) {
         final int newHp = Integer.min(MAX_HP, hp);
         super.setHp(newHp);
+
+        // Uncomment this for unlimited health
+        // super.setHp(99999999);
     }
 
     /**

@@ -152,6 +152,11 @@ public class LoopManiaWorldController {
     private DragIcon draggedEntity;
 
     private boolean isPaused;
+
+    // Prevents race condition
+    private boolean battleScreenOpen = false;
+    private boolean shopOpen = false;
+
     private LoopManiaWorld world;
 
     /**
@@ -357,7 +362,11 @@ public class LoopManiaWorldController {
             printThreadingNotes("HANDLED TIMER");
         }));
         timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.play();
+
+        if (!battleScreenOpen && !shopOpen)
+            timeline.play();
+        else
+            System.out.println("Race condition! Not playing timeline...");
     }
 
     /**
@@ -440,6 +449,7 @@ public class LoopManiaWorldController {
 
     public void runBattleResults(List<Enemy> defeatedEnemies) {
         BattleResultsController results = new BattleResultsController(defeatedEnemies, world.getCharacter().getHp());
+        battleScreenOpen = true;
         pause();
         Stage stage = results.BattleResults();
         stage.setOnShown(new EventHandler<WindowEvent>() {
@@ -448,7 +458,8 @@ public class LoopManiaWorldController {
                 wait.play();
                 wait.setOnFinished((e) -> {
                     stage.close();
-                    if (isPaused) {
+                    if (isPaused && !shopOpen) {
+                        battleScreenOpen = false;
                         startTimer();
                     }
                 });
@@ -457,7 +468,8 @@ public class LoopManiaWorldController {
         stage.show();
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                if (isPaused) {
+                if (isPaused && !shopOpen) {
+                    battleScreenOpen = false;
                     startTimer();
                 }
             }
@@ -477,6 +489,7 @@ public class LoopManiaWorldController {
     @FXML
     private void openShop() throws IOException {
         pause();
+        shopOpen = true;
         musicPlayer.playShop();
 
         FXMLLoader shopLoader = new FXMLLoader(getClass().getResource("ShopView.fxml"));
@@ -497,7 +510,8 @@ public class LoopManiaWorldController {
         shopStage.setOnCloseRequest(e -> {
             shopStage.close();
             musicPlayer.stopShop();
-            if (isPaused) {
+            if (isPaused && !battleScreenOpen) {
+                shopOpen = false;
                 startTimer();
             }
         });
