@@ -49,7 +49,7 @@ public class Slug extends BasicEnemy {
     public List<Item> dropLoot(JSONArray rareItems) {
         List<Item> loot = new ArrayList<Item>();
         int rareItemChance = new Random().nextInt(100); // A random value between 0 and 99 inclusive.
-        if (rareItemChance < 3) {
+        if (rareItemChance < 100) {
             String item = rareItems.getString(new Random().nextInt(rareItems.length()));  // Selects a random item from the rare items list
             if (item.equals("the_one_ring")) {
                 TheOneRing theOneRing = new TheOneRing(new SimpleIntegerProperty(0), new SimpleIntegerProperty(0));

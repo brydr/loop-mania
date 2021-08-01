@@ -220,7 +220,7 @@ public class LoopManiaWorld {
                 spawningEnemies.add(doggie);
                 bossAlreadySpawned = true;
                 boss = true;
-            } else if (character.getCycles() == 40 && character.getExperience() >= 10000) {
+            } else if (character.getCycles() >= 40 && character.getExperience() >= 10000) {
                 ElanMuske elan = new ElanMuske(new PathPosition(indexInPath, orderedPath));
                 enemies.add(elan);
                 spawningEnemies.add(elan);
@@ -442,6 +442,8 @@ public class LoopManiaWorld {
                 character.addBossKilled();
                 if (e instanceof ElanMuske) {
                     doggieCoinMarket.setElanAlive(false);
+                    // Set boss to true since all bosses have been spawned.
+                    boss = true;
                 }
             }
             killEnemy(e);
@@ -502,6 +504,7 @@ public class LoopManiaWorld {
             // eject the oldest unequipped item and replace it... oldest item is that at beginning of items
             removeItemByPositionInUnequippedInventoryItems(0);
             // give some cash/experience rewards for the discarding of the oldest sword
+            payoutGoldOrXp();
             firstAvailableSlot = getFirstAvailableSlotForItem();
         }
         return firstAvailableSlot;
