@@ -1,10 +1,8 @@
 package test.RareItemTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
@@ -12,9 +10,7 @@ import org.junit.jupiter.api.Test;
 import javafx.beans.property.SimpleIntegerProperty;
 import unsw.loopmania.Character;
 import unsw.loopmania.PathPosition;
-import unsw.loopmania.RareItem;
 import unsw.loopmania.TheOneRing;
-import unsw.loopmania.Slug;
 
 
 public class TheOneRingTest {

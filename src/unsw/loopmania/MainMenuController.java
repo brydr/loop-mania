@@ -7,8 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 
 /**
- * controller for the main menu. TODO = you could extend this, for example with
- * a settings menu, or a menu to load particular maps.
+ * controller for the main menu.
  */
 public class MainMenuController {
     private GameMode selectedGameMode;
@@ -43,15 +42,15 @@ public class MainMenuController {
         gameModeDropDown.getItems().add(new BerserkerMode());
         gameModeDropDown.getItems().add(new ConfusingMode());
 
-        gameModeDropDown.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends GameMode> observable, GameMode oldValue, GameMode newValue) -> {
-            selectedGameMode = newValue;
-            System.out.println(String.format("Selected %s", selectedGameMode));
-        });
+        gameModeDropDown.getSelectionModel().selectedItemProperty()
+                .addListener((ObservableValue<? extends GameMode> observable, GameMode oldValue, GameMode newValue) -> {
+                    selectedGameMode = newValue;
+                    System.out.println(String.format("Selected %s", selectedGameMode));
+                });
         gameModeDropDown.getSelectionModel().select(0);
     }
 
     public GameMode getGameMode() {
-        // TODO
         return selectedGameMode;
     }
 }

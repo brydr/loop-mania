@@ -1,16 +1,13 @@
 package test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
 
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.CacheHint;
-import unsw.loopmania.LoopManiaWorld;
 import unsw.loopmania.Character;
 import unsw.loopmania.HealthPotion;
 import unsw.loopmania.PathPosition;
@@ -21,17 +18,17 @@ public class ConsumablesTest {
     public void equippedHealthPotion() {
         SimpleIntegerProperty one = new SimpleIntegerProperty(1);
         HealthPotion healthPotion = new HealthPotion(one, one);
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Character character = new Character(pos);
         character.setEquippedHealthPotion(healthPotion);
         assertTrue(character.getHp() == character.getMaxHp());
         character.consumePotion();
         assertTrue(character.getHp() == character.getMaxHp());
-    }  
-    
+    }
+
     @Test
     public void unequippedHealthPotion() {
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Character character = new Character(pos);
         character.setHp(50);
         assertTrue(character.getHp() == 50);
@@ -43,7 +40,7 @@ public class ConsumablesTest {
     public void theOneRing() {
         SimpleIntegerProperty one = new SimpleIntegerProperty(1);
         TheOneRing theOneRing= new TheOneRing(one, one);
-        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3))); 
+        PathPosition pos = new PathPosition(0, Arrays.asList(new Pair<>(0, 1), new Pair<>(0, 2), new Pair<>(0, 3)));
         Character character = new Character(pos);
         character.setEquippedRareItem(theOneRing);
         character.setHp(0);

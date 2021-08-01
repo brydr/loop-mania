@@ -48,8 +48,15 @@ public class Character extends MovingEntity {
         this.stunned = 0;
         this.oneRingUsed = false;
 
-        cycles.setValue(39);
-        addExperience(10000);
+        // Uncomment this to spawn Doggie after a cycle
+        // cycles.setValue(19);
+
+        // Uncomment this to spawn Elan after a cycle
+        // cycles.setValue(39);
+        // addExperience(10000);
+
+        // Uncomment these to give character lots of health and gold
+        // gold.amount.setValue(99999999);
     }
 
     @Override
@@ -297,7 +304,6 @@ public class Character extends MovingEntity {
                 damage = equippedShield.calculateDamage(damage);
 
             final int newHp = this.getHp() - damage;
-            // TODO Check if The Character has been killed
             this.setHp(newHp);
         }
     }
@@ -410,8 +416,8 @@ public class Character extends MovingEntity {
         alliedSoldierNum.setValue(listAlliedSoldiers.size());
     }
     public IntegerProperty alliedSoldierProperty() {
-        IntegerProperty charalliedSoldierNum = this.alliedSoldierNum;
-        return charalliedSoldierNum;
+        IntegerProperty charAlliedSoldierNum = this.alliedSoldierNum;
+        return charAlliedSoldierNum;
     }
     public String getImage() {
         return "src/images/human_new.png";

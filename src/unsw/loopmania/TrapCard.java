@@ -1,8 +1,6 @@
 package unsw.loopmania;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.image.Image;
-import java.io.File;
 
 public class TrapCard extends Card {
     public TrapCard(SimpleIntegerProperty x, SimpleIntegerProperty y) {
@@ -25,6 +23,5 @@ public class TrapCard extends Card {
     boolean canSpawnOnTile(TileType tileType) {
         return tileType == TileType.PathTile;
     }
-    
+
 }
-    

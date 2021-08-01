@@ -48,7 +48,7 @@ public class AlliedSoldier extends MovingEntity {
         if (tranceTime == null)
             return false;
         tranceTime = this.tranceTime.minus(timePassed);
-        if (tranceTime.isNegative() || tranceTime.isZero()) 
+        if (tranceTime.isNegative() || tranceTime.isZero())
             return true;
         else
             return false;
@@ -64,7 +64,6 @@ public class AlliedSoldier extends MovingEntity {
 
     /**
      * reactivates oldEnemy with same health as this AlliedSoldier
-     * TODO might need to cap health at a max in case returning back 
      * from trance gives the enemy extra health then before
      */
     public void reactivateOldEnemy() {

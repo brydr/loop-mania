@@ -3,7 +3,6 @@ package unsw.loopmania;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class Helmet extends ProtectiveGear {
-	// TODO reduce wearer's attack power
 	private final static double DAMAGE_MULTIPLIER = .7;
 	private final static int BUY_PRICE = 120;
 	private final static int SELL_PRICE = 60;
