@@ -17,11 +17,6 @@ public class AndurilFlameOfTheWest extends Weapon implements RareItem {
     }
 
     @Override
-	public int getDamage(Enemy enemy) {
-		return AndurilFlameOfTheWest.ATTACK_POWER;
-	}
-
-    @Override
     public void effect(Character character, Enemy enemy) {
         if (enemy instanceof BossEnemy) {
             // Set it so the character attacks 2 more times for a total of 3 attacks, tripling the damage.
