@@ -379,6 +379,14 @@ public class LoopManiaWorld {
                     enemiesInRange.add(oldEnemy);   // Add the transformed ally into the enemiesInRange array.
                     transformedEnemies.remove(convertBackAllied);   // Remove the ally from transformedEnemies since it has now transformed back into an enemy.
                 }
+
+                // If the game is in confusing mode do extra effects for the rare items.
+                if (gameMode instanceof ConfusingMode) {
+                    // For every rare item equipped, do its added effect.
+                    for (RareItem rareItems : character.getListRareItems()) {
+                        rareItems.addEffect(character, e);
+                    }
+                }
             }
 
             if (charHealth <= 0) {
