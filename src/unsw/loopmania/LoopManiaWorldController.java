@@ -966,6 +966,14 @@ public class LoopManiaWorldController {
         case Q:
             useHealthPotion(equippedItems);
             break;
+        case P:
+            if (isPaused){
+                startTimer();
+            }
+            else{
+                pause();
+            }
+        break;
         default:
             break;
         }

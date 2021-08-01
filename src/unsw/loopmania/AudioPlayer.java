@@ -11,15 +11,15 @@ import javafx.scene.media.AudioClip;
 public final class AudioPlayer {
     // ---- Constant Paths ----
     // Sound effects obtained from https://www.zapsplat.com
-    private final String WIN_BATTLE_FILE = "/audio/WinBattleSound.mp3";
-    private final String PICKUP_GOLD_FILE = "/audio/PickupGoldSound.mp3";
-    private final String PICKUP_POTION_FILE = "/audio/PickupPotionSound.mp3";
-    private final String USE_POTION_FILE = "/audio/UsePotionSound.mp3";
-    private final String EQUIP_DEFAULT_FILE = "/audio/EquipDefaultSound.mp3";
-    private final String EQUIP_ARMOUR_FILE = "/audio/EquipArmourSound.mp3";
-    private final String EQUIP_SWORD_FILE = "/audio/EquipSwordSound.mp3";
-    private final String DROP_BUILDING_FILE = "/audio/DropBuildingSound.mp3";
-    
+    private final String WIN_BATTLE_FILE = "/audio/WinBattleSound.wav";
+    private final String PICKUP_GOLD_FILE = "/audio/PickupGoldSound.wav";
+    private final String PICKUP_POTION_FILE = "/audio/PickupPotionSound.wav";
+    private final String USE_POTION_FILE = "/audio/UsePotionSound.wav";
+    private final String EQUIP_DEFAULT_FILE = "/audio/EquipDefaultSound.wav";
+    private final String EQUIP_ARMOUR_FILE = "/audio/EquipArmourSound.wav";
+    private final String EQUIP_SWORD_FILE = "/audio/EquipSwordSound.wav";
+    private final String DROP_BUILDING_FILE = "/audio/DropBuildingSound.wav";
+
 
     // ---- AudioClips ----
     // Note: Conceptually constant, but I'm reserving CONSTANT_NAME_STYLE for primitives and java.lang objects
@@ -48,7 +48,7 @@ public final class AudioPlayer {
 
     /**
      * Simple helper/wrapper for creating an {@code AudioClip} from a file path, used to simplify constructor.
-     * @param filePath The {@code String} containing the location of the sound file, to be consumed by 
+     * @param filePath The {@code String} containing the location of the sound file, to be consumed by
      * {@code getClass().getResource(String)}
      * @return A new {@code AudioClip}
      */
@@ -98,7 +98,7 @@ public final class AudioPlayer {
         else
             playEquipDefaultSound();
     }
-    */ 
+    */
 
     public void playEquipDefaultSound() {
         equipDefaultSound.play();
@@ -115,5 +115,5 @@ public final class AudioPlayer {
     public void playDropBuildingSound() {
         dropBuildingSound.play();
     }
-    
+
 }
