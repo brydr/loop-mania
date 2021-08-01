@@ -682,6 +682,10 @@ public class LoopManiaWorldController {
                                     Shield shield = (Shield)item;
                                     world.getCharacter().setEquippedShield(shield);
                                     shieldDurability.widthProperty().bind(shield.getDurabilityBar());
+                                } else if (targetNode.getId().equals("shieldCell") && item instanceof TreeStump) {
+                                    TreeStump shield = (TreeStump)item;
+                                    world.getCharacter().setEquippedShield(shield);
+                                    shieldDurability.widthProperty().bind(shield.getDurabilityBar());
                                 } else if (targetNode.getId().equals("rareItemCell") && item instanceof RareItem) {
                                     RareItem rareItem = (RareItem)item;
                                     world.getCharacter().setEquippedRareItem(rareItem);

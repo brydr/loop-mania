@@ -20,6 +20,7 @@ public class TreeStump extends ProtectiveGear implements RareItem{
 
     @Override
     public int calculateDamage(int attackPower) {
+        decDurability();
         return this.negateAllDamage() ? 0 : attackPower;
     }
 
