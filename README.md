@@ -3,6 +3,11 @@
 [**Link to specification**](https://gitlab.cse.unsw.edu.au/COMP2511/21T2/project-specification)
 
 # Extensions
+
+### Battle Results
+After killing an enemy, a small window displaying what enemy and how many were killed,\
+the character's remaining hp and the xp they received.
+
 ### Durability
 Equipped Items have a durability value that decreases with each attack\
 durability bar shown for each equipped item to represent the percentage of durability left in the item\
